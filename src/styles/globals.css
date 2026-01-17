@@ -84,7 +84,7 @@ section {
 /* Hero Section */
 .hero {
     background: linear-gradient(135deg, rgba(27, 94, 32, 0.9), rgba(67, 160, 71, 0.8)),
-        url('../images/images/download (1).webp') center/cover no-repeat;
+        center/cover no-repeat;
     /* Fallback or overlay */
     background-blend-mode: overlay;
     height: 500px;
