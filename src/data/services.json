@@ -1,0 +1,152 @@
+[
+    {
+        "category": "Artificial Grass",
+        "slug": "artificial-grass",
+        "tagline": "Lush Greenery, Zero Maintenance",
+        "description": "Premium artificial grass that looks and feels like the real thing, perfect for balconies, terraces, and lawns.",
+        "content": "Experience the joy of a perfectly manicured lawn all year round with our high-quality Artificial Grass. Designed to withstand harsh weather conditions while maintaining its vibrant green color, our synthetic turf offers a realistic look and soft feel underfoot. It eliminates the need for watering, mowing, and fertilizing, making it an eco-friendly and cost-effective solution for modern urban living. Whether for a playground, pet area, or a decorative landscape, our artificial grass provides a durable and aesthetic foundation for your outdoor or indoor spaces.",
+        "features": [
+            "Realistic look and feel with multi-tone blades",
+            "UV resistant and weatherproof for longevity",
+            "Excellent drainage system to prevent water logging",
+            "Child and pet-friendly non-toxic materials",
+            "Zero maintenance: No watering or mowing needed"
+        ],
+        "useCases": [
+            "Balconies and Terraces",
+            "Playgrounds and Sports Areas",
+            "Corporate Office Landscapes"
+        ],
+        "image": "artifical_pic_for_balcony_5.png",
+        "seo": {
+            "title": "Artificial Grass Installation | Vertical Gardening",
+            "description": "Transform your space with premium artificial grass. Zero maintenance, realistic look, and durable synthetic turf for balconies and terraces."
+        },
+        "items": []
+    },
+    {
+        "category": "Artificial Green Wall",
+        "slug": "artificial-green-wall",
+        "tagline": "Instant Vertical Beauty",
+        "description": "Stunning artificial vertical gardens that bring life to your walls without the hassle of maintenance.",
+        "content": "Our Artificial Green Walls are the perfect solution for adding a touch of nature to interiors or exteriors where maintenance is a challenge. Using high-quality faux foliage that mimics natural textures and colors, we create breathtaking vertical landscapes that remain fresh and vibrant indefinitely. These installations are lightweight, easy to install, and require absolutely no water or sunlight, making them ideal for dark corners, offices, or high-rise balconies. Customize your wall with a variety of plant styles to create a unique piece of green art.",
+        "features": [
+            "Lifelike foliage with intricate detailing",
+            "Customizable designs and plant varieties",
+            "Indoor and outdoor suitable",
+            "Dust-resistant and easy to clean",
+            "No plumbing or sunlight required"
+        ],
+        "useCases": [
+            "Living Room Feature Walls",
+            "Office Reception Areas",
+            "Restaurant and Cafe Interiors"
+        ],
+        "image": "artificial-green-wall.jpg",
+        "seo": {
+            "title": "Artificial Green Wall Experts | Vertical Gardening",
+            "description": "Install beautiful artificial green walls for home or office. Maintenance-free, hyper-realistic vertical gardens that stay green forever."
+        },
+        "items": []
+    },
+    {
+        "category": "Terrace Garden",
+        "slug": "terrace-garden",
+        "tagline": "Your Private Rooftop Oasis",
+        "description": "Turn your terrace into a luxurious retreat with our bespoke garden design and execution services.",
+        "content": "Unlock the potential of your rooftop with our comprehensive Terrace Garden services. We transform barren concrete slabs into lush, vibrant retreats where you can relax and entertain. Our service includes structural waterproofing, soil preparation, selection of suitable plants, and installation of features like pergolas, gazebos, and seating areas. We carefully balance aesthetics with functionality, ensuring your terrace garden withstands the elements while providing a serene escape from the city bustle below.",
+        "features": [
+            "Structural analysis and waterproofing",
+            "Custom layout design including hardscapes",
+            "Selection of wind and sun-tolerant plants",
+            "Lighting and furniture integration",
+            "Automated irrigation systems"
+        ],
+        "useCases": [
+            "Private Residential Rooftops",
+            "Commercial Building Terraces",
+            "Outdoor Dining spaces"
+        ],
+        "image": "terrace-garden.jpg",
+        "seo": {
+            "title": "Terrace Garden Designers | Vertical Gardening",
+            "description": "Expert terrace garden design and installation. Convert your rooftop into a stunning green paradise with our customized landscaping solutions."
+        },
+        "items": []
+    },
+    {
+        "category": "Creepers & Shrubs",
+        "slug": "creepers-and-shrubs",
+        "tagline": "Organic Textures & Privacy",
+        "description": "Enhance privacy and aesthetics with beautifully curated creepers and decorative shrubs.",
+        "content": "Creepers and shrubs are the backbone of any lush garden, providing essential texture, depth, and privacy. Our experts curate a selection of climbing plants and bushes that thrive in your specific climate and light conditions. Whether you want to cover an unsightly wall with blooming vines or create a natural partition with dense shrubs, we handle the planting, training, and pruning to ensure healthy growth. These plants not only beautify but also improve air quality and reduce noise pollution.",
+        "features": [
+            "Selection of flowering and evergreen varieties",
+            "Growth training for optimal coverage",
+            "Natural privacy screening solutions",
+            "Soil enrichment and planting",
+            "Ongoing pruning and shaping advice"
+        ],
+        "useCases": [
+            "Boundary Walls and Fences",
+            "Natural Partitions",
+            "Pergola Coverings"
+        ],
+        "image": "creepers-shrubs.jpg",
+        "seo": {
+            "title": "Creepers & Shrubs Landscaping | Vertical Gardening",
+            "description": "Add depth and privacy with our creepers and shrubs planting services. Expert selection of climbers and bushes for your garden walls."
+        },
+        "items": []
+    },
+    {
+        "category": "Natural Vertical Garden",
+        "slug": "natural-vertical-garden",
+        "tagline": "Breathable Living Art",
+        "description": "Eco-friendly living walls that purify air and create a stunning natural focal point.",
+        "content": "Experience the true power of nature with a Natural Vertical Garden. These bio-walls are living ecosystems that actively filter air pollutants and regulate temperature. We use advanced hydroponic or soil-based modular systems to grow real plants on your vertical surfaces. From plant selection to irrigation automation, we manage the technical complexity to give you a thriving green wall. It’s perfect for eco-conscious spaces looking to make a bold sustainability statement while enjoying the mental health benefits of nature.",
+        "features": [
+            "Air-purifying plant selection",
+            "Advanced drip irrigation automation",
+            "Modular systems for easy replacement",
+            "Sustainable and eco-friendly",
+            "Regular maintenance packages available"
+        ],
+        "useCases": [
+            "Building Facades",
+            "Eco-conscious Offices",
+            "Courtyards and Atriums"
+        ],
+        "image": "natural-vertical-garden.jpg",
+        "seo": {
+            "title": "Natural Vertical Garden Installation | Vertical Gardening",
+            "description": "Install real living walls with our natural vertical garden services. Improve air quality and aesthetics with sustainable green wall systems."
+        },
+        "items": []
+    },
+    {
+        "category": "Plants & Planters",
+        "slug": "plants-and-planters",
+        "tagline": "Curated Greenery for Every Space",
+        "description": "Stylize your space with our premium range of exotic plants and designer planters.",
+        "content": "Elevate your interiors and exteriors with our curated Plants & Planters service. We don't just sell pots; we style your space. Choose from our exclusive collection of ceramic, fiberglass, metal, and sustainable planters matched with the perfect indoor or outdoor plants. Our team assesses your lighting and decor to recommend plants that will thrive and enhance your aesthetic. Whether you need a statement piece for a lobby or a cluster of pots for a balcony, we deliver ready-to-display greenery.",
+        "features": [
+            "Premium designer planter collection",
+            "Exotic and air-purifying plant varieties",
+            "Interior styling consultation",
+            "Potting with nutrient-rich soil mix",
+            "Delivery and placement service"
+        ],
+        "useCases": [
+            "Indoor Home Decor",
+            "Corporate Lobbies",
+            "Balcony Styling"
+        ],
+        "image": "plants-planters.jpg",
+        "seo": {
+            "title": "Plants & Designer Planters | Vertical Gardening",
+            "description": "Shop premium plants and planters. Expert styling with designer pots and exotic plants to enhance your home or office decor."
+        },
+        "items": []
+    }
+]

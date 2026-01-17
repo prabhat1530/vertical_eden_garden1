@@ -1,0 +1,200 @@
+:root {
+    --header-height: 80px;
+
+    /* Green Nature Palette */
+    --primary-green: #2e7d32;
+    /* Core Green */
+    --secondary-green: #43a047;
+    /* Vibrant Leaf */
+    --dark-green: #1b5e20;
+    /* Deep Forest */
+    --accent-green: #66bb6a;
+    /* Bright Accent */
+
+    /* Backgrounds & Text */
+    --bg-color: #f1f8e9;
+    /* Soft Green Mist */
+    --card-bg: #ffffff;
+    /* White for cards */
+    --text-color: #263238;
+    /* Dark Slate for readability */
+    --text-light: #546e7a;
+    /* Secondary Text */
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.main-content {
+    padding-top: var(--header-height);
+    min-height: 100vh;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    padding: 0;
+    color: var(--dark-green);
+    font-weight: 700;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.8rem;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.3s ease;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Sections */
+section {
+    padding: 60px 0;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(135deg, rgba(27, 94, 32, 0.9), rgba(67, 160, 71, 0.8)),
+        url('/Users/prabhatkumar/ankit_web/verticalgarden-website/src/images/images/download (1).webp') center/cover no-repeat;
+    /* Fallback or overlay */
+    background-blend-mode: overlay;
+    height: 500px;
+    /* Taller hero */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    text-align: center;
+    position: relative;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.hero h1 {
+    color: white;
+    /* Override default heading color for Hero */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-size: 3.5rem;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 600px;
+    margin: 0 auto 30px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Buttons */
+button,
+.btn,
+.hero-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background-color: var(--primary-green);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 6px rgba(46, 125, 50, 0.3);
+}
+
+button:hover,
+.btn:hover,
+.hero-btn:hover {
+    background-color: var(--dark-green);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(46, 125, 50, 0.4);
+    color: white;
+    text-decoration: none;
+}
+
+/* Service & Product Cards */
+.services-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.product-card,
+.service-card {
+    background-color: var(--card-bg);
+    border: none;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s, box-shadow 0.3s;
+    border-bottom: 4px solid transparent;
+}
+
+.product-card:hover,
+.service-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(46, 125, 50, 0.15);
+    border-bottom-color: var(--secondary-green);
+}
+
+/* Contact Form */
+.contact-form {
+    background: var(--card-bg);
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+}
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fafafa;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+    /* Fix padding issue */
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-green);
+    background-color: #fff;
+}
+
+.contact-form button {
+    width: 100%;
+}
