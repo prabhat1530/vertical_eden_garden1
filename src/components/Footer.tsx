@@ -21,11 +21,11 @@ const Footer: React.FC = () => {
                     <p className="brand-text">
                         Protecting biodiversity and natural habitats is crucial for maintaining a healthy and sustainable ecology.
                     </p>
-                    <div className="social-icons">
+                    {/* <div className="social-icons">
                         <a href="#" className="social-icon">{(FaFacebookF as any)({})}</a>
                         <a href="#" className="social-icon">{(FaInstagram as any)({})}</a>
                         <a href="#" className="social-icon">{(FaYoutube as any)({})}</a>
-                    </div>
+                    </div> */}
                 </div>
 
                 {/* Column 2: Quick Links */}
@@ -76,9 +76,9 @@ const Footer: React.FC = () => {
                         <p>&copy; Copyright Home Garden Decor 2023 - All rights reserved. Designed by Buzz Spotlight</p>
                     </div>
                     <div className="bottom-socials">
-                        <a href="#">{(FaInstagram as any)({})}</a>
-                        <a href="#">{(FaFacebookF as any)({})}</a>
-                        <a href="#">{(FaTwitter as any)({})}</a>
+                        <a href="https://www.instagram.com/verticaledengarden?igsh=NTlleWRlcjRzNTNq">{(FaInstagram as any)({})}</a>
+                        <a href="https://www.facebook.com/share/1BxEgEucWc/">{(FaFacebookF as any)({})}</a>
+                        <a href="https://www.youtube.com/@VerticalEdengarden">{(FaYoutube as any)({})}</a>
                         <button onClick={scrollToTop} className="scroll-top-btn">{(FaArrowUp as any)({})}</button>
                     </div>
                 </div>

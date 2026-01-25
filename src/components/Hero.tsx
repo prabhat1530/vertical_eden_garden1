@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface HeroProps {
     title?: string;
@@ -20,7 +21,7 @@ const Hero: React.FC<HeroProps> = ({
             <div className="hero-content">
                 <h1>{title}</h1>
                 <p>{subtitle}</p>
-                {showButton && <a href="#services" className="hero-btn">Explore Our Services</a>}
+                {showButton && <Link to="/services" className="hero-btn">Explore Our Services</Link>}
             </div>
         </div>
     );

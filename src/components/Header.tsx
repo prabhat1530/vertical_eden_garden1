@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import { FaPhoneAlt, FaEnvelope, FaFacebookF, FaInstagram, FaYoutube } from 'react-icons/fa';
-import logoImg from '../images/images/WhatsApp Image 2026-01-13 at 22.37.42.jpeg';
+import logoImg from '/Users/prabhatkumar/ankit_web/verticalgarden-website/src/images/images/ankit_logo.jpeg';
 
 const Header: React.FC = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -70,7 +70,7 @@ const Header: React.FC = () => {
                                 <li><Link to="/about" onClick={closeMobileMenu}>About Us</Link></li>
                                 <li><Link to="/services" onClick={closeMobileMenu}>Services</Link></li>
                                 {/* <li><Link to="/projects" onClick={closeMobileMenu}>Projects</Link></li> */}
-                                <li><Link to="/portfolio" onClick={closeMobileMenu}>Portfolio</Link></li>
+                                <li><Link to="/portfolio" onClick={closeMobileMenu}>Gallery</Link></li>
                                 {/* Contact link removed as per user request */}
                                 {/* <li><Link to="/shop" onClick={closeMobileMenu}>Shop</Link></li> */}
                                 <li><Link to="/products" onClick={closeMobileMenu}>Products</Link></li>

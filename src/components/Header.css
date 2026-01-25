@@ -91,9 +91,14 @@
 
 .logo-img {
     height: 60px;
+    /* margin-right: 2000px;
+    padding-right: 200px; */
     /* Adjust size based on design */
     width: auto;
     display: block;
+
+    background-color: red;
+
 }
 
 .nav-wrapper {
