@@ -40,8 +40,12 @@ body {
 }
 
 .main-content {
-    padding-top: var(--header-height);
-    min-height: 100vh;
+    min-height: calc(100vh - 80px);
+    /* Adjust based on footer/header */
+    width: 100%;
+    overflow-x: hidden;
+    padding-top: 0;
+    /* Remove top padding if it conflicts with Hero margin-top */
 }
 
 h1,

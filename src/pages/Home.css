@@ -798,6 +798,9 @@
     animation-delay: 1.0s;
 }
 
+
+
+
 /* Image Side */
 .showcase-image-wrapper {
     flex: 1.2;
@@ -848,7 +851,8 @@
 
 @media (max-width: 992px) {
     .showcase-container {
-        flex-direction: column;
+        flex-direction: column-reverse;
+        /* Image on top */
         text-align: center;
         gap: 50px;
     }
@@ -877,31 +881,5 @@
     .showcase-image-wrapper {
         width: 100%;
         transform: translateY(30px);
-    }
-}
-
-@media (max-width: 600px) {
-    .hero h1 {
-        font-size: 2.2rem;
-    }
-
-    .hero p {
-        font-size: 1rem;
-    }
-
-    .section-title {
-        font-size: 2rem;
-    }
-
-    .reach-premium-content h2 {
-        font-size: 2.5rem;
-    }
-
-    .stat-card h3 {
-        font-size: 2rem;
-    }
-
-    .sub-heading {
-        font-size: 0.8rem;
     }
 }

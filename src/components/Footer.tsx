@@ -96,9 +96,6 @@ const Footer: React.FC = () => {
                 </div>
             </div>
 
-            <a href="https://wa.me/917827949218" className="whatsapp-float" target="_blank" rel="noopener noreferrer">
-                {(FaWhatsapp as any)({})}
-            </a>
         </footer>
     );
 };
