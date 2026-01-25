@@ -37,14 +37,14 @@ const Header: React.FC = () => {
             <div className="top-bar">
                 <div className="top-bar-container">
                     <div className="top-bar-left">
-                        <a href="tel:+918744803809" className="top-link">{(FaPhoneAlt as any)({})} +91 8744803809</a>
-                        <a href="mailto:infohomegardendecor@gmail.com" className="top-link">{(FaEnvelope as any)({})} infohomegardendecor@gmail.com</a>
+                        <a href="tel:+917827949218" className="top-link">{(FaPhoneAlt as any)({})} +91 7827949218</a>
+                        <a href="mailto:verticaledengarden@gmail.com" className="top-link">{(FaEnvelope as any)({})} verticaledengarden@gmail.com</a>
 
                     </div>
                     <div className="top-bar-right">
-                        <a href="#" target="_blank" rel="noopener noreferrer">{(FaInstagram as any)({})}</a>
-                        <a href="#" target="_blank" rel="noopener noreferrer">{(FaFacebookF as any)({})}</a>
-                        <a href="#" target="_blank" rel="noopener noreferrer">{(FaYoutube as any)({})}</a>
+                        <a href="https://www.instagram.com/verticaledengarden?igsh=NTlleWRlcjRzNTNq" target="_blank" rel="noopener noreferrer">{(FaInstagram as any)({})}</a>
+                        <a href="https://www.facebook.com/share/1BxEgEucWc/" target="_blank" rel="noopener noreferrer">{(FaFacebookF as any)({})}</a>
+                        <a href="https://www.youtube.com/@VerticalEdengarden" target="_blank" rel="noopener noreferrer">{(FaYoutube as any)({})}</a>
                     </div>
                 </div>
             </div>

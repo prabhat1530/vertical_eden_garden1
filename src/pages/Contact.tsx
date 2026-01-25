@@ -31,7 +31,7 @@ const Contact: React.FC = () => {
                         <div className="icon">{(FaPhoneAlt as any)({})}</div>
                         <div className="details">
                             <h3>Phone</h3>
-                            <p><a href="tel:+918744803809">+91 8744803809</a></p>
+                            <p><a href="tel:+917827949218">+91 7827949218</a></p>
                         </div>
                     </div>
 
@@ -39,7 +39,7 @@ const Contact: React.FC = () => {
                         <div className="icon">{(FaEnvelope as any)({})}</div>
                         <div className="details">
                             <h3>Email</h3>
-                            <p><a href="mailto:infohomegardendecor@gmail.com">infohomegardendecor@gmail.com</a></p>
+                            <p><a href="mailto:verticaledengarden@gmail.com">verticaledengarden@gmail.com</a></p>
                         </div>
                     </div>
 
@@ -55,14 +55,14 @@ const Contact: React.FC = () => {
                         <div className="icon">{(FaWhatsapp as any)({})}</div>
                         <div className="details">
                             <h3>WhatsApp</h3>
-                            <p><a href="https://wa.me/918744803809" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a></p>
+                            <p><a href="https://wa.me/917827949218" target="_blank" rel="noopener noreferrer">Chat on WhatsApp</a></p>
                         </div>
                     </div>
                 </div>
 
                 <div className="contact-form-wrapper">
                     <h2>Get A Free Quote</h2>
-                    <form action="https://formsubmit.co/infohomegardendecor@gmail.com" method="POST">
+                    <form action="https://formsubmit.co/verticaledengarden@gmail.com" method="POST">
                         <input type="hidden" name="_subject" value="New Quote Request from Website!" />
                         <input type="hidden" name="_captcha" value="false" />
                         <input type="hidden" name="_template" value="table" />
