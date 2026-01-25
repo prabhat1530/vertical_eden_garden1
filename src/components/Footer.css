@@ -1,9 +1,25 @@
 /* Footer.css */
 .footer {
-    background-color: #1a1a1a;
+    background-color: #1a4031;
+    /* Deep green similar to image */
     color: #ffffff;
     font-family: 'Poppins', sans-serif;
-    padding-top: 60px;
+    padding-top: 70px;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Add a subtle background texture or leaf overlay if desired */
+.footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    /* Optional: background-image: url('leaf-pattern.png'); */
+    opacity: 0.05;
+    pointer-events: none;
 }
 
 .footer-content {
@@ -11,182 +27,161 @@
     margin: 0 auto;
     padding: 0 20px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 30px;
-    padding-bottom: 60px;
+    grid-template-columns: 1.2fr 1fr 1fr 1fr;
+    /* Adjust column widths */
+    gap: 40px;
+    padding-bottom: 50px;
+    position: relative;
+    z-index: 1;
 }
 
 /* Common Header Styles */
 .footer-col h3 {
     color: #ffffff;
-    font-size: 1.5rem;
-    font-weight: 600;
-    margin-bottom: 25px;
+    font-size: 1.6rem;
+    font-weight: 500;
+    /* Regular/Medium weight like in image */
+    margin-bottom: 30px;
+    font-style: italic;
+    /* "Contact Us", "Our services" look italicized in image */
+    font-family: 'Playfair Display', serif;
+    /* Use a serif font for headings if available, else standard */
 }
 
 /* Column 1: Brand */
-.footer-logo {
-    max-width: 180px;
-    margin-bottom: 20px;
-    filter: brightness(0) invert(1);
-    /* Make logo white if needed, or adjust */
-    /* Remove filter if logo is already suitable for dark bg */
-    filter: none;
-    /* Reset based on user logo provided */
+.footer-logo-container {
+    background: #fff;
+    padding: 15px 25px;
+    border-radius: 50px;
+    /* Make it a pill/oval shape */
+    display: inline-block;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-/* Adjust logo specifically for footer if needed */
+.footer-logo {
+    max-width: 160px;
+    display: block;
+}
+
 .brand-text {
-    color: #cccccc;
-    font-size: 0.95rem;
+    color: #e0e0e0;
+    font-size: 1rem;
     line-height: 1.6;
     margin-bottom: 25px;
+    max-width: 300px;
 }
 
 .social-icons {
     display: flex;
-    gap: 15px;
+    gap: 12px;
 }
 
 .social-icon {
+    width: 35px;
+    height: 35px;
+    background-color: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
     color: #ffffff;
-    font-size: 1.1rem;
-    transition: color 0.3s;
+    transition: all 0.3s ease;
+    text-decoration: none;
 }
 
 .social-icon:hover {
-    color: #4CAF50;
+    background-color: #4CAF50;
+    transform: translateY(-3px);
 }
 
-/* Column 2: Quick Links */
-.links-col ul {
+/* Column 2: Contact Us */
+.contact-row {
+    margin-bottom: 15px;
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.contact-label {
+    font-weight: 700;
+    color: #fff;
+    margin-right: 5px;
+    display: block;
+    /* Stack on mobile? No, inline looks better like "Phone: +91..." */
+}
+
+.contact-value {
+    color: #dcdcdc;
+    text-decoration: none;
+    display: block;
+}
+
+.contact-value:hover {
+    color: #fff;
+}
+
+/* Column 3: Our Services */
+.services-col ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-.links-col li {
-    margin-bottom: 15px;
+.services-col li {
+    margin-bottom: 12px;
 }
 
-.links-col a {
-    color: #ffffff;
+.services-col a {
+    color: #dcdcdc;
     text-decoration: none;
     font-size: 1rem;
     transition: color 0.3s;
-}
-
-.links-col a:hover {
-    color: #4CAF50;
-}
-
-/* Column 3: Recent News */
-.news-item {
     display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
+    align-items: center;
+    gap: 8px;
 }
 
-.news-image {
-    width: 60px;
-    height: 60px;
-    background-color: #333;
-    /* Placeholder gray */
-    border-radius: 50%;
-    /* Circle thumbnails per design reference */
-    flex-shrink: 0;
-    background-size: cover;
-    background-position: center;
+.services-col a:hover {
+    color: #ffffff;
+    padding-left: 5px;
+    /* Subtle movement */
 }
 
-/* Placeholder images for news */
-.rect-1 {
-    background-image: url('https://images.unsplash.com/photo-1585320806297-9794b3e4eeae?w=100&h=100&fit=crop');
+/* Column 4: Get Free Estimate */
+.estimate-col h3 {
+    font-style: italic;
 }
 
-.rect-2 {
-    background-image: url('https://images.unsplash.com/photo-1523348837708-15d4a09cfac2?w=100&h=100&fit=crop');
-}
-
-.news-details {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
-
-.news-details a {
+.estimate-phone a {
+    font-size: 1.4rem;
+    font-weight: 700;
     color: #ffffff;
     text-decoration: none;
-    font-weight: 500;
-    font-size: 0.95rem;
-    line-height: 1.3;
-    margin-bottom: 5px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-}
-
-.news-details a:hover {
-    color: #4CAF50;
-}
-
-.news-date {
-    color: #999999;
-    font-size: 0.8rem;
     display: flex;
     align-items: center;
-    gap: 5px;
-}
-
-/* Column 4: Newsletter */
-.newsletter-col p {
-    color: #cccccc;
+    gap: 10px;
     margin-bottom: 20px;
-    line-height: 1.5;
 }
 
-.newsletter-form {
-    display: flex;
-    background-color: #2c2c2c;
-    /* Dark input bg */
-    border-radius: 4px;
-    padding: 5px;
-    border: 1px solid #333;
+.estimate-icon {
+    font-size: 1rem;
+    /* Smaller phone icon */
 }
 
-.newsletter-form input {
-    background: transparent;
-    border: none;
-    color: #ffffff;
-    padding: 10px 15px;
-    flex-grow: 1;
-    outline: none;
-}
-
-.newsletter-form button {
-    background-color: #4CAF50;
-    border: none;
-    color: white;
-    width: 45px;
-    height: 40px;
-    border-radius: 4px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s;
-}
-
-.newsletter-form button:hover {
-    background-color: #43a047;
+.estimate-text {
+    color: #b0c4b1;
+    font-size: 0.95rem;
+    line-height: 1.6;
 }
 
 /* Footer Bottom */
 .footer-bottom {
-    background-color: #4CAF50;
-    /* Green bar */
-    padding: 20px 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 25px 0;
+    position: relative;
+    z-index: 1;
+    background-color: rgba(0, 0, 0, 0.1);
+    /* Slightly darker bottom */
 }
 
 .footer-bottom-container {
@@ -199,56 +194,48 @@
 }
 
 .copyright p {
-    color: #ffffff;
-    margin: 0;
+    color: #a0a0a0;
     font-size: 0.9rem;
+    margin: 0;
 }
 
-.bottom-socials {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
-
-.bottom-socials a,
 .scroll-top-btn {
-    width: 35px;
-    height: 35px;
+    width: 40px;
+    height: 40px;
+    background-color: #4CAF50;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    border-radius: 50%;
-    color: #ffffff;
-    text-decoration: none;
-    transition: all 0.3s;
-    background: transparent;
-    cursor: pointer;
+    font-size: 1.2rem;
+    transition: background 0.3s;
 }
 
-.bottom-socials a:hover,
 .scroll-top-btn:hover {
-    background-color: #ffffff;
-    color: #4CAF50;
-    border-color: #ffffff;
+    background-color: #388E3C;
 }
 
-.scroll-top-btn {
-    border: none;
-    /* Maybe specific style for up arrow */
-    background: rgba(255, 255, 255, 0.2);
-}
+/* Floating WhatsApp Button styles moved to WhatsAppButton.css */
 
 /* Responsive */
 @media (max-width: 1024px) {
     .footer-content {
         grid-template-columns: repeat(2, 1fr);
+        gap: 30px;
     }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 600px) {
     .footer-content {
         grid-template-columns: 1fr;
+        padding-bottom: 30px;
+    }
+
+    .footer-col {
+        margin-bottom: 30px;
     }
 
     .footer-bottom-container {

@@ -1,8 +1,10 @@
 import React from 'react';
 import './Footer.css';
 import { Link } from 'react-router-dom';
-import { FaFacebookF, FaInstagram, FaTwitter, FaYoutube, FaArrowUp, FaPaperPlane, FaCalendarAlt } from 'react-icons/fa';
-import logoImg from '../images/images/WhatsApp Image 2026-01-13 at 22.37.42.jpeg';
+import { FaFacebookF, FaInstagram, FaYoutube, FaArrowUp, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaClock, FaWhatsapp } from 'react-icons/fa';
+import logoImg from '../images/images/logo-v2.png';
+
+import servicesData from '../data/services.json';
 
 const Footer: React.FC = () => {
     const scrollToTop = () => {
@@ -17,55 +19,66 @@ const Footer: React.FC = () => {
             <div className="footer-content">
                 {/* Column 1: Brand */}
                 <div className="footer-col brand-col">
-                    <img src={logoImg} alt="Home Garden Decor" className="footer-logo" />
+                    <div className="footer-logo-container">
+                        <img src={logoImg} alt="Vertical Eden Garden" className="footer-logo" />
+                    </div>
                     <p className="brand-text">
-                        Protecting biodiversity and natural habitats is crucial for maintaining a healthy and sustainable ecology.
+                        Make Everyday A Vacation With Your Custom-Designed Dream Outdoor Space
                     </p>
-                    {/* <div className="social-icons">
-                        <a href="#" className="social-icon">{(FaFacebookF as any)({})}</a>
-                        <a href="#" className="social-icon">{(FaInstagram as any)({})}</a>
-                        <a href="#" className="social-icon">{(FaYoutube as any)({})}</a>
-                    </div> */}
+                    <div className="social-icons">
+                        <a href="https://www.instagram.com/verticaledengarden?igsh=NTlleWRlcjRzNTNq" target="_blank" rel="noopener noreferrer" className="social-icon">{(FaInstagram as any)({})}</a>
+                        <a href="https://www.facebook.com/share/1BxEgEucWc/" target="_blank" rel="noopener noreferrer" className="social-icon">{(FaFacebookF as any)({})}</a>
+                        <a href="https://www.youtube.com/@VerticalEdengarden" target="_blank" rel="noopener noreferrer" className="social-icon">{(FaYoutube as any)({})}</a>
+                        <a href="https://wa.me/917827949218" target="_blank" rel="noopener noreferrer" className="social-icon">{(FaWhatsapp as any)({})}</a>
+                    </div>
                 </div>
 
-                {/* Column 2: Quick Links */}
-                <div className="footer-col links-col">
-                    <h3>Quick Link</h3>
+                {/* Column 2: Contact Us */}
+                <div className="footer-col contact-col">
+                    <h3>Contact Us</h3>
+
+                    <div className="contact-row">
+                        <span className="contact-label">Phone:</span>
+                        <a href="tel:+917827949218" className="contact-value">+91 7827949218</a>
+                    </div>
+
+                    <div className="contact-row">
+                        <span className="contact-label">E-mail:</span>
+                        <a href="mailto:verticaledengarden@gmail.com" className="contact-value">verticaledengarden@gmail.com</a>
+                    </div>
+
+                    <div className="contact-row">
+                        <span className="contact-label">Address:</span>
+                        <span className="contact-value">Janakpuri District Center, New Delhi, India</span>
+                    </div>
+
+                    <div className="contact-row">
+                        <span className="contact-label">Time:</span>
+                        <span className="contact-value">Mon – Sat ( 9am – 7pm ) Sun Closed</span>
+                    </div>
+                </div>
+
+                {/* Column 3: Our Services */}
+                <div className="footer-col services-col">
+                    <h3>Our Services</h3>
                     <ul>
-                        <li><Link to="/policy">Privacy Policy</Link></li>
-                        <li><Link to="/shipping">Shipping Policy</Link></li>
-                        <li><Link to="/refund">Refund and Returns Policy</Link></li>
-                        <li><Link to="/terms">Terms And Conditions</Link></li>
+                        {servicesData.map((service, index) => (
+                            <li key={index}>
+                                <Link to={`/services/${service.slug}`}>→ {service.category}</Link>
+                            </li>
+                        ))}
                     </ul>
                 </div>
 
-                {/* Column 3: Recent News (Mock Data) */}
-                <div className="footer-col news-col">
-                    <h3>Recent News</h3>
-                    <div className="news-item">
-                        <div className="news-image rect-1"></div>
-                        <div className="news-details">
-                            <a href="#">What are the benefits of Natural...</a>
-                            <span className="news-date">{(FaCalendarAlt as any)({})} April 17, 2023</span>
-                        </div>
+                {/* Column 4: Get Free Estimate */}
+                <div className="footer-col estimate-col">
+                    <h3>Get Free Estimate</h3>
+                    <div className="estimate-phone">
+                        <a href="tel:+917827949218">{(FaPhoneAlt as any)({ className: 'estimate-icon' })} +91 7827949218</a>
                     </div>
-                    <div className="news-item">
-                        <div className="news-image rect-2"></div>
-                        <div className="news-details">
-                            <a href="#">What is a natural vertical garden...</a>
-                            <span className="news-date">{(FaCalendarAlt as any)({})} April 17, 2023</span>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Column 4: Newsletter */}
-                <div className="footer-col newsletter-col">
-                    <h3>Newsletter</h3>
-                    <p>Your opinion is important to us. So contact us for any service.</p>
-                    <div className="newsletter-form">
-                        <input type="email" placeholder="Your Email Address" />
-                        <button type="button">{(FaPaperPlane as any)({})}</button>
-                    </div>
+                    <p className="estimate-text">
+                        Contact us now for a quote on your garden ( We are Support 24/7 )
+                    </p>
                 </div>
             </div>
 
@@ -73,16 +86,19 @@ const Footer: React.FC = () => {
             <div className="footer-bottom">
                 <div className="footer-bottom-container">
                     <div className="copyright">
-                        <p>&copy; Copyright Home Garden Decor 2023 - All rights reserved. Designed by Buzz Spotlight</p>
+                        <p>&copy; 2024 Vertical Eden Garden. All Rights Reserved.</p>
                     </div>
-                    <div className="bottom-socials">
-                        <a href="https://www.instagram.com/verticaledengarden?igsh=NTlleWRlcjRzNTNq">{(FaInstagram as any)({})}</a>
-                        <a href="https://www.facebook.com/share/1BxEgEucWc/">{(FaFacebookF as any)({})}</a>
-                        <a href="https://www.youtube.com/@VerticalEdengarden">{(FaYoutube as any)({})}</a>
-                        <button onClick={scrollToTop} className="scroll-top-btn">{(FaArrowUp as any)({})}</button>
+                    <div className="bottom-scroll">
+                        <button onClick={scrollToTop} className="scroll-top-btn" aria-label="Scroll to top">
+                            {(FaArrowUp as any)({})}
+                        </button>
                     </div>
                 </div>
             </div>
+
+            <a href="https://wa.me/917827949218" className="whatsapp-float" target="_blank" rel="noopener noreferrer">
+                {(FaWhatsapp as any)({})}
+            </a>
         </footer>
     );
 };

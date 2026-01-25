@@ -32,6 +32,13 @@ body {
     color: var(--text-color);
 }
 
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+        /* Scale down base font size for tablets/mobile */
+    }
+}
+
 .main-content {
     padding-top: var(--header-height);
     min-height: 100vh;

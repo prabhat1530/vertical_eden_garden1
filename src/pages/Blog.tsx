@@ -1,74 +1,68 @@
 import React from "react";
+import "./Blog.css";
+
+const blogPosts = [
+    {
+        id: 1,
+        title: "5 Tips for a Thriving Balcony Garden",
+        excerpt: "Transform your urban balcony into a lush paradise with our expert tips on pot selection, watering schedules, and the best flowering plants for the Indian climate.",
+        date: "Oct 12, 2025",
+        image: "/images/blog/blog_urban_jungle.webp",
+        category: "Urban Gardening"
+    },
+    {
+        id: 2,
+        title: "Vertical Walls: The Indoor Air Purifier",
+        excerpt: "Discover how a vertical garden not only enhances your living room aesthetics but also acts as a natural air purifier, removing toxins and boosting oxygen levels.",
+        date: "Sep 28, 2025",
+        image: "/images/blog/blog_indoor_oases.webp",
+        category: "Interior Design"
+    },
+    {
+        id: 3,
+        title: "Sustainable Living: Rooftop Farming",
+        excerpt: "Grow your own organic vegetables! Learn the basics of setting up a productive rooftop farm, from soil preparation to seasonal crop rotation.",
+        date: "Sep 15, 2025",
+        image: "/images/blog/blog_sustainable_living.webp",
+        category: "Sustainability"
+    }
+];
 
 const Blog: React.FC = () => {
     return (
-        <div
-            style={{
-                height: "100vh",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                background: "linear-gradient(to bottom, rgba(46, 204, 113, 0.2), rgba(0, 0, 0, 0.4))", /* Green Theme */
-                padding: "20px",
-            }}
-        >
-            <div
-                style={{
-                    textAlign: "center",
-                    padding: "40px 50px",
-                    borderRadius: "18px",
-                    background: "rgba(255, 255, 255, 0.1)", /* Slightly clearer glass */
-                    backdropFilter: "blur(12px)",
-                    boxShadow: "0px 10px 30px rgba(0,0,0,0.2)",
-                    border: "1px solid rgba(255,255,255,0.2)",
-                    maxWidth: "500px",
-                    width: "100%",
-                }}
-            >
-                <h1
-                    style={{
-                        fontSize: "42px",
-                        fontWeight: 800,
-                        marginBottom: "12px",
-                        color: "green",
-                        letterSpacing: "1px",
-                    }}
-                >
-                    Blogs Coming Soon 🌿
-                </h1>
-
-                <p
-                    style={{
-                        fontSize: "16px",
-                        color: "green",
-                        lineHeight: "1.6",
-                    }}
-                >
-                    We’re cultivating something amazing. Stay tuned for expert gardening tips and updates!
+        <div className="blog-container">
+            <div className="blog-header">
+                <span className="blog-subtitle">Green Living</span>
+                <h1 className="blog-title">Our Latest Stories</h1>
+                <p className="blog-description">
+                    Insights, tips, and inspiration for your gardening journey.
                 </p>
+            </div>
 
-                <button
-                    style={{
-                        marginTop: "22px",
-                        padding: "12px 22px",
-                        borderRadius: "12px",
-                        border: "none",
-                        cursor: "pointer",
-                        fontSize: "15px",
-                        fontWeight: 600,
-                        color: "#1b5e20", /* Dark Green Text */
-                        background: "#ffffff",
-                        transition: "0.3s",
-                    }}
-                    onMouseOver={(e) =>
-                        (e.currentTarget.style.transform = "scale(1.05)")
-                    }
-                    onMouseOut={(e) =>
-                        (e.currentTarget.style.transform = "scale(1)")
-                    }
-                >
-                    Notify Me
-                </button>
+            <div className="blog-grid">
+                {blogPosts.map((post) => (
+                    <div key={post.id} className="blog-card">
+                        <div className="blog-img-wrapper">
+                            <img src={post.image} alt={post.title} loading="lazy" />
+                            <span className="blog-category">{post.category}</span>
+                        </div>
+                        <div className="blog-content">
+                            <span className="blog-date">{post.date}</span>
+                            <h2>{post.title}</h2>
+                            <p>{post.excerpt}</p>
+                            <button className="read-more-btn-text">Read Article →</button>
+                        </div>
+                    </div>
+                ))}
+            </div>
+
+            <div className="newsletter-section">
+                <h3>Join Our Community</h3>
+                <p>Get the latest gardening updates delivered to your inbox.</p>
+                <div className="newsletter-form">
+                    <input type="email" placeholder="Enter your email address" />
+                    <button>Subscribe</button>
+                </div>
             </div>
         </div>
     );

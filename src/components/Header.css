@@ -115,7 +115,8 @@
     gap: 30px;
 }
 
-.main-nav a {
+.main-nav a,
+.nav-link-span {
     text-decoration: none;
     color: var(--text-dark);
     font-weight: 600;
@@ -123,10 +124,94 @@
     transition: color 0.3s;
     text-transform: capitalize;
     /* Ensure "Services", "About Us" etc looks good */
+    cursor: pointer;
 }
 
-.main-nav a:hover {
+.main-nav a:hover,
+.nav-link-span:hover {
     color: var(--primary-green);
+}
+
+/* Dropdown Styles */
+.nav-item-dropdown {
+    position: relative;
+    padding-bottom: 10px;
+    /* Helper for hover bridge */
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #fff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    min-width: 180px;
+    border-radius: 4px;
+    padding: 10px 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(10px);
+    transition: all 0.3s ease;
+    flex-direction: column;
+    gap: 0 !important;
+    /* Override main-nav gap */
+    display: flex !important;
+    /* Override main-nav display */
+}
+
+.nav-item-dropdown:hover .dropdown-menu,
+.nav-item-dropdown.active .dropdown-menu {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.dropdown-menu li {
+    padding: 0;
+    width: 100%;
+}
+
+.dropdown-menu a {
+    display: block;
+    padding: 10px 20px;
+    font-size: 0.95rem;
+    color: #333;
+    transition: background-color 0.2s;
+    white-space: nowrap;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f5f5f5;
+    color: #4CAF50;
+    padding-left: 25px;
+    /* Slight movement */
+}
+
+/* Mobile Dropdown */
+@media (max-width: 992px) {
+    .nav-item-dropdown {
+        width: 100%;
+        text-align: center;
+    }
+
+    .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        opacity: 1;
+        visibility: visible;
+        transform: none;
+        background-color: transparent;
+        padding-left: 0;
+        display: none !important;
+        /* Hidden by default on mobile unless toggled - for simplicity here we keep it expanded or handle via JS */
+    }
+
+    /* Simplification: On mobile, list everything inline or just show links. 
+       For "Home", let's make it expanded by default or just list items below */
+    .nav-item-dropdown:hover .dropdown-menu,
+    .nav-item-dropdown.active .dropdown-menu {
+        display: flex !important;
+    }
 }
 
 /* "Get A Quote" Button */
@@ -157,6 +242,8 @@
     flex-direction: column;
     gap: 5px;
     z-index: 1002;
+    position: relative;
+    /* Essential for z-index to work */
 }
 
 .hamburger-bar {

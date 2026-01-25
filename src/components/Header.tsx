@@ -2,11 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
 import { FaPhoneAlt, FaEnvelope, FaFacebookF, FaInstagram, FaYoutube } from 'react-icons/fa';
-import logoImg from '/Users/prabhatkumar/ankit_web/verticalgarden-website/src/images/images/ankit_logo.jpeg';
+import logoImg from '../images/images/logo-v2.png';
 
 const Header: React.FC = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
+    const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+    const toggleDropdown = (menu: string) => {
+        if (activeDropdown === menu) {
+            setActiveDropdown(null);
+        } else {
+            setActiveDropdown(menu);
+        }
+    };
 
     const toggleMobileMenu = () => {
         setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -14,26 +23,14 @@ const Header: React.FC = () => {
 
     const closeMobileMenu = () => {
         setIsMobileMenuOpen(false);
+        setActiveDropdown(null);
     };
 
-    useEffect(() => {
-        const handleScroll = () => {
-            if (window.scrollY > 50) {
-                setIsScrolled(true);
-            } else {
-                setIsScrolled(false);
-            }
-        };
-
-        window.addEventListener('scroll', handleScroll);
-        return () => {
-            window.removeEventListener('scroll', handleScroll);
-        };
-    }, []);
+    // ... scroll effect ...
 
     return (
         <header className="site-header">
-            {/* Top Bar */}
+            {/* Top Bar ... */}
             <div className="top-bar">
                 <div className="top-bar-container">
                     <div className="top-bar-left">
@@ -67,19 +64,39 @@ const Header: React.FC = () => {
                     <div className={`nav-wrapper ${isMobileMenuOpen ? 'open' : ''}`}>
                         <nav className="main-nav">
                             <ul>
+                                <li><Link to="/" onClick={closeMobileMenu}>Home</Link></li>
                                 <li><Link to="/about" onClick={closeMobileMenu}>About Us</Link></li>
-                                <li><Link to="/services" onClick={closeMobileMenu}>Services</Link></li>
-                                {/* <li><Link to="/projects" onClick={closeMobileMenu}>Projects</Link></li> */}
-                                <li><Link to="/portfolio" onClick={closeMobileMenu}>Gallery</Link></li>
-                                {/* Contact link removed as per user request */}
-                                {/* <li><Link to="/shop" onClick={closeMobileMenu}>Shop</Link></li> */}
-                                <li><Link to="/products" onClick={closeMobileMenu}>Products</Link></li>
-                                <li><Link to="/blog" onClick={closeMobileMenu}>Blog</Link></li>
+                                <li className={`nav-item-dropdown ${activeDropdown === 'services' ? 'active' : ''}`}>
+                                    <span
+                                        className="nav-link-span"
+                                        onClick={() => toggleDropdown('services')}
+                                    >
+                                        Services
+                                    </span>
+                                    <ul className="dropdown-menu">
+                                        <li><Link to="/services" onClick={closeMobileMenu}>All Services</Link></li>
+                                        <li><Link to="/services/artificial-green-wall" onClick={closeMobileMenu}>Artificial Green Wall</Link></li>
+                                        <li><Link to="/services/terrace-garden" onClick={closeMobileMenu}>Terrace Garden</Link></li>
+                                        <li><Link to="/services/artificial-grass" onClick={closeMobileMenu}>Artificial Grass</Link></li>
+                                        <li><Link to="/services/creepers-and-shrubs" onClick={closeMobileMenu}>Creepers and Shrubs</Link></li>
+                                        <li><Link to="/services/plants-and-planters" onClick={closeMobileMenu}>Plants and Planters</Link></li>
+                                    </ul>
+                                </li>
+
+                                <li className={`nav-item-dropdown ${activeDropdown === 'pages' ? 'active' : ''}`}>
+                                    <span
+                                        className="nav-link-span"
+                                        onClick={() => toggleDropdown('pages')}
+                                    >
+                                        Pages
+                                    </span>
+                                    <ul className="dropdown-menu">
+                                        <li><Link to="/portfolio" onClick={closeMobileMenu}>Gallery</Link></li>
+                                        <li><Link to="/blog" onClick={closeMobileMenu}>Blog</Link></li>
+                                    </ul>
+                                </li>
                             </ul>
                         </nav>
-                        <div className="header-cta">
-                            <Link to="/contact" className="get-quote-btn" onClick={closeMobileMenu}>Get A Quote »</Link>
-                        </div>
                     </div>
                 </div>
             </div>
