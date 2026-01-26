@@ -33,7 +33,7 @@ const Contact: React.FC = () => {
                     <p>We are here to answer any questions you may have about our services. Reach out to us and we'll respond as soon as we can.</p>
 
                     <div className="info-feature-image">
-                        <img src={contactFeature} alt="Vertical Garden Detail" />
+                        <img src={contactFeature} alt="Vertical Garden Detail" loading="lazy" />
                     </div>
 
                     <div className="contact-details-grid">

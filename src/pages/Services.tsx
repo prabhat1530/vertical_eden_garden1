@@ -56,7 +56,7 @@ const Services: React.FC = () => {
                     return (
                         <div key={index} className="service-card-main" id={service.slug}>
                             <div className="service-img-wrapper">
-                                <img src={imageSrc} alt={service.category} />
+                                <img src={imageSrc} alt={service.category} loading="lazy" />
                                 <div className="service-overlay-gradient"></div>
                             </div>
                             <div className="service-content-overlay">

@@ -4,9 +4,17 @@ import './WhatsAppButton.css';
 const WhatsAppButton: React.FC = () => {
     return (
         <div className="whatsapp-container">
-            <div className="whatsapp-text-bubble">
-                Chat with us <span className="waving-hand">👋</span>
-            </div>
+            <a
+                href="https://wa.me/917827949218"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="whatsapp-text-bubble-link"
+                style={{ textDecoration: 'none' }}
+            >
+                <div className="whatsapp-text-bubble">
+                    Chat with us <span className="waving-hand">👋</span>
+                </div>
+            </a>
             <a
                 href="https://wa.me/917827949218"
                 className="whatsapp-float"

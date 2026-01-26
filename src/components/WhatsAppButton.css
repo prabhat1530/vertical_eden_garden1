@@ -31,6 +31,14 @@
     /* Delay appearance slightly for effect */
 }
 
+/* Ensure the link wrapper is clickable and doesn't mess up layout */
+.whatsapp-text-bubble-link {
+    pointer-events: auto;
+    text-decoration: none;
+    display: flex;
+    /* Maintain flex behavior if needed */
+}
+
 .waving-hand {
     animation: wave 2s infinite;
     display: inline-block;

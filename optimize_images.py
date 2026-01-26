@@ -1,8 +1,12 @@
 import os
 from PIL import Image
 
-# Directory to scan
-IMAGE_DIR = '/Users/prabhatkumar/ankit_web/verticalgarden-website/public/images'
+# Directories to scan
+DIRECTORIES_TO_SCAN = [
+    '/Users/prabhatkumar/ankit_web/verticalgarden-website/public/images',
+    '/Users/prabhatkumar/ankit_web/verticalgarden-website/src/images',
+    '/Users/prabhatkumar/ankit_web/verticalgarden-website/src/assets'
+]
 
 # Configuration
 MAX_WIDTH_HERO = 1920
@@ -21,17 +25,18 @@ def optimize_image(file_path):
         if ext.lower() not in ['.png', '.jpg', '.jpeg']:
             return
 
+        # check if optimized version already exists
+        new_filename = f"{name}.webp"
+        new_path = os.path.join(os.path.dirname(file_path), new_filename)
+        
+        if os.path.exists(new_path):
+             return # Skip if already optimized
+
         img = Image.open(file_path)
         
         # Determine target width
         width, height = img.size
         target_width = width
-        
-        # Logic: If it's likely a hero image (large width), cap at 1920
-        # If it's a content image, cap at 800 (unless it's already smaller)
-        # For simplicity in this batch, let's just cap everything at 1920 to be safe not to ruin quality,
-        # but specifically for the very large ones we saw (service images), we might want to be more aggressive if we knew which was which.
-        # Given the file sizes (8MB), they are likely huge.
         
         if width > MAX_WIDTH_HERO:
             target_width = MAX_WIDTH_HERO
@@ -43,14 +48,15 @@ def optimize_image(file_path):
             print(f"Resized {filename} from {width}x{height} to {target_width}x{new_height}")
 
         # Save as WebP
-        new_filename = f"{name}.webp"
-        new_path = os.path.join(os.path.dirname(file_path), new_filename)
-        
         img.save(new_path, 'WEBP', quality=QUALITY)
         
         old_size = get_file_size(file_path)
         new_size = get_file_size(new_path)
-        savings = (old_size - new_size) / old_size * 100
+        
+        if old_size > 0:
+            savings = (old_size - new_size) / old_size * 100
+        else:
+            savings = 0
         
         print(f"Converted {filename}: {old_size/1024/1024:.2f}MB -> {new_size/1024/1024:.2f}MB ({savings:.1f}% savings)")
         
@@ -58,6 +64,10 @@ def optimize_image(file_path):
         print(f"Error processing {file_path}: {e}")
 
 def process_directory(directory):
+    if not os.path.exists(directory):
+        print(f"Directory not found: {directory}")
+        return
+
     for root, dirs, files in os.walk(directory):
         for file in files:
             if file.lower().endswith(('.png', '.jpg', '.jpeg')):
@@ -65,5 +75,7 @@ def process_directory(directory):
 
 if __name__ == "__main__":
     print("Starting optimization...")
-    process_directory(IMAGE_DIR)
+    for directory in DIRECTORIES_TO_SCAN:
+        print(f"Scanning {directory}...")
+        process_directory(directory)
     print("Done.")

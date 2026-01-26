@@ -1,19 +1,21 @@
 .hero-carousel {
     position: relative;
-    height: 90vh;
-    /* Full viewport height or close to it */
+    width: 100%;
+    height: calc(100vh - 80px);
+    /* remove gap by adjusting header height */
     min-height: 500px;
-    /* Minimum height for mobile */
-    width: 100vw;
-    /* Force viewport width */
-    left: 50%;
-    right: 50%;
-    margin-left: -50vw;
-    margin-right: -50vw;
     overflow: hidden;
     margin-top: 80px;
-    /* Match header height */
 }
+
+.hero-carousel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* full stretch like footer bg */
+    display: block;
+}
+
 
 .hero-slide {
     position: absolute;

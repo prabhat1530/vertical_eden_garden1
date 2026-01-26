@@ -2,7 +2,7 @@ import React from 'react';
 import './Footer.css';
 import { Link } from 'react-router-dom';
 import { FaFacebookF, FaInstagram, FaYoutube, FaArrowUp, FaPhoneAlt, FaEnvelope, FaMapMarkerAlt, FaClock, FaWhatsapp } from 'react-icons/fa';
-import logoImg from '../images/images/logo-v2.png';
+import logoLeaf from '../images/images/logo-leaf.webp';
 
 import servicesData from '../data/services.json';
 
@@ -20,7 +20,13 @@ const Footer: React.FC = () => {
                 {/* Column 1: Brand */}
                 <div className="footer-col brand-col">
                     <div className="footer-logo-container">
-                        <img src={logoImg} alt="Vertical Eden Garden" className="footer-logo" />
+                        <div className="logo-container-footer">
+                            <img src={logoLeaf} alt="Vertical Eden Garden" className="logo-icon-footer" />
+                            <div className="logo-text-wrapper-footer">
+                                <span className="logo-text-main-footer">Vertical Eden</span>
+                                <span className="logo-text-sub-footer">Garden</span>
+                            </div>
+                        </div>
                     </div>
                     <p className="brand-text">
                         Make Everyday A Vacation With Your Custom-Designed Dream Outdoor Space
@@ -54,7 +60,7 @@ const Footer: React.FC = () => {
 
                     <div className="contact-row">
                         <span className="contact-label">Time:</span>
-                        <span className="contact-value">Mon – Sat ( 9am – 7pm ) Sun Closed</span>
+                        <span className="contact-value">Mon – Sun ( 9am – 7pm )</span>
                     </div>
                 </div>
 

@@ -1,13 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
-import { FaPhoneAlt, FaEnvelope, FaFacebookF, FaInstagram, FaYoutube } from 'react-icons/fa';
-import logoImg from '../images/images/logo-v2.png';
+import { FaPhoneAlt, FaEnvelope, FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp } from 'react-icons/fa';
+import logoLeaf from '../images/images/logo-leaf.webp';
 
 const Header: React.FC = () => {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isScrolled, setIsScrolled] = useState(false);
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            if (window.scrollY > 50) {
+                setIsScrolled(true);
+            } else {
+                setIsScrolled(false);
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
 
     const toggleDropdown = (menu: string) => {
         if (activeDropdown === menu) {
@@ -26,8 +41,6 @@ const Header: React.FC = () => {
         setActiveDropdown(null);
     };
 
-    // ... scroll effect ...
-
     return (
         <header className="site-header">
             {/* Top Bar ... */}
@@ -36,9 +49,9 @@ const Header: React.FC = () => {
                     <div className="top-bar-left">
                         <a href="tel:+917827949218" className="top-link">{(FaPhoneAlt as any)({})} +91 7827949218</a>
                         <a href="mailto:verticaledengarden@gmail.com" className="top-link">{(FaEnvelope as any)({})} verticaledengarden@gmail.com</a>
-
                     </div>
                     <div className="top-bar-right">
+                        <a href="https://wa.me/917827949218" target="_blank" rel="noopener noreferrer">{(FaWhatsapp as any)({})}</a>
                         <a href="https://www.instagram.com/verticaledengarden?igsh=NTlleWRlcjRzNTNq" target="_blank" rel="noopener noreferrer">{(FaInstagram as any)({})}</a>
                         <a href="https://www.facebook.com/share/1BxEgEucWc/" target="_blank" rel="noopener noreferrer">{(FaFacebookF as any)({})}</a>
                         <a href="https://www.youtube.com/@VerticalEdengarden" target="_blank" rel="noopener noreferrer">{(FaYoutube as any)({})}</a>
@@ -50,8 +63,14 @@ const Header: React.FC = () => {
             <div className={`main-header ${isScrolled ? 'scrolled' : ''}`}>
                 <div className="header-container">
                     <div className="logo">
-                        <Link to="/" onClick={closeMobileMenu}>
-                            <img src={logoImg} alt="Vertical Eden Garden" className="logo-img" />
+                        <Link to="/" onClick={closeMobileMenu} className="logo-link">
+                            <div className="logo-container">
+                                <img src={logoLeaf} alt="Vertical Eden Garden" className="logo-icon" />
+                                <div className="logo-text-wrapper">
+                                    <span className="logo-text-main">Vertical Eden</span>
+                                    <span className="logo-text-sub">Garden</span>
+                                </div>
+                            </div>
                         </Link>
                     </div>
 
@@ -83,18 +102,8 @@ const Header: React.FC = () => {
                                     </ul>
                                 </li>
 
-                                <li className={`nav-item-dropdown ${activeDropdown === 'pages' ? 'active' : ''}`}>
-                                    <span
-                                        className="nav-link-span"
-                                        onClick={() => toggleDropdown('pages')}
-                                    >
-                                        Pages
-                                    </span>
-                                    <ul className="dropdown-menu">
-                                        <li><Link to="/portfolio" onClick={closeMobileMenu}>Gallery</Link></li>
-                                        <li><Link to="/blog" onClick={closeMobileMenu}>Blog</Link></li>
-                                    </ul>
-                                </li>
+                                <li><Link to="/portfolio" onClick={closeMobileMenu}>Gallery</Link></li>
+                                <li><Link to="/blog" onClick={closeMobileMenu}>Blog</Link></li>
                             </ul>
                         </nav>
                     </div>

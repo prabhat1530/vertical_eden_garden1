@@ -353,6 +353,15 @@
     }
 
     .values-grid {
-        justify-content: space-between;
+        justify-content: center;
+        /* Center items if they wrap */
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .hero-stats-row {
+        flex-wrap: wrap;
+        /* Ensure stats don't overflow */
+        gap: 30px;
     }
 }

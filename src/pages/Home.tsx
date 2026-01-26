@@ -8,10 +8,10 @@ import './Home.css';
 // Importing a few key images for the homepage
 // In a real app we might import these or use public URL
 // We will use public URLs assuming the move structure from previous step
-const HOME_BG_IMAGE = '/images/img_20250802_wa0024.jpg'; // Main hero
-const FEATURE_1 = '/images/artifical_pic_for_balcony_3.png';
-const FEATURE_2 = '/images/e38256b0e0114ed0b0dad1178e26c65a.jpg';
-const FEATURE_3 = '/images/153ad2cd683f484385d4a9fb38f58182.jpg';
+const HOME_BG_IMAGE = '/images/img_20250802_wa0024.webp'; // Main hero
+const FEATURE_1 = '/images/artifical_pic_for_balcony_3.webp';
+const FEATURE_2 = '/images/e38256b0e0114ed0b0dad1178e26c65a.webp'; // Assuming these exist, matching pattern
+const FEATURE_3 = '/images/153ad2cd683f484385d4a9fb38f58182.webp'; // Assuming these exist, matching pattern
 
 interface ShowcaseSlide {
     id: number;
@@ -28,7 +28,7 @@ const slides: ShowcaseSlide[] = [
         subHeading: "Our Philosophy",
         heading: "Redefining Urban Spaces",
         description: "Transforming concrete into living, breathing ecosystems.",
-        img: "/images/project-showcase.png",
+        img: "/images/project-showcase.webp",
         features: [
             { title: "Sustainable Living", text: "We integrate nature into modern architecture, reducing carbon footprints." },
             { title: "Custom Aesthetics", text: "Every wall is a canvas. Our designers curate bespoke plant palettes." },
@@ -40,7 +40,7 @@ const slides: ShowcaseSlide[] = [
         subHeading: "Luxury Outdoors",
         heading: "Sunset Balcony Retreats",
         description: "Experience the magic of twilight in your private green sanctuary.",
-        img: "/images/showcase-slide-2.png",
+        img: "/images/showcase-slide-2.webp",
         features: [
             { title: "Panoramic Views", text: "Designed to frame your view while adding lush privacy." },
             { title: "Ambient Lighting", text: "Integrated warm lighting for magical evening atmospheres." },
@@ -52,7 +52,7 @@ const slides: ShowcaseSlide[] = [
         subHeading: "Corporate Biophilia",
         heading: "Green Office Excellence",
         description: "Boost productivity and wellness with world-class interior landscapes.",
-        img: "/images/showcase-slide-3.png",
+        img: "/images/showcase-slide-3.webp",
         features: [
             { title: "Air Purification", text: "Moss walls that naturally filter office air and reduce noise." },
             { title: "Brand Identity", text: "Sustainable design that speaks volumes about your company values." },
@@ -96,7 +96,7 @@ const ShowcaseCarousel: React.FC = () => {
                 </div>
             </div>
             <div className="showcase-image-wrapper">
-                <img src={slide.img} alt={slide.heading} className="showcase-img" />
+                <img src={slide.img} alt={slide.heading} className="showcase-img" loading="lazy" />
                 <div className="showcase-overlay-gradient"></div>
             </div>
         </div>
@@ -117,7 +117,7 @@ const Home: React.FC = () => {
             {/* Our Reach Section */}
             {/* Premium Our Reach Section */}
             {/* Premium Our Reach Section */}
-            <section className="our-reach-premium" style={{ backgroundImage: `url('/images/reach-premium-bg-bright.png')` }}>
+            <section className="our-reach-premium" style={{ backgroundImage: `url('/images/reach-premium-bg-bright.webp')` }}>
                 <div className="reach-premium-overlay"></div>
                 <div className="reach-premium-container">
                     <div className="reach-premium-content">
@@ -151,7 +151,7 @@ const Home: React.FC = () => {
 
                     <div className="reach-premium-visual">
                         <div className="visual-frame">
-                            <img src="/images/reach-featured-bright.png" alt="Featured Vertical Garden" />
+                            <img src="/images/reach-featured-bright.webp" alt="Featured Vertical Garden" loading="lazy" />
                         </div>
                     </div>
                 </div>

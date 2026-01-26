@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Hero.css';
-import slide1 from '../images/images/hero-slide-1.png';
-import slide2 from '../images/images/hero-slide-2.png';
-import slide3 from '../images/images/hero-slide-3.png';
+import slide1 from '../images/images/hero-slide-1.webp';
+import slide2 from '../images/images/hero-slide-2.webp';
+import slide3 from '../images/images/hero-slide-3.webp';
 
 const slides = [
     {
@@ -46,7 +46,7 @@ const Hero: React.FC = () => {
                     style={{ backgroundImage: `url(${slide.image})` }}
                 >
                     <div className="hero-overlay"></div>
-                    <div className="hero-content container">
+                    <div className="hero-content">
                         <h1 className={index === currentSlide ? 'animate-text' : ''}>{slide.title}</h1>
                         <p className={index === currentSlide ? 'animate-sub' : ''}>{slide.subtitle}</p>
                         <Link

@@ -551,6 +551,8 @@
     border-radius: 15px;
     text-align: center;
     flex: 1;
+    min-width: 140px;
+    /* Ensure logical wrapping on small screens */
     transition: transform 0.3s, background 0.3s;
 }
 
