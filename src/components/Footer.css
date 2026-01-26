@@ -24,8 +24,10 @@
 
 .footer-content {
     max-width: 1200px;
+    /* Standardized */
     margin: 0 auto;
     padding: 0 20px;
+    /* Standardized */
     display: grid;
     grid-template-columns: 1.2fr 1fr 1fr 1fr;
     /* Adjust column widths */
@@ -185,9 +187,11 @@
 }
 
 .footer-bottom-container {
-    max-width: 1200px;
+    max-width: 1300px;
+    /* Matched */
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 40px;
+    /* Matched */
     display: flex;
     justify-content: space-between;
     align-items: center;

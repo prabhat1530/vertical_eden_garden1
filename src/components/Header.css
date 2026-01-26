@@ -90,15 +90,16 @@
 }
 
 .logo-img {
-    height: 60px;
-    /* margin-right: 2000px;
-    padding-right: 200px; */
-    /* Adjust size based on design */
+    height: 85px;
+    /* Increased from 60px for better visibility */
     width: auto;
     display: block;
+    transition: transform 0.3s ease;
+}
 
-    background-color: red;
-
+.logo-img:hover {
+    transform: scale(1.05);
+    /* Subtle zoom on hover */
 }
 
 .nav-wrapper {

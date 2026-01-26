@@ -30,6 +30,10 @@ body {
     line-height: 1.6;
     background-color: var(--bg-color);
     color: var(--text-color);
+    width: 100%;
+    overflow-x: hidden;
+    /* Prevent horizontal scroll causing alignment issues */
+    position: relative;
 }
 
 @media (max-width: 768px) {
@@ -43,9 +47,11 @@ body {
     min-height: calc(100vh - 80px);
     /* Adjust based on footer/header */
     width: 100%;
-    overflow-x: hidden;
+    /* overflow-x: hidden; */
+    /* Removed to allow Hero breakout */
     padding-top: 0;
     /* Remove top padding if it conflicts with Hero margin-top */
+    position: relative;
 }
 
 h1,
