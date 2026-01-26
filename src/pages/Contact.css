@@ -3,7 +3,7 @@
     /* Header height offset handled by main content usually, but keeping this or checking globals */
     /* background-color: #f9f9f9; Removed for cleaner look with full bleed hero */
     min-height: 100vh;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-body);
 }
 
 .contact-hero {
@@ -38,7 +38,7 @@
     font-size: 3.5rem;
     margin-bottom: 15px;
     color: white;
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     font-weight: 700;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
@@ -78,7 +78,7 @@
     color: var(--primary-green);
     margin-bottom: 15px;
     font-size: 2rem;
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
 }
 
 .contact-info>p {
@@ -179,7 +179,7 @@
     color: var(--primary-green);
     margin-bottom: 10px;
     font-size: 2rem;
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
 }
 
 .form-group {

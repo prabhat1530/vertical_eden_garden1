@@ -3,7 +3,7 @@
     background-color: #1a4031;
     /* Deep green similar to image */
     color: #ffffff;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-body);
     padding-top: 70px;
     position: relative;
     overflow: hidden;
@@ -46,7 +46,7 @@
     margin-bottom: 30px;
     font-style: italic;
     /* "Contact Us", "Our services" look italicized in image */
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     /* Use a serif font for headings if available, else standard */
 }
 
@@ -81,7 +81,7 @@
 }
 
 .logo-text-main-footer {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     font-size: 1.5rem;
     font-weight: 700;
     color: #006738;
@@ -91,7 +91,7 @@
 }
 
 .logo-text-sub-footer {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     /* Match main text font */
     font-size: 0.95rem;
     font-weight: 700;

@@ -1,6 +1,6 @@
 /* About.css */
 .about-page {
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-body);
     color: #333;
     overflow-x: hidden;
 }
@@ -44,7 +44,7 @@
 }
 
 .hero-split-content h1 {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     font-size: 5.5rem;
     line-height: 1.1;
     color: #1a1a1a;
@@ -173,7 +173,7 @@
 }
 
 .mission-glass-card h2 {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     font-size: 3rem;
     color: #ffffff;
     margin-bottom: 30px;
@@ -232,7 +232,7 @@
 }
 
 .story-content h2 {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     font-size: 3.5rem;
     color: #1a1a1a;
     margin-bottom: 30px;

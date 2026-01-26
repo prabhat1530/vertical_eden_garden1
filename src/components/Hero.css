@@ -75,9 +75,9 @@
     font-weight: 800;
     margin-bottom: 20px;
     line-height: 1.1;
-    font-family: 'Playfair Display', serif;
-    color: #FFD700 !important;
-    /* Gold color */
+    font-family: var(--font-heading);
+    color: #ffffff !important;
+    /* White color */
     opacity: 0;
     transform: translateY(30px);
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
@@ -88,7 +88,7 @@
     margin-bottom: 35px;
     max-width: 600px;
     line-height: 1.6;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-body);
     color: #ffffff !important;
     font-weight: 600;
     /* Bolder */

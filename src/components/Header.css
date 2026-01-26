@@ -19,7 +19,7 @@
     top: 0;
     left: 0;
     z-index: 1000;
-    font-family: 'Poppins', sans-serif;
+    font-family: var(--font-body);
     /* Assuming a clean font like Poppins or Roboto */
 }
 
@@ -121,7 +121,7 @@
 }
 
 .logo-text-main {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     /* Premium feeling font */
     font-size: 1.5rem;
     font-weight: 700;
@@ -131,7 +131,7 @@
 }
 
 .logo-text-sub {
-    font-family: 'Playfair Display', serif;
+    font-family: var(--font-heading);
     /* Match main text font */
     font-size: 0.95rem;
     /* Slightly larger to match style */
