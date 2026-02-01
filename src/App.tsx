@@ -29,7 +29,7 @@ const App: React.FC = () => {
             {/* <Route path="/products" component={Products} /> */}
             <Route path="/portfolio" component={Portfolio} />
             <Route path="/blog" component={Blog} />
-            <Route path="/contact" component={Contact} />
+            {/* <Route path="/contact" component={Contact} /> */}
           </Switch>
         </Suspense>
       </main>
