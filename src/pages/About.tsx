@@ -1,9 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import './About.css';
 import { FaLeaf, FaLightbulb, FaTools, FaQuoteLeft } from 'react-icons/fa';
-import heroBg from '../images/images/about-hero-premium.webp';
-import missionImg from '../images/images/about-mission-authentic.webp';
-import teamImg from '../images/images/about-team-authentic.webp';
+import heroBg from '../images/real_service_images/artificial-green-wall.jpeg';
+import missionImg from '../images/real_service_images/plants-planters.jpeg';
+import teamImg from '../images/real_service_images/artificial-grass.jpeg';
 
 const About: React.FC = () => {
     const revealRefs = useRef<(HTMLDivElement | null)[]>([]);

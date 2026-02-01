@@ -4,12 +4,13 @@ import './Services.css';
 import servicesData from '../data/services.json';
 
 // Static imports from the user-specified directory
-import artificialGrassImg from '../images/images/service_image/Gemini_Generated_Image_m6nvfzm6nvfzm6nv.webp';
-import artificialGreenWallImg from '../images/images/service_image/Gemini_Generated_Image_m6nvfzm6nvfzm6nv (1).webp';
-import terraceGardenImg from '../images/images/service_image/Gemini_Generated_Image_m6nvfzm6nvfzm6nv (2).webp';
-import creepersShrubsImg from '../images/images/service_image/Gemini_Generated_Image_m6nvfzm6nvfzm6nv (3).webp';
-import naturalVerticalGardenImg from '../images/images/service_image/Gemini_Generated_Image_m6nvfzm6nvfzm6nv (4).webp';
-import plantsPlantersImg from '../images/images/service_image/Gemini_Generated_Image_m6nvfzm6nvfzm6nv (5).webp';
+// Real images
+import artificialGrassImg from '../images/real_service_images/artificial-grass.jpeg';
+import artificialGreenWallImg from '../images/real_service_images/artificial-green-wall.jpeg';
+import terraceGardenImg from '../images/real_service_images/terrace-garden.jpeg';
+import creepersShrubsImg from '../images/real_service_images/creepers-shrubs.jpeg';
+import naturalVerticalGardenImg from '../images/real_service_images/natural-vertical-garden.jpeg';
+import plantsPlantersImg from '../images/real_service_images/plants-planters.jpeg';
 
 // Map slugs or categories to imported images
 const imageMap: { [key: string]: string } = {

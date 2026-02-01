@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Hero.css';
-import slide1 from '../images/images/hero-slide-1.webp';
-import slide2 from '../images/images/hero-slide-2.webp';
-import slide3 from '../images/images/hero-slide-3.webp';
+import slide1 from '../images/real_service_images/natural-vertical-garden.jpeg';
+import slide2 from '../images/real_service_images/terrace-garden.jpeg';
+import slide3 from '../images/real_service_images/creepers-shrubs.jpeg';
 
 const slides = [
     {

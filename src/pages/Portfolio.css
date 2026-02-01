@@ -193,21 +193,73 @@
 
 /* Responsive */
 @media (max-width: 992px) {
+    .portfolio-container {
+        padding: 100px 20px 60px;
+    }
+
     .gallery-masonry {
         column-count: 2;
+        column-gap: 20px;
+    }
+
+    .gallery-item {
+        margin-bottom: 20px;
     }
 }
 
 @media (max-width: 600px) {
+    .portfolio-container {
+        padding: 90px 15px 40px;
+        /* Less side padding on small screens */
+    }
+
+    .portfolio-header {
+        margin-bottom: 40px;
+    }
+
+    .portfolio-header h1 {
+        font-size: 2.2rem;
+    }
+
+    .portfolio-header p {
+        font-size: 1rem;
+    }
+
     .gallery-masonry {
         column-count: 1;
     }
 
-    .portfolio-header h1 {
-        font-size: 2.5rem;
+    /* On mobile, show overlay info always or make it easier */
+    .gallery-overlay {
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent 60%);
+        opacity: 1;
+        justify-content: flex-end;
+        align-items: flex-start;
+        padding: 20px;
     }
 
-    .portfolio-container {
-        padding: 100px 20px 40px;
+    .overlay-icon {
+        display: none;
+        /* Hide icon to declutter */
+    }
+
+    .gallery-overlay span {
+        transform: translateY(0);
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+    }
+
+    .lightbox-close {
+        top: -50px;
+        /* Ensure close button is reachable */
+        right: 10px;
+        background: rgba(0, 0, 0, 0.5);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 }

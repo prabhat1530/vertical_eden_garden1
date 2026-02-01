@@ -326,17 +326,35 @@
         /* Constrain on mobile */
         height: 350px;
     }
+
+    /* Fix background fixed support on mobile */
+    .our-reach-section {
+        background-attachment: scroll;
+    }
 }
 
-/* Our Reach Section */
+/* Project Showcase Section */
+.project-showcase {
+    padding: 100px 0;
+    background: #fdfdfd;
+    overflow: hidden;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+}
+
+/* Our Reach Section - Legacy and Premium */
 .our-reach-section {
     position: relative;
     padding: 80px 0;
     color: #fff;
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
-    /* Parallax feel */
+    background-attachment: scroll;
+    /* Fixed for mobile */
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
 }
 
 /* Dark overlay for readability */
@@ -460,9 +478,13 @@
     color: #fff;
     background-size: cover;
     background-position: center;
-    background-attachment: fixed;
+    background-attachment: scroll;
+    /* Fixed for mobile */
     font-family: 'Poppins', sans-serif;
     overflow: hidden;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
 }
 
 .reach-premium-overlay {

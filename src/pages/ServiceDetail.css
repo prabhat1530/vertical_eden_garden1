@@ -271,14 +271,39 @@
 
 @media (max-width: 600px) {
     .detail-hero-content h1 {
-        font-size: 2.8rem;
+        font-size: 2.5rem;
     }
 
     .main-content {
         padding: 30px 20px;
+        text-align: center;
+        /* Center content on mobile */
+    }
+
+    .long-description {
+        text-align: center;
+        /* Ensure description is centered */
+        text-justify: none;
+        /* Avoid justify spacing issues */
+    }
+
+    .features-grid-detail {
+        justify-content: center;
+        /* Center grid items if few */
+    }
+
+    .feature-item-detail {
+        text-align: left;
+        /* Keep feature items readable */
     }
 
     .service-detail-hero {
         height: 50vh;
+    }
+
+    /* Ensure no overflow */
+    .service-content-wrapper {
+        overflow-x: hidden;
+        padding: 0 15px;
     }
 }

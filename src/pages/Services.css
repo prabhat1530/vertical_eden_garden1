@@ -200,46 +200,89 @@
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-    .services-grid-main {
-        grid-template-columns: 1fr;
+@media (max-width: 1024px) {
+    .services-container {
+        padding: 100px 20px 60px;
     }
 
-    .service-card-main {
-        height: 450px;
-    }
-
-    .service-content-overlay {
-        transform: translateY(0);
-        /* Always show on mobile? Or keep effect */
-        /* Let's keep the effect but maybe subtle or always show part of it */
-    }
-
-    .service-hidden-content {
-        /* Optional: Always show description on mobile if desired, 
-           but hover effects don't work well on touch. 
-           Let's default to visible content for mobile/touch or keep as is 
-           since tapping usually triggers hover first on iOS */
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    .service-content-overlay {
-        transform: translateY(0);
-        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+    .services-header h1 {
+        font-size: 3rem;
     }
 }
 
-@media (max-width: 600px) {
-    .services-header h1 {
-        font-size: 2.5rem;
+@media (max-width: 768px) {
+    .services-container {
+        padding: 90px 20px 50px;
+    }
+
+    .services-header {
+        margin-bottom: 50px;
+    }
+
+    .services-grid-main {
+        grid-template-columns: 1fr;
+        gap: 30px;
     }
 
     .service-card-main {
-        height: 400px;
+        height: auto;
+        min-height: 400px;
+        /* Allow growing */
+    }
+
+    /* Make overlays visible on touch/mobile by default or easier to trigger */
+    .service-content-overlay {
+        transform: translateY(0);
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.6) 50%, transparent);
+        padding: 25px 20px;
+        text-align: center;
+        /* Center card text on mobile */
+    }
+
+    .service-hidden-content {
+        opacity: 1;
+        transform: translateY(0);
+        /* Show content by default on mobile so user sees description */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* Center button */
+    }
+
+    .service-img-wrapper img {
+        /* Zoom reset for mobile to ensure image is visible */
+        transform: scale(1);
     }
 
     .service-content-overlay h2 {
         font-size: 1.8rem;
+    }
+
+    .service-desc {
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
+        /* Standard property */
+        /* Show a bit more text on mobile if possible */
+        font-size: 0.95rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .services-header h1 {
+        font-size: 2.2rem;
+    }
+
+    .services-header p {
+        font-size: 1rem;
+    }
+
+    .service-card-main {
+        min-height: 380px;
+    }
+
+    .read-more-btn {
+        padding: 10px 25px;
+        font-size: 0.9rem;
     }
 }

@@ -12,6 +12,9 @@
     position: relative;
     background: #fcfcfc;
     overflow: hidden;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
 }
 
 .hero-split-content {
@@ -117,6 +120,22 @@
     }
 }
 
+/* Premium Our Reach Section */
+.our-reach-premium {
+    position: relative;
+    padding: 120px 0;
+    color: #fff;
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
+    /* Fixed for mobile */
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+}
+
 /* Mission Glass Section */
 .mission-section {
     position: relative;
@@ -125,6 +144,9 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
 }
 
 .mission-bg-wrapper {
@@ -199,6 +221,9 @@
 .story-section {
     padding: 120px 0;
     background: #fff;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
 }
 
 .story-container {
@@ -308,10 +333,15 @@
 
     .hero-split-content {
         max-width: 100%;
-        padding: 60px 30px;
+        padding: 60px 20px;
+        /* Reduce padding slightly */
         order: 2;
         /* Image on top? Or text on top? Usually Image on top for mobile */
         order: 1;
+        text-align: center;
+        /* Center text */
+        align-items: center;
+        /* Center flex items like buttons */
     }
 
     .hero-split-image {
@@ -350,6 +380,20 @@
 
     .story-content h2 {
         font-size: 2.5rem;
+    }
+
+    .reach-stats-grid {
+        justify-content: center;
+        flex-wrap: wrap;
+        /* Stack cards if needed on very small screens */
+    }
+
+    /* Fix background fixed support on mobile for "Our Reach" */
+    .our-reach-premium {
+        background-attachment: scroll;
+        height: auto;
+        min-height: 500px;
+        /* Ensure coverage */
     }
 
     .values-grid {

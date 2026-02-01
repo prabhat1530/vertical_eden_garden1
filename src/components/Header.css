@@ -204,6 +204,8 @@
     /* Override main-nav gap */
     display: flex !important;
     /* Override main-nav display */
+    padding-top: 15px;
+    /* Increase hovering area */
 }
 
 .nav-item-dropdown:hover .dropdown-menu,
@@ -249,16 +251,36 @@
         transform: none;
         background-color: transparent;
         padding-left: 0;
-        display: none !important;
-        /* Hidden by default on mobile unless toggled - for simplicity here we keep it expanded or handle via JS */
+        display: flex !important;
+        /* Always show in mobile */
+        margin-top: 10px;
+        /* spacing */
+        width: 100%;
+        align-items: center;
+        text-align: center;
     }
 
-    /* Simplification: On mobile, list everything inline or just show links. 
-       For "Home", let's make it expanded by default or just list items below */
-    .nav-item-dropdown:hover .dropdown-menu,
+    .dropdown-menu a {
+        padding: 10px 0;
+        /* Simplify padding for mobile */
+        width: 100%;
+        text-align: center;
+        padding-left: 0 !important;
+        /* Override hover padding shift */
+    }
+
+    .dropdown-menu a:hover {
+        padding-left: 0 !important;
+        /* Disable toggle shift on mobile */
+        background-color: transparent;
+        color: var(--primary-green);
+    }
+
     .nav-item-dropdown.active .dropdown-menu {
         display: flex !important;
     }
+
+
 }
 
 /* "Get A Quote" Button */

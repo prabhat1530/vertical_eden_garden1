@@ -89,6 +89,8 @@ const Header: React.FC = () => {
                                     <span
                                         className="nav-link-span"
                                         onClick={() => toggleDropdown('services')}
+                                        onMouseEnter={() => setActiveDropdown('services')}
+                                        onMouseLeave={() => setActiveDropdown(null)}
                                     >
                                         Services
                                     </span>
