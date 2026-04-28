@@ -12,6 +12,7 @@ interface Message {
 
 const ChatBot: React.FC = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [isVisible, setIsVisible] = useState(true);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState<Message[]>([
         {
@@ -64,12 +65,12 @@ const ChatBot: React.FC = () => {
             } else {
                 throw new Error(data.error || 'Failed to get response');
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error('Chat error:', error);
             const errorMsg: Message = { 
                 id: Date.now().toString(), 
                 role: 'model', 
-                text: 'Sorry, I am having trouble connecting to my brain right now. Please try again later!' 
+                text: `Sorry, I am having trouble connecting to my brain right now. (${error.message || 'Please try again later!'})` 
             };
             setMessages(prev => [...prev, errorMsg]);
         } finally {
@@ -96,14 +97,24 @@ const ChatBot: React.FC = () => {
         });
     };
 
+    if (!isVisible) return null;
+
     return (
         <div className="chatbot-wrapper">
-            {/* The Floating Bubble Button */}
-            <div 
-                className={`chatbot-bubble ${isOpen ? 'open' : ''}`}
-                onClick={() => setIsOpen(true)}
-            >
-                <FaRobot size={24} />
+            {/* Tooltip & Bubble */}
+            <div className={`chatbot-bubble-container ${isOpen ? 'open' : ''}`}>
+                <div className="chatbot-tooltip">
+                    Ask AI ✨
+                </div>
+                <div 
+                    className="chatbot-bubble"
+                    onClick={() => setIsOpen(true)}
+                >
+                    <FaRobot size={24} />
+                </div>
+                <button className="chatbot-dismiss" onClick={() => setIsVisible(false)} title="Hide AI Assistant">
+                    <FaTimes size={12} />
+                </button>
             </div>
 
             {/* The Chat Window */}
