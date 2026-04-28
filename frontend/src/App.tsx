@@ -6,6 +6,7 @@ import Footer from './components/Footer';
 import WhatsAppButton from './components/WhatsAppButton';
 import LoadingSpinner from './components/LoadingSpinner';
 import ScrollToTop from './components/ScrollToTop';
+import ChatBot from './components/ChatBot/ChatBot';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -47,6 +48,7 @@ const App: React.FC = () => {
         </main>
         <Footer />
         <WhatsAppButton />
+        <ChatBot />
       </Router>
     </AuthProvider>
   );
