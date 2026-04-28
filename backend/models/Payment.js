@@ -1,0 +1,46 @@
+const mongoose = require('mongoose');
+
+const paymentSchema = new mongoose.Schema({
+    booking: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Booking',
+        required: true,
+    },
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+    },
+    razorpayOrderId: {
+        type: String,
+        required: true,
+    },
+    razorpayPaymentId: {
+        type: String,
+        default: null,
+    },
+    razorpaySignature: {
+        type: String,
+        default: null,
+    },
+    amount: {
+        type: Number,
+        required: true,
+    },
+    currency: {
+        type: String,
+        default: 'INR',
+    },
+    status: {
+        type: String,
+        enum: ['created', 'captured', 'failed'],
+        default: 'created',
+    },
+}, {
+    timestamps: true,
+});
+
+paymentSchema.index({ booking: 1 });
+paymentSchema.index({ razorpayOrderId: 1 });
+
+module.exports = mongoose.model('Payment', paymentSchema);
