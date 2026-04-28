@@ -50,14 +50,31 @@ const Login: React.FC = () => {
 
     // Setup Firebase RecaptchaVerifier
     useEffect(() => {
-        if (!window.recaptchaVerifier) {
-            window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-                'size': 'invisible',
-                'callback': () => {
-                    // reCAPTCHA solved
-                }
-            });
+        // Clear any old verifier to prevent "element has been removed" errors on re-renders
+        if (window.recaptchaVerifier) {
+            try {
+                window.recaptchaVerifier.clear();
+            } catch (e) {
+                // Ignore clear errors
+            }
+            window.recaptchaVerifier = null;
         }
+
+        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
+            'size': 'invisible',
+            'callback': () => {
+                // reCAPTCHA solved
+            }
+        });
+
+        return () => {
+            if (window.recaptchaVerifier) {
+                try {
+                    window.recaptchaVerifier.clear();
+                } catch (e) {}
+                window.recaptchaVerifier = null;
+            }
+        };
     }, []);
 
     const handleEmailSubmit = async (e: React.FormEvent) => {
