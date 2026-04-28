@@ -2,16 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useHistory, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FaLeaf, FaEye, FaEyeSlash, FaEnvelope, FaLock, FaPhone, FaKey } from 'react-icons/fa';
-import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from 'firebase/auth';
-import { auth } from '../config/firebase';
 import './Login.css';
-
-declare global {
-    interface Window {
-        recaptchaVerifier: any;
-        grecaptcha: any;
-    }
-}
 
 const Login: React.FC = () => {
     // Auth Method State
@@ -26,14 +17,13 @@ const Login: React.FC = () => {
     const [phone, setPhone] = useState('');
     const [otp, setOtp] = useState('');
     const [otpSent, setOtpSent] = useState(false);
-    const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
 
     // General State
     const [error, setError] = useState('');
     const [successMsg, setSuccessMsg] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
-    const { login, loginWithFirebaseToken, isAuthenticated } = useAuth();
+    const { login, sendOtp, verifyOtp, isAuthenticated } = useAuth();
     const history = useHistory();
     const location = useLocation();
 
@@ -48,34 +38,7 @@ const Login: React.FC = () => {
         }
     }, [isAuthenticated, history, redirectTo]);
 
-    // Setup Firebase RecaptchaVerifier
-    useEffect(() => {
-        // Clear any old verifier to prevent "element has been removed" errors on re-renders
-        if (window.recaptchaVerifier) {
-            try {
-                window.recaptchaVerifier.clear();
-            } catch (e) {
-                // Ignore clear errors
-            }
-            window.recaptchaVerifier = null;
-        }
 
-        window.recaptchaVerifier = new RecaptchaVerifier(auth, 'recaptcha-container', {
-            'size': 'invisible',
-            'callback': () => {
-                // reCAPTCHA solved
-            }
-        });
-
-        return () => {
-            if (window.recaptchaVerifier) {
-                try {
-                    window.recaptchaVerifier.clear();
-                } catch (e) {}
-                window.recaptchaVerifier = null;
-            }
-        };
-    }, []);
 
     const handleEmailSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -108,30 +71,14 @@ const Login: React.FC = () => {
             return;
         }
 
-        // Format phone to E.164 (Assuming India +91 for now)
-        let formattedPhone = phone.trim();
-        if (!formattedPhone.startsWith('+')) {
-            formattedPhone = '+91' + formattedPhone;
-        }
-
         setIsLoading(true);
 
-        try {
-            const appVerifier = window.recaptchaVerifier;
-            const confirmation = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
-            setConfirmationResult(confirmation);
+        const result = await sendOtp(phone);
+        if (result.success) {
             setOtpSent(true);
             setSuccessMsg('OTP sent successfully to your phone!');
-        } catch (err: any) {
-            console.error(err);
-            setError('Failed to send OTP. Ensure the number is correct or try again later.');
-            
-            // Reset Recaptcha in case of error
-            if (window.recaptchaVerifier) {
-                window.recaptchaVerifier.render().then((widgetId: any) => {
-                    window.grecaptcha.reset(widgetId);
-                });
-            }
+        } else {
+            setError(result.error || 'Failed to send OTP.');
         }
         
         setIsLoading(false);
@@ -147,35 +94,15 @@ const Login: React.FC = () => {
             return;
         }
 
-        if (!confirmationResult) {
-            setError('No OTP requested. Please request an OTP first.');
-            return;
-        }
-
         setIsLoading(true);
 
-        try {
-            // Confirm the OTP with Firebase
-            const result = await confirmationResult.confirm(otp);
-            const user = result.user;
-            
-            // Get the secure Firebase ID token
-            const idToken = await user.getIdToken();
-
-            // Send to our backend to log in and get standard JWT
-            const backendResult = await loginWithFirebaseToken(idToken, phone);
-            
-            if (backendResult.success) {
-                history.push(redirectTo);
-            } else {
-                setError(backendResult.error || 'Failed to authenticate with backend.');
-                setIsLoading(false);
-            }
-        } catch (err: any) {
-            console.error(err);
-            setError('Invalid or expired OTP.');
-            setIsLoading(false);
+        const result = await verifyOtp(phone, otp);
+        if (result.success) {
+            history.push(redirectTo);
+        } else {
+            setError(result.error || 'Invalid or expired OTP.');
         }
+        setIsLoading(false);
     };
 
     return (
@@ -230,8 +157,7 @@ const Login: React.FC = () => {
                             </button>
                         </div>
 
-                        {/* Unconditionally render recaptcha-container so Firebase can find it on mount */}
-                        <div id="recaptcha-container"></div>
+
 
                         {error && (
                             <div className="auth-error">

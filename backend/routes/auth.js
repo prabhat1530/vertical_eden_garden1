@@ -2,16 +2,8 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const { body, validationResult } = require('express-validator');
-const admin = require('firebase-admin');
 const User = require('../models/User');
 const { protect } = require('../middleware/auth');
-
-// Initialize Firebase Admin (Only projectId is needed for token verification)
-if (!admin.apps.length) {
-    admin.initializeApp({
-        projectId: 'verticaledengarden-32475'
-    });
-}
 
 const router = express.Router();
 
@@ -136,10 +128,10 @@ router.get('/me', protect, async (req, res) => {
 });
 
 // ─────────────────────────────────────────────
-// POST /api/auth/firebase-login — Authenticate via Firebase Phone Auth
+// POST /api/auth/send-otp — Generate and send OTP via Authkey
 // ─────────────────────────────────────────────
-router.post('/firebase-login', [
-    body('token').notEmpty().withMessage('Firebase token is required'),
+router.post('/send-otp', [
+    body('phone').notEmpty().withMessage('Phone number is required'),
 ], async (req, res) => {
     try {
         const errors = validationResult(req);
@@ -147,40 +139,97 @@ router.post('/firebase-login', [
             return res.status(400).json({ success: false, error: errors.array()[0].msg });
         }
 
-        const { token } = req.body;
-
-        // 1. Verify the Firebase ID Token
-        let decodedToken;
-        try {
-            decodedToken = await admin.auth().verifyIdToken(token);
-        } catch (verifyError) {
-            console.error('Firebase token verification failed:', verifyError.message);
-            return res.status(401).json({ success: false, error: 'Invalid or expired Firebase token.' });
+        let { phone } = req.body;
+        // Clean phone number
+        phone = phone.replace(/\D/g, '');
+        if (phone.length > 10 && phone.startsWith('91')) {
+            phone = phone.slice(2);
         }
 
-        const phone = decodedToken.phone_number;
-        if (!phone) {
-            return res.status(400).json({ success: false, error: 'No phone number associated with this token.' });
-        }
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
 
-        // 2. Find or Create User in MongoDB
+        // Save OTP to DB
         let user = await User.findOne({ phone });
-        
         if (!user) {
-            // New user signed in via Phone Auth
-            user = new User({ 
-                phone, 
-                name: 'New User' 
-            });
-            await user.save({ validateBeforeSave: false });
+            user = new User({ phone, name: 'New User' });
+        }
+        user.otp = otp;
+        user.otpExpires = otpExpires;
+        await user.save({ validateBeforeSave: false });
+
+        // Send via Authkey
+        const authKey = process.env.AUTHKEY_API_KEY;
+        const senderId = process.env.AUTHKEY_SENDER_ID || '12345';
+        
+        if (authKey) {
+            // Authkey GET request format
+            const authkeyUrl = `https://api.authkey.io/request?authkey=${authKey}&mobile=${phone}&country_code=91&sid=${senderId}&company=VerticalEden&otp=${otp}`;
+            try {
+                const response = await fetch(authkeyUrl);
+                const data = await response.json();
+                console.log('Authkey API response:', data);
+            } catch (err) {
+                console.error('Failed to call Authkey API:', err.message);
+                // Continue anyway so they don't get blocked
+            }
+        } else {
+            // Simulation mode
+            console.log(`\n=== 🚀 SIMULATION MODE 🚀 ===`);
+            console.log(`Sending OTP to ${phone}: ${otp}`);
+            console.log(`==============================\n`);
         }
 
-        // 3. Generate our custom backend JWT
-        const jwtToken = generateToken(user._id);
+        res.json({ success: true, message: 'OTP sent successfully' });
+    } catch (error) {
+        console.error('Send OTP error:', error.message);
+        res.status(500).json({ success: false, error: 'Server error sending OTP' });
+    }
+});
+
+// ─────────────────────────────────────────────
+// POST /api/auth/verify-otp — Verify Authkey OTP
+// ─────────────────────────────────────────────
+router.post('/verify-otp', [
+    body('phone').notEmpty().withMessage('Phone number is required'),
+    body('otp').notEmpty().withMessage('OTP is required'),
+], async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ success: false, error: errors.array()[0].msg });
+        }
+
+        let { phone, otp } = req.body;
+        phone = phone.replace(/\D/g, '');
+        if (phone.length > 10 && phone.startsWith('91')) {
+            phone = phone.slice(2);
+        }
+
+        const user = await User.findOne({ phone }).select('+otp +otpExpires');
+        
+        if (!user || !user.otp) {
+            return res.status(400).json({ success: false, error: 'Please request a new OTP first' });
+        }
+
+        if (user.otpExpires < new Date()) {
+            return res.status(400).json({ success: false, error: 'OTP has expired' });
+        }
+
+        if (user.otp !== otp) {
+            return res.status(400).json({ success: false, error: 'Invalid OTP' });
+        }
+
+        // Clear OTP
+        user.otp = undefined;
+        user.otpExpires = undefined;
+        await user.save({ validateBeforeSave: false });
+
+        const token = generateToken(user._id);
 
         res.json({
             success: true,
-            token: jwtToken,
+            token,
             user: {
                 id: user._id,
                 name: user.name,
@@ -188,10 +237,9 @@ router.post('/firebase-login', [
                 phone: user.phone,
             },
         });
-
     } catch (error) {
-        console.error('Firebase login error:', error.message);
-        res.status(500).json({ success: false, error: 'Server error during Firebase login.' });
+        console.error('Verify OTP error:', error.message);
+        res.status(500).json({ success: false, error: 'Server error verifying OTP' });
     }
 });
 

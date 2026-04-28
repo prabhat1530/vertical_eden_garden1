@@ -17,7 +17,8 @@ interface AuthContextType {
     isLoading: boolean;
     login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
     signup: (name: string, email: string, phone: string, password: string) => Promise<{ success: boolean; error?: string }>;
-    loginWithFirebaseToken: (firebaseToken: string, phone: string) => Promise<{ success: boolean; error?: string }>;
+    sendOtp: (phone: string) => Promise<{ success: boolean; error?: string }>;
+    verifyOtp: (phone: string, otp: string) => Promise<{ success: boolean; error?: string }>;
     logout: () => void;
 }
 
@@ -118,12 +119,30 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
     }, []);
 
-    const loginWithFirebaseToken = useCallback(async (firebaseToken: string, phone: string) => {
+    const sendOtp = useCallback(async (phone: string) => {
         try {
-            const res = await fetch(`${API_URL}/auth/firebase-login`, {
+            const res = await fetch(`${API_URL}/auth/send-otp`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ token: firebaseToken, phone }),
+                body: JSON.stringify({ phone }),
+            });
+            const data = await res.json();
+            
+            if (data.success) {
+                return { success: true };
+            }
+            return { success: false, error: data.error || 'Failed to send OTP.' };
+        } catch (error) {
+            return { success: false, error: 'Cannot connect to server.' };
+        }
+    }, []);
+
+    const verifyOtp = useCallback(async (phone: string, otp: string) => {
+        try {
+            const res = await fetch(`${API_URL}/auth/verify-otp`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone, otp }),
             });
             const data = await res.json();
             
@@ -134,7 +153,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 setUser(data.user);
                 return { success: true };
             }
-            return { success: false, error: data.error || 'Firebase authentication failed on backend.' };
+            return { success: false, error: data.error || 'Invalid OTP.' };
         } catch (error) {
             return { success: false, error: 'Cannot connect to server.' };
         }
@@ -155,7 +174,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
             isLoading,
             login,
             signup,
-            loginWithFirebaseToken,
+            sendOtp,
+            verifyOtp,
             logout,
         }}>
             {children}
