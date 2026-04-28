@@ -1,0 +1,288 @@
+/* Services.css */
+.services-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 120px 20px 80px;
+    font-family: var(--font-body);
+    background-color: #fcfcfc;
+}
+
+.services-header {
+    text-align: center;
+    margin-bottom: 80px;
+}
+
+.services-subtitle {
+    display: block;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #4CAF50;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.services-header h1 {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    color: #1a4031;
+    margin-bottom: 20px;
+}
+
+.services-header p {
+    font-size: 1.15rem;
+    color: #666;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Grid Layout */
+.services-grid-main {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 40px;
+}
+
+/* Card Design */
+.service-card-main {
+    position: relative;
+    height: 500px;
+    /* Taller, immersive cards */
+    border-radius: 20px;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+
+.service-card-main:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+.service-img-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.service-img-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s ease;
+}
+
+.service-card-main:hover .service-img-wrapper img {
+    transform: scale(1.1);
+}
+
+.service-overlay-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.1) 0%,
+            rgba(0, 0, 0, 0.6) 50%,
+            rgba(0, 0, 0, 0.9) 100%);
+    transition: background 0.4s ease;
+}
+
+.service-card-main:hover .service-overlay-gradient {
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.3) 0%,
+            rgba(0, 0, 0, 0.7) 40%,
+            rgba(0, 0, 0, 0.95) 100%);
+}
+
+/* Content Overlay */
+.service-content-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 30px;
+    /* Reduced from 40px to give more space */
+    z-index: 2;
+    color: white;
+    transform: translateY(60px);
+    /* Partially hide description initially */
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.service-card-main:hover .service-content-overlay {
+    transform: translateY(0);
+}
+
+.service-icon-wrapper {
+    margin-bottom: 20px;
+}
+
+.service-index {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 5px 15px;
+    border-radius: 50px;
+}
+
+.service-content-overlay h2 {
+    font-family: var(--font-heading);
+    font-size: clamp(1.5rem, 5vw, 2.2rem);
+    /* Fluid typography */
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #ffffff !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+    line-height: 1.2;
+    overflow-wrap: break-word;
+    /* Ensure wrapping */
+    hyphens: auto;
+    /* Allow hyphenation if needed */
+}
+
+.service-tagline {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #b9f6ca;
+    /* Very bright green for contrast */
+    margin-bottom: 20px;
+    display: block;
+    font-weight: 600;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.service-hidden-content {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.4s ease 0.1s;
+}
+
+.service-card-main:hover .service-hidden-content {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.service-desc {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #e0e0e0;
+    margin-bottom: 25px;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    /* Standard property for compatibility */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.read-more-btn {
+    display: inline-block;
+    padding: 12px 30px;
+    background: white;
+    color: #1a4031;
+    text-decoration: none;
+    font-weight: 600;
+    border-radius: 30px;
+    transition: transform 0.2s, background 0.2s;
+}
+
+.read-more-btn:hover {
+    transform: scale(1.05);
+    background: #4CAF50;
+    color: white;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+    .services-container {
+        padding: 100px 20px 60px;
+    }
+
+    .services-header h1 {
+        font-size: 3rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .services-container {
+        padding: 90px 20px 50px;
+    }
+
+    .services-header {
+        margin-bottom: 50px;
+    }
+
+    .services-grid-main {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .service-card-main {
+        height: auto;
+        min-height: 400px;
+        /* Allow growing */
+    }
+
+    /* Make overlays visible on touch/mobile by default or easier to trigger */
+    .service-content-overlay {
+        transform: translateY(0);
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.6) 50%, transparent);
+        padding: 25px 20px;
+        text-align: center;
+        /* Center card text on mobile */
+    }
+
+    .service-hidden-content {
+        opacity: 1;
+        transform: translateY(0);
+        /* Show content by default on mobile so user sees description */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        /* Center button */
+    }
+
+    .service-img-wrapper img {
+        /* Zoom reset for mobile to ensure image is visible */
+        transform: scale(1);
+    }
+
+    .service-content-overlay h2 {
+        font-size: 1.8rem;
+    }
+
+    .service-desc {
+        -webkit-line-clamp: 4;
+        line-clamp: 4;
+        /* Standard property */
+        /* Show a bit more text on mobile if possible */
+        font-size: 0.95rem;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .services-header h1 {
+        font-size: 2.2rem;
+    }
+
+    .services-header p {
+        font-size: 1rem;
+    }
+
+    .service-card-main {
+        min-height: 380px;
+    }
+
+    .read-more-btn {
+        padding: 10px 25px;
+        font-size: 0.9rem;
+    }
+}

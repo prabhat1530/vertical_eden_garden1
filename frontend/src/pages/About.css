@@ -1,0 +1,411 @@
+/* About.css */
+.about-page {
+    font-family: var(--font-body);
+    color: #333;
+    overflow-x: hidden;
+}
+
+/* Split Hero Section */
+.about-hero-split {
+    display: flex;
+    min-height: 85vh;
+    position: relative;
+    background: #fcfcfc;
+    overflow: hidden;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+}
+
+.hero-split-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px;
+    z-index: 2;
+    background: #ffffff;
+    max-width: 50%;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 1s ease-out;
+}
+
+.hero-split-content.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.hero-subtitle {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: #4CAF50;
+    font-weight: 600;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.hero-split-content h1 {
+    font-family: var(--font-heading);
+    font-size: 5.5rem;
+    line-height: 1.1;
+    color: #1a1a1a;
+    margin-bottom: 30px;
+}
+
+.hero-split-content p {
+    font-size: 1.2rem;
+    line-height: 1.7;
+    color: #666;
+    max-width: 500px;
+    margin-bottom: 50px;
+}
+
+.hero-stats-row {
+    display: flex;
+    gap: 50px;
+}
+
+.hero-stat {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-num {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1a4031;
+    /* Deep Forest Green */
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+}
+
+.hero-split-image {
+    flex: 1.2;
+    position: relative;
+    overflow: hidden;
+    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+    margin-left: -50px;
+}
+
+.parallax-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    animation: zoomPan 20s infinite alternate;
+}
+
+.hero-overlay-gradient {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(26, 64, 49, 0.2) 0%, transparent 100%);
+}
+
+@keyframes zoomPan {
+    0% {
+        transform: scale(1);
+    }
+
+    100% {
+        transform: scale(1.1);
+    }
+}
+
+/* Premium Our Reach Section */
+.our-reach-premium {
+    position: relative;
+    padding: 120px 0;
+    color: #fff;
+    background-size: cover;
+    background-position: center;
+    background-attachment: scroll;
+    /* Fixed for mobile */
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+}
+
+/* Mission Glass Section */
+.mission-section {
+    position: relative;
+    padding: 120px 20px;
+    min-height: 600px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+}
+
+.mission-bg-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.mission-bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.7);
+}
+
+.mission-glass-card {
+    position: relative;
+    z-index: 2;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 60px;
+    text-align: center;
+    max-width: 800px;
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 1s ease-out;
+}
+
+.mission-glass-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.quote-icon {
+    font-size: 2.5rem;
+    color: #fff;
+    margin-bottom: 20px;
+    opacity: 0.8;
+}
+
+.mission-glass-card h2 {
+    font-family: var(--font-heading);
+    font-size: 3rem;
+    color: #ffffff;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+.mission-text {
+    font-size: 1.4rem;
+    line-height: 1.8;
+    color: #f0f0f0;
+    font-weight: 300;
+    margin-bottom: 40px;
+}
+
+.mission-signature span {
+    font-family: 'Dancing Script', cursive;
+    /* Assuming a script font is available or similar */
+    font-size: 1.5rem;
+    color: #4CAF50;
+}
+
+/* Story Section */
+.story-section {
+    padding: 120px 0;
+    background: #fff;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-right: calc(50% - 50vw);
+}
+
+.story-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 40px;
+    display: flex;
+    align-items: center;
+    gap: 80px;
+}
+
+.story-content {
+    flex: 1;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: all 1s ease-out;
+}
+
+.story-content.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.section-tag {
+    font-size: 0.9rem;
+    color: #aaa;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.story-content h2 {
+    font-family: var(--font-heading);
+    font-size: 3.5rem;
+    color: #1a1a1a;
+    margin-bottom: 30px;
+}
+
+.story-content p {
+    font-size: 1.1rem;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 20px;
+}
+
+.values-grid {
+    display: flex;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.value-item {
+    text-align: center;
+}
+
+.value-icon {
+    font-size: 1.8rem;
+    color: #4CAF50;
+    margin-bottom: 10px;
+}
+
+.value-item h4 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.story-image-wrapper {
+    flex: 1;
+    position: relative;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: all 1s ease-out;
+}
+
+.story-image-wrapper.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.story-img {
+    width: 100%;
+    border-radius: 20px;
+    box-shadow: 20px 20px 0 #f0f8f1;
+    /* Offset shadow */
+}
+
+.story-badge {
+    position: absolute;
+    bottom: -20px;
+    left: -20px;
+    background: #1a4031;
+    padding: 15px 30px;
+    border-radius: 10px;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .about-hero-split {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .hero-split-content {
+        max-width: 100%;
+        padding: 60px 20px;
+        /* Reduce padding slightly */
+        order: 2;
+        /* Image on top? Or text on top? Usually Image on top for mobile */
+        order: 1;
+        text-align: center;
+        /* Center text */
+        align-items: center;
+        /* Center flex items like buttons */
+    }
+
+    .hero-split-image {
+        min-height: 400px;
+        margin-left: 0;
+        clip-path: none;
+        order: 0;
+    }
+
+    .hero-split-content h1 {
+        font-size: 3.5rem;
+    }
+
+    .story-container {
+        flex-direction: column;
+        gap: 50px;
+    }
+}
+
+@media (max-width: 600px) {
+    .hero-split-content h1 {
+        font-size: 2.8rem;
+    }
+
+    .mission-glass-card {
+        padding: 30px;
+    }
+
+    .mission-glass-card h2 {
+        font-size: 2rem;
+    }
+
+    .mission-text {
+        font-size: 1.1rem;
+    }
+
+    .story-content h2 {
+        font-size: 2.5rem;
+    }
+
+    .reach-stats-grid {
+        justify-content: center;
+        flex-wrap: wrap;
+        /* Stack cards if needed on very small screens */
+    }
+
+    /* Fix background fixed support on mobile for "Our Reach" */
+    .our-reach-premium {
+        background-attachment: scroll;
+        height: auto;
+        min-height: 500px;
+        /* Ensure coverage */
+    }
+
+    .values-grid {
+        justify-content: center;
+        /* Center items if they wrap */
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .hero-stats-row {
+        flex-wrap: wrap;
+        /* Ensure stats don't overflow */
+        gap: 30px;
+    }
+}
