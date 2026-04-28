@@ -103,7 +103,7 @@ const ChatBot: React.FC = () => {
                 className={`chatbot-bubble ${isOpen ? 'open' : ''}`}
                 onClick={() => setIsOpen(true)}
             >
-                <FaLeaf size={24} />
+                <FaRobot size={24} />
             </div>
 
             {/* The Chat Window */}
