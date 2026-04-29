@@ -2,6 +2,7 @@ const express = require('express');
 const { body, validationResult } = require('express-validator');
 const Booking = require('../models/Booking');
 const { protect } = require('../middleware/auth');
+const sendEmail = require('../utils/sendEmail');
 
 const router = express.Router();
 
@@ -73,6 +74,29 @@ router.post('/', [
             totalPrice,
             status: 'pending',
         });
+
+        // Send booking confirmation email (non-blocking)
+        if (req.user.email) {
+            sendEmail({
+                to: req.user.email,
+                subject: `Booking Confirmed — ${serviceName}`,
+                html: `
+                    <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
+                        <h2 style="color: #1e293b;">🌿 Booking Confirmed!</h2>
+                        <p>Hi ${req.user.name},</p>
+                        <p>Your booking has been received successfully.</p>
+                        <table style="width:100%; border-collapse:collapse; margin: 16px 0;">
+                            <tr><td style="padding:8px; color:#64748b;">Service</td><td style="padding:8px; font-weight:600;">${serviceName}</td></tr>
+                            <tr><td style="padding:8px; color:#64748b;">Area</td><td style="padding:8px;">${areaSize} sq ft</td></tr>
+                            <tr><td style="padding:8px; color:#64748b;">Date</td><td style="padding:8px;">${preferredDate}</td></tr>
+                            <tr><td style="padding:8px; color:#64748b;">Time</td><td style="padding:8px;">${preferredTime}</td></tr>
+                            <tr><td style="padding:8px; color:#64748b;">Total</td><td style="padding:8px; font-weight:700; color:#10b981;">₹${totalPrice.toLocaleString()}</td></tr>
+                        </table>
+                        <p style="color: #94a3b8; font-size: 0.85rem;">Please proceed to payment to confirm your booking.</p>
+                    </div>
+                `,
+            }).catch(err => console.error('Booking email error:', err.message));
+        }
 
         res.status(201).json({
             success: true,
