@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaLeaf, FaPlus, FaReceipt, FaStar } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaLeaf, FaPlus, FaReceipt, FaStar, FaDownload } from 'react-icons/fa';
 import ReviewForm from '../components/Reviews/ReviewForm';
+import jsPDF from 'jspdf';
+import 'jspdf-autotable';
 import './MyBookings.css';
 
 const API_URL = process.env.REACT_APP_API_URL || '/api';
@@ -23,7 +25,7 @@ interface BookingItem {
 }
 
 const MyBookings: React.FC = () => {
-    const { token, isAuthenticated } = useAuth();
+    const { user, token, isAuthenticated } = useAuth();
     const history = useHistory();
     const [bookings, setBookings] = useState<BookingItem[]>([]);
     const [loading, setLoading] = useState(true);
@@ -93,12 +95,85 @@ const MyBookings: React.FC = () => {
         });
     };
 
+    const generateInvoice = (booking: BookingItem) => {
+        const doc = new jsPDF();
+        
+        // Header
+        doc.setFontSize(22);
+        doc.setTextColor(46, 125, 50); // Primary green
+        doc.text('Vertical Eden Garden', 14, 20);
+        
+        doc.setFontSize(10);
+        doc.setTextColor(100);
+        doc.text('Official Booking Invoice', 14, 28);
+        
+        // Invoice details
+        doc.setFontSize(12);
+        doc.setTextColor(50);
+        doc.text(`Invoice ID: INV-${booking.id.substring(0, 8).toUpperCase()}`, 14, 45);
+        doc.text(`Issue Date: ${new Date().toLocaleDateString()}`, 14, 52);
+        
+        // Customer details
+        doc.setFontSize(14);
+        doc.setTextColor(0);
+        doc.text('Customer Details', 14, 70);
+        
+        doc.setFontSize(11);
+        doc.setTextColor(80);
+        const custName = user?.name || 'Customer';
+        const custEmail = user?.email || 'N/A';
+        const custPhone = user?.phone || 'N/A';
+        doc.text(`Name: ${custName}`, 14, 78);
+        doc.text(`Email: ${custEmail}`, 14, 84);
+        doc.text(`Phone: ${custPhone}`, 14, 90);
+        doc.text(`Service Address: ${booking.address}, ${booking.city}`, 14, 96);
+        
+        // Service details Table
+        (doc as any).autoTable({
+            startY: 110,
+            head: [['Service Name', 'Date', 'Time', 'Area Size', 'Amount']],
+            body: [
+                [
+                    booking.serviceName, 
+                    formatDate(booking.preferredDate), 
+                    booking.preferredTime, 
+                    `${booking.areaSize} sq.ft`, 
+                    `Rs. ${booking.totalPrice.toLocaleString()}`
+                ]
+            ],
+            theme: 'striped',
+            headStyles: { fillColor: [46, 125, 50] }
+        });
+        
+        const finalY = (doc as any).lastAutoTable.finalY || 150;
+        
+        // Total
+        doc.setFontSize(14);
+        doc.setTextColor(0);
+        doc.text(`Total Paid: Rs. ${booking.totalPrice.toLocaleString()}`, 14, finalY + 15);
+        
+        // Footer
+        doc.setFontSize(10);
+        doc.setTextColor(150);
+        doc.text('Thank you for choosing Vertical Eden Garden!', 105, finalY + 40, { align: 'center' });
+        
+        doc.save(`Invoice_${booking.id.substring(0, 8)}.pdf`);
+    };
+
     if (loading) {
         return (
             <div className="mybookings-page">
-                <div className="mybookings-loading">
-                    <div className="mybookings-spinner"></div>
-                    <p>Loading your bookings...</p>
+                <div className="mybookings-header-bg">
+                    <div className="mybookings-header-content">
+                        <div className="skeleton skeleton-title" style={{ width: '300px', height: '40px' }}></div>
+                    </div>
+                </div>
+                <div className="mybookings-container">
+                    <div className="bookings-grid">
+                        {[...Array(4)].map((_, i) => (
+                            <div key={i} className="booking-card skeleton skeleton-card" style={{ height: '250px' }}></div>
+                        ))}
+                    </div>
                 </div>
             </div>
         );
@@ -176,10 +251,20 @@ const MyBookings: React.FC = () => {
                                     Payment ID: {booking.paymentId}
                                 </div>
                             )}
-
                             {booking.status === 'completed' && !reviewedBookings.includes(booking.id) && (
-                                <button className="write-review-btn" onClick={() => setReviewBooking(booking)}>
-                                    <FaStar style={{ marginRight: '4px' }} /> Write Review
+                                <button 
+                                    className="review-btn"
+                                    onClick={() => setReviewBooking(booking)}
+                                >
+                                    <FaStar /> Leave a Review
+                                </button>
+                            )}
+                            {booking.status === 'completed' && (
+                                <button 
+                                    className="invoice-btn"
+                                    onClick={() => generateInvoice(booking)}
+                                >
+                                    <FaDownload /> Download Invoice
                                 </button>
                             )}
                             {reviewedBookings.includes(booking.id) && (

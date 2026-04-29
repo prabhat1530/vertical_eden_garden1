@@ -86,7 +86,21 @@ const AdminBookings: React.FC = () => {
         }
     };
 
-    if (isLoading) return <div className="admin-loading">Loading bookings...</div>;
+    if (isLoading) {
+        return (
+            <div className="admin-page">
+                <div className="admin-header">
+                    <div className="skeleton skeleton-title" style={{ width: '250px', height: '36px', marginBottom: 0 }}></div>
+                </div>
+                <div className="admin-table-wrapper" style={{ padding: '2rem' }}>
+                    <div className="skeleton skeleton-title" style={{ width: '200px', marginBottom: '2rem' }}></div>
+                    {[...Array(8)].map((_, i) => (
+                        <div key={i} className="skeleton skeleton-text" style={{ height: '45px', marginBottom: '15px' }}></div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="admin-page">

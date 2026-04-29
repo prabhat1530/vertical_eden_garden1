@@ -57,7 +57,26 @@ const AdminDashboard: React.FC = () => {
         }
     };
 
-    if (isLoading) return <div className="admin-loading">Loading dashboard...</div>;
+    if (isLoading) {
+        return (
+            <div className="admin-page">
+                <div className="admin-header">
+                    <div className="skeleton skeleton-title" style={{ width: '250px', height: '36px', marginBottom: 0 }}></div>
+                </div>
+                <div className="stats-grid">
+                    {[...Array(4)].map((_, i) => (
+                        <div key={i} className="skeleton skeleton-card"></div>
+                    ))}
+                </div>
+                <div className="admin-table-wrapper" style={{ marginTop: '2rem', padding: '2rem' }}>
+                    <div className="skeleton skeleton-title" style={{ width: '200px', marginBottom: '2rem' }}></div>
+                    {[...Array(5)].map((_, i) => (
+                        <div key={i} className="skeleton skeleton-text" style={{ height: '45px', marginBottom: '15px' }}></div>
+                    ))}
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="admin-page">

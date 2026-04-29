@@ -225,6 +225,42 @@
     font-family: monospace;
 }
 
+/* Action Buttons */
+.invoice-btn, .review-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    margin-top: 12px;
+    margin-right: 10px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    border: none;
+}
+
+.invoice-btn {
+    background: #e3f2fd;
+    color: #1565c0;
+}
+
+.invoice-btn:hover {
+    background: #bbdefb;
+    transform: translateY(-2px);
+}
+
+.review-btn {
+    background: #fff8e1;
+    color: #f57f17;
+}
+
+.review-btn:hover {
+    background: #ffecb3;
+    transform: translateY(-2px);
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
     .mybookings-page {
