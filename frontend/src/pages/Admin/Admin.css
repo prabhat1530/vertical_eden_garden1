@@ -79,16 +79,21 @@
 .stat-icon.pending { background: linear-gradient(135deg, #f59e0b, #d97706); }
 
 .stat-info h3 {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #1e293b;
+    font-size: 2.4rem;
+    font-weight: 800;
+    color: #2e7d32; /* Vibrant primary green */
     margin: 0;
+    line-height: 1.1;
+    letter-spacing: -0.5px;
 }
 
 .stat-info p {
-    font-size: 0.85rem;
-    color: #94a3b8;
-    margin: 4px 0 0;
+    font-size: 0.95rem;
+    color: #64748b;
+    margin: 6px 0 0;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 /* ─── Admin Table ─── */
