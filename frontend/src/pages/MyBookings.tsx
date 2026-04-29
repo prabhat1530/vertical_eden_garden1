@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaLeaf, FaPlus, FaReceipt } from 'react-icons/fa';
+import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaLeaf, FaPlus, FaReceipt, FaStar } from 'react-icons/fa';
+import ReviewForm from '../components/Reviews/ReviewForm';
 import './MyBookings.css';
 
 const API_URL = process.env.REACT_APP_API_URL || '/api';
@@ -27,6 +28,8 @@ const MyBookings: React.FC = () => {
     const [bookings, setBookings] = useState<BookingItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [reviewBooking, setReviewBooking] = useState<BookingItem | null>(null);
+    const [reviewedBookings, setReviewedBookings] = useState<Set<string>>(new Set());
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -173,9 +176,30 @@ const MyBookings: React.FC = () => {
                                     Payment ID: {booking.paymentId}
                                 </div>
                             )}
+
+                            {booking.status === 'completed' && !reviewedBookings.has(booking.id) && (
+                                <button className="write-review-btn" onClick={() => setReviewBooking(booking)}>
+                                    <FaStar style={{ marginRight: '4px' }} /> Write Review
+                                </button>
+                            )}
+                            {reviewedBookings.has(booking.id) && (
+                                <span style={{ fontSize: '0.8rem', color: '#10b981', marginTop: '8px', display: 'block' }}>✓ Reviewed</span>
+                            )}
                         </div>
                     ))}
                 </div>
+            )}
+
+            {reviewBooking && (
+                <ReviewForm
+                    bookingId={reviewBooking.id}
+                    serviceName={reviewBooking.serviceName}
+                    onClose={() => setReviewBooking(null)}
+                    onSuccess={() => {
+                        setReviewedBookings(prev => new Set([...prev, reviewBooking.id]));
+                        setReviewBooking(null);
+                    }}
+                />
             )}
         </div>
     );

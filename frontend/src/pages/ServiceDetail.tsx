@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import servicesData from '../data/services.json';
+import ServiceReviews from '../components/Reviews/ServiceReviews';
 import './ServiceDetail.css';
 
 // Static imports from the user-specified directory
@@ -72,6 +73,8 @@ const ServiceDetail: React.FC = () => {
                             ))}
                         </div>
                     </section>
+
+                    <ServiceReviews serviceSlug={serviceCategory.slug} />
                 </div>
 
                 <aside className="sidebar">
