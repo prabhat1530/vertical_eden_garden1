@@ -44,6 +44,8 @@ The platform also includes a complete **Admin Dashboard** for business owners to
 | **Secure Payments** | Integrated Razorpay payment gateway (UPI, Cards, Net Banking, Wallets) |
 | **Dual Login** | Login via **Email + Password** or **Phone + OTP** (SMS via Fast2SMS) |
 | **My Bookings** | Track all past and current bookings with real-time status updates |
+| **Invoice Download** | Download professional PDF invoices for all completed bookings |
+| **Search & Filter** | Quickly find services using the real-time search and filtering system |
 | **Reviews & Ratings** | Write star-rated reviews for completed bookings |
 | **User Profile** | Update name, email, phone & change password |
 | **Password Recovery** | Forgot password flow with email reset link |
@@ -56,6 +58,7 @@ The platform also includes a complete **Admin Dashboard** for business owners to
 | **Dashboard** | Overview of total users, bookings, revenue & recent activity |
 | **Manage Bookings** | View all bookings, update status (Pending → Confirmed → Completed) |
 | **Manage Users** | View all registered users with booking count, email, phone & role |
+| **Table Pagination** | Efficiently browse large datasets with built-in table pagination |
 | **Role-Based Access** | Admin Panel is hidden from regular users — only visible to admin accounts |
 
 ### 🎨 Design & UX
@@ -63,6 +66,7 @@ The platform also includes a complete **Admin Dashboard** for business owners to
 |---|---|
 | **Fully Responsive** | Works perfectly on Desktop, Tablet & Mobile |
 | **Modern UI** | Glassmorphism, smooth animations, gradient accents & premium feel |
+| **Loading Skeletons** | Professional shimmering skeleton loaders for better perceived performance |
 | **Dark Header** | Sleek navigation with scroll effects & mobile hamburger menu |
 | **Image Gallery** | Portfolio page showcasing real completed projects |
 | **Blog Section** | Informational articles about gardening tips & trends |
@@ -78,6 +82,7 @@ The platform also includes a complete **Admin Dashboard** for business owners to
 | **React Router v5** | Client-side routing & navigation |
 | **Context API** | Global state management (Auth, User) |
 | **CSS3** | Custom styling with CSS variables, flexbox & grid |
+| **jspdf** | Client-side PDF generation for invoices |
 | **React Icons** | Beautiful icon library |
 
 ### Backend
