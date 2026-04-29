@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
 import { useLocation, Link } from 'react-router-dom';
 import './Services.css';
 import servicesData from '../data/services.json';
@@ -24,6 +25,7 @@ const imageMap: { [key: string]: string } = {
 
 const Services: React.FC = () => {
     const location = useLocation();
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         if (location.hash) {
@@ -48,10 +50,27 @@ const Services: React.FC = () => {
                 <span className="services-subtitle">What We Do</span>
                 <h1>Our Expertise</h1>
                 <p>Comprehensive landscaping and vertical gardening solutions tailored for your space.</p>
+                
+                <div className="services-search-container">
+                    <div className="services-search-wrapper">
+                        <FaSearch className="services-search-icon" />
+                        <input 
+                            type="text" 
+                            className="services-search-input"
+                            placeholder="Search services by name or description..." 
+                            value={searchTerm}
+                            onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                    </div>
+                </div>
             </div>
 
             <div className="services-grid-main">
-                {servicesData.map((service, index) => {
+                {servicesData.filter(service => 
+                    service.category.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                    service.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    service.tagline.toLowerCase().includes(searchTerm.toLowerCase())
+                ).map((service, index) => {
                     const imageSrc = imageMap[service.slug] || 'https://placehold.co/800x600?text=Image+Not+Found';
 
                     return (
@@ -77,6 +96,17 @@ const Services: React.FC = () => {
                         </div>
                     );
                 })}
+                
+                {servicesData.filter(service => 
+                    service.category.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                    service.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    service.tagline.toLowerCase().includes(searchTerm.toLowerCase())
+                ).length === 0 && (
+                    <div className="no-services-found">
+                        <h3>No services found matching "{searchTerm}"</h3>
+                        <p>Try adjusting your search terms.</p>
+                    </div>
+                )}
             </div>
         </div>
     );

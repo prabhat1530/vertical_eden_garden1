@@ -27,6 +27,8 @@ const AdminBookings: React.FC = () => {
     const [filteredBookings, setFilteredBookings] = useState<BookingItem[]>([]);
     const [search, setSearch] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         if (!isAdmin) { history.push('/'); return; }
@@ -45,7 +47,11 @@ const AdminBookings: React.FC = () => {
                 b.status.toLowerCase().includes(q)
             ));
         }
+        setCurrentPage(1); // Reset to page 1 when search changes
     }, [search, bookings]);
+
+    const totalPages = Math.ceil(filteredBookings.length / itemsPerPage);
+    const currentBookings = filteredBookings.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     const fetchBookings = async () => {
         try {
@@ -118,7 +124,7 @@ const AdminBookings: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredBookings.map(b => (
+                        {currentBookings.map(b => (
                             <tr key={b.id}>
                                 <td>{b.user?.name || 'N/A'}</td>
                                 <td>{b.user?.email || 'N/A'}</td>
@@ -141,11 +147,33 @@ const AdminBookings: React.FC = () => {
                                 </td>
                             </tr>
                         ))}
-                        {filteredBookings.length === 0 && (
+                        {currentBookings.length === 0 && (
                             <tr><td colSpan={8} style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>No bookings found</td></tr>
                         )}
                     </tbody>
                 </table>
+                
+                {totalPages > 1 && (
+                    <div className="admin-pagination">
+                        <button 
+                            disabled={currentPage === 1} 
+                            onClick={() => setCurrentPage(p => p - 1)}
+                            className="admin-page-btn"
+                        >
+                            Previous
+                        </button>
+                        <span className="admin-page-info">
+                            Page {currentPage} of {totalPages}
+                        </span>
+                        <button 
+                            disabled={currentPage === totalPages} 
+                            onClick={() => setCurrentPage(p => p + 1)}
+                            className="admin-page-btn"
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

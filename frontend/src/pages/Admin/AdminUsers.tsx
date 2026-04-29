@@ -22,6 +22,8 @@ const AdminUsers: React.FC = () => {
     const [filteredUsers, setFilteredUsers] = useState<UserItem[]>([]);
     const [search, setSearch] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 10;
 
     useEffect(() => {
         if (!isAdmin) { history.push('/'); return; }
@@ -39,7 +41,11 @@ const AdminUsers: React.FC = () => {
                 u.phone.includes(q)
             ));
         }
+        setCurrentPage(1); // Reset to page 1 when search changes
     }, [search, users]);
+
+    const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+    const currentUsers = filteredUsers.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
     const fetchUsers = async () => {
         try {
@@ -91,7 +97,7 @@ const AdminUsers: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredUsers.map(u => (
+                        {currentUsers.map(u => (
                             <tr key={u.id}>
                                 <td>{u.name}</td>
                                 <td>{u.email || '—'}</td>
@@ -101,11 +107,33 @@ const AdminUsers: React.FC = () => {
                                 <td>{new Date(u.createdAt).toLocaleDateString()}</td>
                             </tr>
                         ))}
-                        {filteredUsers.length === 0 && (
+                        {currentUsers.length === 0 && (
                             <tr><td colSpan={6} style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>No users found</td></tr>
                         )}
                     </tbody>
                 </table>
+                
+                {totalPages > 1 && (
+                    <div className="admin-pagination">
+                        <button 
+                            disabled={currentPage === 1} 
+                            onClick={() => setCurrentPage(p => p - 1)}
+                            className="admin-page-btn"
+                        >
+                            Previous
+                        </button>
+                        <span className="admin-page-info">
+                            Page {currentPage} of {totalPages}
+                        </span>
+                        <button 
+                            disabled={currentPage === totalPages} 
+                            onClick={() => setCurrentPage(p => p + 1)}
+                            className="admin-page-btn"
+                        >
+                            Next
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );

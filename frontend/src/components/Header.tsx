@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Header.css';
-import { FaPhoneAlt, FaEnvelope, FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp, FaUser, FaSignOutAlt, FaCalendarCheck, FaCog } from 'react-icons/fa';
+import { FaPhoneAlt, FaEnvelope, FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp, FaUser, FaSignOutAlt, FaCalendarCheck, FaCog, FaSun, FaMoon } from 'react-icons/fa';
 import logoLeaf from '../images/images/logo-leaf.webp';
 
 const Header: React.FC = () => {
@@ -11,8 +11,33 @@ const Header: React.FC = () => {
     const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const userMenuRef = useRef<HTMLDivElement>(null);
+    const [isDarkMode, setIsDarkMode] = useState(false);
 
     const { user, isAuthenticated, isAdmin, logout } = useAuth();
+
+    // Dark Mode Logic
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            setIsDarkMode(true);
+            document.body.classList.add('dark-theme');
+        } else if (!savedTheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            setIsDarkMode(true);
+            document.body.classList.add('dark-theme');
+        }
+    }, []);
+
+    const toggleTheme = () => {
+        if (isDarkMode) {
+            setIsDarkMode(false);
+            document.body.classList.remove('dark-theme');
+            localStorage.setItem('theme', 'light');
+        } else {
+            setIsDarkMode(true);
+            document.body.classList.add('dark-theme');
+            localStorage.setItem('theme', 'dark');
+        }
+    };
 
     useEffect(() => {
         const handleScroll = () => {
@@ -138,6 +163,15 @@ const Header: React.FC = () => {
 
                         {/* Header CTA & Auth */}
                         <div className="header-actions">
+                            <button 
+                                className="theme-toggle-btn" 
+                                onClick={toggleTheme} 
+                                aria-label="Toggle Dark Mode"
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: isDarkMode ? '#FFC107' : '#4CAF50', fontSize: '1.2rem', marginRight: '10px', display: 'flex', alignItems: 'center' }}
+                            >
+                                {isDarkMode ? <FaSun /> : <FaMoon />}
+                            </button>
+
                             <Link to="/booking" className="header-book-btn" onClick={closeMobileMenu} id="header-book-now">
                                 Book Now
                             </Link>
