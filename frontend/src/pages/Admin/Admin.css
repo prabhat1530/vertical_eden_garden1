@@ -1,0 +1,237 @@
+/* ─── Admin Layout ─── */
+.admin-page {
+    min-height: 100vh;
+    background: #f1f5f9;
+    padding: 2rem;
+}
+
+.admin-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.admin-header h1 {
+    font-size: 1.8rem;
+    color: #1e293b;
+    font-weight: 700;
+}
+
+.admin-nav {
+    display: flex;
+    gap: 8px;
+}
+
+.admin-nav a {
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #64748b;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.admin-nav a:hover,
+.admin-nav a.active {
+    background: #1e293b;
+    color: white;
+}
+
+/* ─── Stats Grid ─── */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.stat-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: transform 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: white;
+}
+
+.stat-icon.users { background: linear-gradient(135deg, #6366f1, #8b5cf6); }
+.stat-icon.bookings { background: linear-gradient(135deg, #3b82f6, #06b6d4); }
+.stat-icon.revenue { background: linear-gradient(135deg, #10b981, #059669); }
+.stat-icon.pending { background: linear-gradient(135deg, #f59e0b, #d97706); }
+
+.stat-info h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0;
+}
+
+.stat-info p {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin: 4px 0 0;
+}
+
+/* ─── Admin Table ─── */
+.admin-table-wrapper {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.admin-table-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-table-header h2 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin: 0;
+}
+
+.admin-search {
+    padding: 8px 14px;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    outline: none;
+    width: 250px;
+    transition: border-color 0.2s;
+}
+
+.admin-search:focus {
+    border-color: #1e293b;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    background: #f8fafc;
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.admin-table td {
+    padding: 14px 16px;
+    font-size: 0.9rem;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.admin-table tbody tr:hover {
+    background: #f8fafc;
+}
+
+/* ─── Status Badges ─── */
+.status-badge {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+    display: inline-block;
+}
+
+.status-badge.pending { background: #fef3c7; color: #92400e; }
+.status-badge.confirmed { background: #dbeafe; color: #1e40af; }
+.status-badge.completed { background: #d1fae5; color: #065f46; }
+.status-badge.cancelled { background: #fee2e2; color: #991b1b; }
+
+/* ─── Status Select ─── */
+.status-select {
+    padding: 6px 10px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    outline: none;
+    background: white;
+    transition: border-color 0.2s;
+}
+
+.status-select:focus {
+    border-color: #1e293b;
+}
+
+/* ─── Role Badge ─── */
+.role-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.role-badge.admin { background: #ede9fe; color: #5b21b6; }
+.role-badge.user { background: #f1f5f9; color: #64748b; }
+
+/* ─── Loading ─── */
+.admin-loading {
+    text-align: center;
+    padding: 4rem;
+    color: #94a3b8;
+    font-size: 1rem;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 768px) {
+    .admin-page {
+        padding: 1rem;
+    }
+
+    .admin-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+
+    .admin-nav {
+        flex-wrap: wrap;
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .admin-table-wrapper {
+        overflow-x: auto;
+    }
+
+    .admin-search {
+        width: 100%;
+    }
+}

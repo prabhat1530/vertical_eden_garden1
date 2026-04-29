@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Header.css';
-import { FaPhoneAlt, FaEnvelope, FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp, FaUser, FaSignOutAlt, FaCalendarCheck } from 'react-icons/fa';
+import { FaPhoneAlt, FaEnvelope, FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp, FaUser, FaSignOutAlt, FaCalendarCheck, FaCog } from 'react-icons/fa';
 import logoLeaf from '../images/images/logo-leaf.webp';
 
 const Header: React.FC = () => {
@@ -12,7 +12,7 @@ const Header: React.FC = () => {
     const [userMenuOpen, setUserMenuOpen] = useState(false);
     const userMenuRef = useRef<HTMLDivElement>(null);
 
-    const { user, isAuthenticated, logout } = useAuth();
+    const { user, isAuthenticated, isAdmin, logout } = useAuth();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -162,6 +162,11 @@ const Header: React.FC = () => {
                                             <Link to="/my-bookings" className="user-dropdown-item" onClick={closeMobileMenu}>
                                                 {(FaCalendarCheck as any)({ size: 14 })} My Bookings
                                             </Link>
+                                            {isAdmin && (
+                                                <Link to="/admin" className="user-dropdown-item" onClick={closeMobileMenu}>
+                                                    {(FaCog as any)({ size: 14 })} Admin Panel
+                                                </Link>
+                                            )}
                                             <button className="user-dropdown-item logout" onClick={handleLogout}>
                                                 {(FaSignOutAlt as any)({ size: 14 })} Logout
                                             </button>

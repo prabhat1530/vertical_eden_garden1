@@ -20,6 +20,9 @@ const Login = lazy(() => import('./pages/Login'));
 const Signup = lazy(() => import('./pages/Signup'));
 const Booking = lazy(() => import('./pages/Booking'));
 const MyBookings = lazy(() => import('./pages/MyBookings'));
+const AdminDashboard = lazy(() => import('./pages/Admin/AdminDashboard'));
+const AdminBookings = lazy(() => import('./pages/Admin/AdminBookings'));
+const AdminUsers = lazy(() => import('./pages/Admin/AdminUsers'));
 
 
 const App: React.FC = () => {
@@ -43,6 +46,9 @@ const App: React.FC = () => {
               <Route path="/signup" component={Signup} />
               <Route path="/booking" component={Booking} />
               <Route path="/my-bookings" component={MyBookings} />
+              <Route path="/admin" exact component={AdminDashboard} />
+              <Route path="/admin/bookings" component={AdminBookings} />
+              <Route path="/admin/users" component={AdminUsers} />
             </Switch>
           </Suspense>
         </main>
