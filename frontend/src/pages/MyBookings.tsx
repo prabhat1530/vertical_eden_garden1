@@ -29,7 +29,7 @@ const MyBookings: React.FC = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [reviewBooking, setReviewBooking] = useState<BookingItem | null>(null);
-    const [reviewedBookings, setReviewedBookings] = useState<Set<string>>(new Set());
+    const [reviewedBookings, setReviewedBookings] = useState<string[]>([]);
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -177,12 +177,12 @@ const MyBookings: React.FC = () => {
                                 </div>
                             )}
 
-                            {booking.status === 'completed' && !reviewedBookings.has(booking.id) && (
+                            {booking.status === 'completed' && !reviewedBookings.includes(booking.id) && (
                                 <button className="write-review-btn" onClick={() => setReviewBooking(booking)}>
                                     <FaStar style={{ marginRight: '4px' }} /> Write Review
                                 </button>
                             )}
-                            {reviewedBookings.has(booking.id) && (
+                            {reviewedBookings.includes(booking.id) && (
                                 <span style={{ fontSize: '0.8rem', color: '#10b981', marginTop: '8px', display: 'block' }}>✓ Reviewed</span>
                             )}
                         </div>
@@ -196,7 +196,7 @@ const MyBookings: React.FC = () => {
                     serviceName={reviewBooking.serviceName}
                     onClose={() => setReviewBooking(null)}
                     onSuccess={() => {
-                        setReviewedBookings(prev => new Set([...prev, reviewBooking.id]));
+                        setReviewedBookings(prev => [...prev, reviewBooking.id]);
                         setReviewBooking(null);
                     }}
                 />
