@@ -108,6 +108,7 @@ const AdminBookings: React.FC = () => {
                     <thead>
                         <tr>
                             <th>Customer</th>
+                            <th>Email</th>
                             <th>Phone</th>
                             <th>Service</th>
                             <th>City</th>
@@ -120,6 +121,7 @@ const AdminBookings: React.FC = () => {
                         {filteredBookings.map(b => (
                             <tr key={b.id}>
                                 <td>{b.user?.name || 'N/A'}</td>
+                                <td>{b.user?.email || 'N/A'}</td>
                                 <td>{b.user?.phone || 'N/A'}</td>
                                 <td>{b.serviceName}</td>
                                 <td>{b.city}</td>
@@ -140,7 +142,7 @@ const AdminBookings: React.FC = () => {
                             </tr>
                         ))}
                         {filteredBookings.length === 0 && (
-                            <tr><td colSpan={7} style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>No bookings found</td></tr>
+                            <tr><td colSpan={8} style={{ textAlign: 'center', padding: '2rem', color: '#94a3b8' }}>No bookings found</td></tr>
                         )}
                     </tbody>
                 </table>
