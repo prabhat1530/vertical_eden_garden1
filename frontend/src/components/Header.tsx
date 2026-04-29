@@ -159,6 +159,9 @@ const Header: React.FC = () => {
                                                 <span className="user-dropdown-email">{user.email}</span>
                                             </div>
                                             <div className="user-dropdown-divider"></div>
+                                            <Link to="/profile" className="user-dropdown-item" onClick={closeMobileMenu}>
+                                                {(FaUser as any)({ size: 14 })} My Profile
+                                            </Link>
                                             <Link to="/my-bookings" className="user-dropdown-item" onClick={closeMobileMenu}>
                                                 {(FaCalendarCheck as any)({ size: 14 })} My Bookings
                                             </Link>

@@ -219,6 +219,7 @@ const Login: React.FC = () => {
                                 >
                                     {isLoading ? <span className="auth-spinner"></span> : 'Sign In'}
                                 </button>
+                                <Link to="/forgot-password" style={{ display: 'block', textAlign: 'right', marginTop: '0.75rem', color: 'var(--primary-color)', fontSize: '0.85rem', textDecoration: 'none' }}>Forgot Password?</Link>
                             </form>
                         ) : (
                             <div className="auth-form" id="otp-form">

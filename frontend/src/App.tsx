@@ -23,6 +23,9 @@ const MyBookings = lazy(() => import('./pages/MyBookings'));
 const AdminDashboard = lazy(() => import('./pages/Admin/AdminDashboard'));
 const AdminBookings = lazy(() => import('./pages/Admin/AdminBookings'));
 const AdminUsers = lazy(() => import('./pages/Admin/AdminUsers'));
+const Profile = lazy(() => import('./pages/Profile'));
+const ForgotPassword = lazy(() => import('./pages/ForgotPassword'));
+const ResetPassword = lazy(() => import('./pages/ResetPassword'));
 
 
 const App: React.FC = () => {
@@ -49,6 +52,9 @@ const App: React.FC = () => {
               <Route path="/admin" exact component={AdminDashboard} />
               <Route path="/admin/bookings" component={AdminBookings} />
               <Route path="/admin/users" component={AdminUsers} />
+              <Route path="/profile" component={Profile} />
+              <Route path="/forgot-password" component={ForgotPassword} />
+              <Route path="/reset-password/:token" component={ResetPassword} />
             </Switch>
           </Suspense>
         </main>
