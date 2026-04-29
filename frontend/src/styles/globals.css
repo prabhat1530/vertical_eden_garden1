@@ -26,30 +26,6 @@
     --font-accent: 'Allura', cursive;
 }
 
-/* Dark Mode Overrides */
-body.dark-theme {
-    --primary-green: #388e3c;
-    --secondary-green: #4caf50;
-    --dark-green: #a5d6a7; /* Lighter green for headings on dark backgrounds */
-    --accent-green: #81c784;
-
-    --bg-color: #121212;
-    --card-bg: #1e1e1e;
-    --text-color: #e0e0e0;
-    --text-light: #aaaaaa;
-}
-
-/* Base input styles using variables */
-:root {
-    --input-bg: #fafafa;
-    --input-border: #e0e0e0;
-}
-
-body.dark-theme {
-    --input-bg: #2c2c2c;
-    --input-border: #444444;
-}
-
 *,
 *::before,
 *::after {
@@ -231,9 +207,9 @@ button:hover,
     width: 100%;
     margin-bottom: 20px;
     padding: 15px;
-    border: 1px solid var(--input-border);
+    border: 1px solid #e0e0e0;
     border-radius: 8px;
-    background-color: var(--input-bg);
+    background-color: #fafafa;
     color: var(--text-color);
     font-size: 1rem;
     transition: border-color 0.3s;
