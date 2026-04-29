@@ -57,7 +57,7 @@ router.post('/create-order', async (req, res) => {
         const razorpay = getRazorpayInstance();
 
         const order = await razorpay.orders.create({
-            amount: booking.totalPrice * 100, // Razorpay expects paise
+            amount: Math.round(booking.totalPrice * 100), // Razorpay strictly expects integer paise
             currency: 'INR',
             receipt: `booking_${booking._id}`,
             notes: {
