@@ -158,19 +158,27 @@ router.post('/send-otp', [
         user.otpExpires = otpExpires;
         await user.save({ validateBeforeSave: false });
 
-        // Send via Authkey
-        const authKey = process.env.AUTHKEY_API_KEY;
-        const senderId = process.env.AUTHKEY_SENDER_ID || '12345';
+        // Send via Fast2SMS
+        const fast2smsKey = process.env.FAST2SMS_API_KEY;
         
-        if (authKey) {
-            // Authkey GET request format
-            const authkeyUrl = `https://api.authkey.io/request?authkey=${authKey}&mobile=${phone}&country_code=91&sid=${senderId}&company=VerticalEden&otp=${otp}`;
+        if (fast2smsKey && fast2smsKey !== 'your_fast2sms_api_key_here') {
             try {
-                const response = await fetch(authkeyUrl);
+                const response = await fetch('https://www.fast2sms.com/dev/bulkV2', {
+                    method: 'POST',
+                    headers: {
+                        'authorization': fast2smsKey,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        route: 'otp',
+                        variables_values: otp,
+                        numbers: phone
+                    })
+                });
                 const data = await response.json();
-                console.log('Authkey API response:', data);
+                console.log('Fast2SMS API response:', data);
             } catch (err) {
-                console.error('Failed to call Authkey API:', err.message);
+                console.error('Failed to call Fast2SMS API:', err.message);
                 // Continue anyway so they don't get blocked
             }
         } else {
