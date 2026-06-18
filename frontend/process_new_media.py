@@ -42,6 +42,35 @@ def process_files():
     if not os.path.exists(DEST_DIR):
         os.makedirs(DEST_DIR, exist_ok=True)
         
+    # Determine the set of expected targets first from SOURCE_DIR files
+    files = sorted(os.listdir(SOURCE_DIR))
+    expected_targets = set()
+    temp_existing = set()
+    for filename in files:
+        if filename.startswith('.'):
+            continue
+        clean_name, target_ext = sanitize_filename(filename)
+        if not clean_name:
+            continue
+        target_filename = f"{clean_name}{target_ext}"
+        counter = 1
+        while target_filename in temp_existing:
+            target_filename = f"{clean_name}_{counter}{target_ext}"
+            counter += 1
+        temp_existing.add(target_filename)
+        expected_targets.add(target_filename)
+
+    # Clean up DEST_DIR: remove any file not in expected_targets (ignoring directories)
+    if os.path.exists(DEST_DIR):
+        for name in os.listdir(DEST_DIR):
+            path = os.path.join(DEST_DIR, name)
+            if os.path.isfile(path) and name not in expected_targets:
+                try:
+                    os.remove(path)
+                    print(f"Removed old/unrecognized file: {name}")
+                except Exception as e:
+                    print(f"Error removing {name}: {e}")
+
     # Load existing manifest if it exists
     existing_manifest = []
     if os.path.exists(MANIFEST_FILE):
@@ -54,13 +83,17 @@ def process_files():
             print(f"Error reading manifest: {e}")
             existing_manifest = []
             
+    # Filter existing manifest to only keep expected targets
+    existing_manifest = [x for x in existing_manifest if x in expected_targets]
+            
     # Set to track unique filenames in public/images
     manifest_set = set(existing_manifest)
     new_additions = []
     
-    files = sorted(os.listdir(SOURCE_DIR))
     print(f"Found {len(files)} files in source directory.")
     
+    # Track targets processed in this run to avoid duplicates if source files map to same name
+    processed_targets_in_run = set()
     count = 0
     for filename in files:
         if filename.startswith('.'):
@@ -72,15 +105,23 @@ def process_files():
             
         source_path = os.path.join(SOURCE_DIR, filename)
         
-        # Determine unique target name
+        # Determine unique target name in the current run
         target_filename = f"{clean_name}{target_ext}"
+        counter = 1
+        while target_filename in processed_targets_in_run:
+            target_filename = f"{clean_name}_{counter}{target_ext}"
+            counter += 1
+            
+        processed_targets_in_run.add(target_filename)
         target_path = os.path.join(DEST_DIR, target_filename)
         
-        counter = 1
-        while os.path.exists(target_path):
-            target_filename = f"{clean_name}_{counter}{target_ext}"
-            target_path = os.path.join(DEST_DIR, target_filename)
-            counter += 1
+        # If the file already exists on disk, skip re-processing and just update manifest if needed
+        if os.path.exists(target_path):
+            if target_filename not in manifest_set:
+                new_additions.append(target_filename)
+                manifest_set.add(target_filename)
+                count += 1
+            continue
             
         try:
             if target_ext == '.webp':
