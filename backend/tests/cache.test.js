@@ -1,8 +1,9 @@
-// This file runs the app WITH Redis (database 15) to test caching.
-const { TEST_REDIS_URL, describeWithRedis } = require('./helpers/redis');
+// This file runs the app WITH Redis (database 14) to test caching.
+// Not 15: the email queue tests use that one, in parallel.
+const { testRedisUrl, describeWithRedis } = require('./helpers/redis');
 
 process.env.DISABLE_REDIS = 'false';
-process.env.REDIS_URL = TEST_REDIS_URL;
+process.env.REDIS_URL = testRedisUrl(14);
 
 jest.mock('../utils/sendEmail', () => jest.fn(() => Promise.resolve()));
 
