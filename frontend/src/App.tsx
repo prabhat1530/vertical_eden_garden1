@@ -7,6 +7,7 @@ import WhatsAppButton from './components/WhatsAppButton';
 import LoadingSpinner from './components/LoadingSpinner';
 import ScrollToTop from './components/ScrollToTop';
 import ChatBot from './components/ChatBot/ChatBot';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const Home = lazy(() => import('./pages/Home'));
 const About = lazy(() => import('./pages/About'));
@@ -47,12 +48,12 @@ const App: React.FC = () => {
               <Route path="/contact" component={Contact} />
               <Route path="/login" component={Login} />
               <Route path="/signup" component={Signup} />
-              <Route path="/booking" component={Booking} />
-              <Route path="/my-bookings" component={MyBookings} />
-              <Route path="/admin" exact component={AdminDashboard} />
-              <Route path="/admin/bookings" component={AdminBookings} />
-              <Route path="/admin/users" component={AdminUsers} />
-              <Route path="/profile" component={Profile} />
+              <ProtectedRoute path="/booking" component={Booking} />
+              <ProtectedRoute path="/my-bookings" component={MyBookings} />
+              <ProtectedRoute path="/admin" exact adminOnly component={AdminDashboard} />
+              <ProtectedRoute path="/admin/bookings" adminOnly component={AdminBookings} />
+              <ProtectedRoute path="/admin/users" adminOnly component={AdminUsers} />
+              <ProtectedRoute path="/profile" component={Profile} />
               <Route path="/forgot-password" component={ForgotPassword} />
               <Route path="/reset-password/:token" component={ResetPassword} />
             </Switch>

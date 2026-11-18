@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Admin.css';
 
@@ -21,8 +21,7 @@ interface BookingItem {
 }
 
 const AdminBookings: React.FC = () => {
-    const { token, isAdmin } = useAuth();
-    const history = useHistory();
+    const { token } = useAuth();
     const [bookings, setBookings] = useState<BookingItem[]>([]);
     const [filteredBookings, setFilteredBookings] = useState<BookingItem[]>([]);
     const [search, setSearch] = useState('');
@@ -31,9 +30,8 @@ const AdminBookings: React.FC = () => {
     const itemsPerPage = 10;
 
     useEffect(() => {
-        if (!isAdmin) { history.push('/'); return; }
         fetchBookings();
-    }, [isAdmin, history]);
+    }, []);
 
     useEffect(() => {
         if (!search.trim()) {

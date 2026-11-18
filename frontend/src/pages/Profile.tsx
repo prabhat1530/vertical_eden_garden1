@@ -1,13 +1,11 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Profile.css';
 
 const API_URL = process.env.REACT_APP_API_URL || '/api';
 
 const Profile: React.FC = () => {
-    const { user, token, isAuthenticated } = useAuth();
-    const history = useHistory();
+    const { user, token } = useAuth();
 
     const [name, setName] = useState(user?.name || '');
     const [email, setEmail] = useState(user?.email || '');
@@ -21,11 +19,6 @@ const Profile: React.FC = () => {
     const [passMsg, setPassMsg] = useState('');
     const [passErr, setPassErr] = useState('');
     const [savingPass, setSavingPass] = useState(false);
-
-    if (!isAuthenticated) {
-        history.push('/login');
-        return null;
-    }
 
     const handleProfileUpdate = async (e: React.FormEvent) => {
         e.preventDefault();
