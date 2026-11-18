@@ -339,6 +339,13 @@ module.exports = {
                 responses: { 201: ok('Review created', { type: 'object', properties: { success: { type: 'boolean' }, review: ref('Review') } }), 400: err('Invalid input, booking not completed, or already reviewed'), 401: UNAUTHORIZED, 404: err('Booking not found') },
             },
         },
+        '/api/reviews/summary': {
+            get: {
+                tags: ['Reviews'], summary: 'Average rating and review count for every service',
+                description: 'Used by the service cards. Computed with a MongoDB aggregation, cached in Redis for 10 minutes and cleared when a review is posted. Services with no reviews are left out.',
+                responses: { 200: ok('Ratings keyed by service slug', { type: 'object', properties: { success: { type: 'boolean' }, services: { type: 'object', additionalProperties: { type: 'object', properties: { averageRating: { type: 'number', example: 4.5 }, count: { type: 'integer', example: 12 } } }, example: { 'terrace-garden': { averageRating: 4.5, count: 12 } } } } }) },
+            },
+        },
         '/api/reviews/{serviceSlug}': {
             get: {
                 tags: ['Reviews'], summary: 'Reviews and average rating for a service',

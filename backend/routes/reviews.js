@@ -47,8 +47,8 @@ router.post('/', protect, [
             comment,
         });
 
-        // The service's cached review list is now out of date.
-        invalidateCache(CACHE_KEYS.reviews(booking.serviceSlug));
+        // The service's cached review list and the ratings summary are now out of date.
+        invalidateCache(CACHE_KEYS.reviews(booking.serviceSlug), CACHE_KEYS.reviewSummary);
 
         res.status(201).json({
             success: true,
@@ -61,6 +61,33 @@ router.post('/', protect, [
         });
     } catch (error) {
         console.error('Create review error:', error.message);
+        res.status(500).json({ success: false, error: 'Server error.' });
+    }
+});
+
+// ─────────────────────────────────────────────
+// GET /api/reviews/summary — Average rating + count for every service
+// ─────────────────────────────────────────────
+// One request for all service cards. MongoDB does the averaging ($group),
+// so the reviews themselves never leave the database.
+const computeReviewSummary = async () => {
+    const rows = await Review.aggregate([
+        { $group: { _id: '$serviceSlug', averageRating: { $avg: '$rating' }, count: { $sum: 1 } } },
+    ]);
+    return Object.fromEntries(rows.map((r) => [
+        r._id,
+        { averageRating: Math.round(r.averageRating * 10) / 10, count: r.count },
+    ]));
+};
+
+// Declared before /:serviceSlug, otherwise "summary" would be read as a slug.
+router.get('/summary', async (req, res) => {
+    try {
+        const { value, status } = await cached(CACHE_KEYS.reviewSummary, 600, computeReviewSummary);
+        res.set('X-Cache', status);
+        res.json({ success: true, services: value });
+    } catch (error) {
+        console.error('Review summary error:', error.message);
         res.status(500).json({ success: false, error: 'Server error.' });
     }
 });
