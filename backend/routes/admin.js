@@ -4,6 +4,7 @@ const User = require('../models/User');
 const Payment = require('../models/Payment');
 const { protect } = require('../middleware/auth');
 const { adminOnly } = require('../middleware/admin');
+const { setStatusByAdmin, BookingError, SlotUnavailableError } = require('../services/bookingService');
 
 const router = express.Router();
 
@@ -92,6 +93,10 @@ router.get('/bookings', async (req, res) => {
                 totalPrice: b.totalPrice,
                 status: b.status,
                 paymentId: b.paymentId,
+                cancelledBy: b.cancelledBy,
+                cancelReason: b.cancelReason,
+                refundStatus: b.refundStatus,
+                rescheduleCount: b.rescheduleCount,
                 createdAt: b.createdAt,
                 user: b.user ? {
                     id: b.user._id,
@@ -122,15 +127,10 @@ router.put('/bookings/:id/status', async (req, res) => {
             });
         }
 
-        const booking = await Booking.findByIdAndUpdate(
-            req.params.id,
-            { status },
-            { new: true }
-        ).populate('user', 'name email phone');
-
-        if (!booking) {
-            return res.status(404).json({ success: false, error: 'Booking not found.' });
-        }
+        // Goes through the booking service so the slot is freed on cancel
+        // and re-claimed (or refused with 409) when un-cancelling.
+        const updated = await setStatusByAdmin({ bookingId: req.params.id, status });
+        const booking = await updated.populate('user', 'name email phone');
 
         res.json({
             success: true,
@@ -146,6 +146,9 @@ router.put('/bookings/:id/status', async (req, res) => {
             },
         });
     } catch (error) {
+        if (error instanceof BookingError || error instanceof SlotUnavailableError) {
+            return res.status(error.status).json({ success: false, error: error.message });
+        }
         console.error('Update booking status error:', error.message);
         res.status(500).json({ success: false, error: 'Server error.' });
     }

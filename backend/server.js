@@ -90,6 +90,11 @@ const startServer = async () => {
     // Connect to MongoDB
     await connectDB();
 
+    // Make sure the unique (date, time) slot index exists before taking
+    // bookings, then release unpaid slot holds every minute.
+    await require('./models/Slot').init();
+    require('./services/bookingService').startHoldSweeper();
+
     app.listen(PORT, () => {
         console.log(`\n🌿 Vertical Eden Garden API`);
         console.log(`   Server running on port ${PORT}`);
