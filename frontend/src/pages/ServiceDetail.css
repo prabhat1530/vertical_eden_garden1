@@ -1,7 +1,7 @@
 /* ServiceDetail.css */
 .service-detail-container {
     font-family: 'Poppins', sans-serif;
-    background-color: #fdfdfd;
+    background-color: var(--surface-alt, #fdfdfd);
     padding-bottom: 80px;
 }
 
@@ -70,7 +70,7 @@
 }
 
 .main-content {
-    background: white;
+    background: var(--surface, white);
     padding: 60px;
     border-radius: 12px;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
@@ -83,7 +83,7 @@
 .main-content h2 {
     font-family: 'Playfair Display', serif;
     font-size: 2.5rem;
-    color: #1a4031;
+    color: var(--heading-green, #1a4031);
     margin-bottom: 15px;
 }
 
@@ -98,7 +98,7 @@
 .long-description {
     font-size: 1.15rem;
     line-height: 1.9;
-    color: #444;
+    color: var(--text, #444);
 }
 
 /* Features Grid */
@@ -113,7 +113,7 @@
     display: flex;
     align-items: flex-start;
     gap: 15px;
-    background: #f8fcf9;
+    background: var(--surface-tint, #f8fcf9);
     padding: 20px;
     border-radius: 8px;
     transition: transform 0.2s;
@@ -121,11 +121,11 @@
 
 .feature-item-detail:hover {
     transform: translateY(-3px);
-    background: #f0f7f2;
+    background: var(--surface-tint, #f0f7f2);
 }
 
 .check-icon {
-    color: #4CAF50;
+    color: var(--heading-green, #4CAF50);
     font-weight: bold;
     font-size: 1.2rem;
     background: rgba(76, 175, 80, 0.1);
@@ -141,7 +141,7 @@
 .feature-item-detail p {
     margin: 0;
     font-size: 1rem;
-    color: #555;
+    color: var(--text-muted, #555);
     line-height: 1.5;
 }
 
@@ -161,7 +161,7 @@
 
 .use-cases-card,
 .cta-card {
-    background: white;
+    background: var(--surface, white);
     padding: 35px;
     border-radius: 12px;
     box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
@@ -171,7 +171,7 @@
 .use-cases-card h3 {
     font-size: 1.3rem;
     margin-bottom: 20px;
-    color: #1a1a1a;
+    color: var(--text, #1a1a1a);
     border-left: 4px solid #4CAF50;
     padding-left: 15px;
 }
@@ -183,8 +183,8 @@
 
 .use-cases-card li {
     padding: 12px 0;
-    border-bottom: 1px solid #f0f0f0;
-    color: #666;
+    border-bottom: 1px solid var(--border, #f0f0f0);
+    color: var(--text-muted, #666);
     font-size: 1rem;
     transition: padding-left 0.2s;
 }
@@ -195,7 +195,7 @@
 
 .use-cases-card li:hover {
     padding-left: 10px;
-    color: #4CAF50;
+    color: var(--heading-green, #4CAF50);
 }
 
 .cta-card {

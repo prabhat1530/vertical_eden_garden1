@@ -6,6 +6,19 @@
   <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="theme-color" content="#000000" />
+  <script>
+    // Apply the theme before the page paints, so dark-mode visitors never see
+    // a white flash. A saved choice wins; otherwise follow the device setting.
+    (function () {
+      var theme = 'light';
+      try {
+        var saved = localStorage.getItem('veg_theme');
+        if (saved === 'light' || saved === 'dark') theme = saved;
+        else if (window.matchMedia('(prefers-color-scheme: dark)').matches) theme = 'dark';
+      } catch (e) {}
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
   <meta name="description" content="Web site created using create-react-app" />
   <title>Vertical Eden Garden</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">

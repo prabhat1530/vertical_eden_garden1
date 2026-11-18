@@ -2,7 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Header.css';
-import { FaPhoneAlt, FaEnvelope, FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp, FaUser, FaSignOutAlt, FaCalendarCheck, FaCog } from 'react-icons/fa';
+import { FaPhoneAlt, FaEnvelope, FaFacebookF, FaInstagram, FaYoutube, FaWhatsapp, FaUser, FaSignOutAlt, FaCalendarCheck, FaCog, FaMoon, FaSun } from 'react-icons/fa';
+import { useTheme } from '../services/theme';
 import logoLeaf from '../images/images/logo-leaf.webp';
 
 const Header: React.FC = () => {
@@ -13,6 +14,7 @@ const Header: React.FC = () => {
     const userMenuRef = useRef<HTMLDivElement>(null);
 
     const { user, isAuthenticated, isAdmin, logout } = useAuth();
+    const { theme, toggleTheme } = useTheme();
 
     useEffect(() => {
         const handleScroll = () => {
@@ -138,6 +140,17 @@ const Header: React.FC = () => {
 
                         {/* Header CTA & Auth */}
                         <div className="header-actions">
+                            <button
+                                type="button"
+                                className="theme-toggle"
+                                onClick={toggleTheme}
+                                aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+                                title={theme === 'dark' ? 'Light mode' : 'Dark mode'}
+                                id="header-theme-toggle"
+                            >
+                                {theme === 'dark' ? (FaSun as any)({ size: 16 }) : (FaMoon as any)({ size: 16 })}
+                            </button>
+
                             <Link to="/booking" className="header-book-btn" onClick={closeMobileMenu} id="header-book-now">
                                 Book Now
                             </Link>

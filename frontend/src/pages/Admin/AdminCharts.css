@@ -2,10 +2,10 @@
 .charts-grid {
     --chart-bar: #2e7d32;
     --chart-bar-hover: #1b5e20;
-    --chart-track: #eef2ee;
-    --chart-grid: #e2e8f0;
-    --chart-text: #2c3e50;
-    --chart-muted: #64748b;
+    --chart-track: var(--surface-tint, #eef2ee);
+    --chart-grid: var(--border, #e2e8f0);
+    --chart-text: var(--text, #2c3e50);
+    --chart-muted: var(--text-muted, #64748b);
 
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -15,7 +15,7 @@
 
 .chart-card {
     margin: 0;
-    background: white;
+    background: var(--surface, white);
     border-radius: 12px;
     padding: 1.25rem 1.5rem 1.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
@@ -76,7 +76,7 @@
     transform: translateX(-50%);
     padding: 0.2rem 0.5rem;
     border-radius: 6px;
-    background: var(--chart-text);
+    background: #2c3e50;
     color: white;
     font-size: 0.8rem;
     white-space: nowrap;

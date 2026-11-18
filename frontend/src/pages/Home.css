@@ -1,6 +1,6 @@
 .home-container {
     font-family: 'Open Sans', sans-serif;
-    color: #333;
+    color: var(--text, #333);
 }
 
 /* Hero Section Styles moved to Hero.css or here */
@@ -71,7 +71,7 @@
 .intro-section {
     padding: 4rem 2rem;
     text-align: center;
-    background-color: #f9f9f9;
+    background-color: var(--surface-alt, #f9f9f9);
 }
 
 .intro-content {
@@ -80,7 +80,7 @@
 }
 
 .intro-content h2 {
-    color: #2c3e50;
+    color: var(--text, #2c3e50);
     margin-bottom: 1.5rem;
     font-size: 2.5rem;
 }
@@ -88,7 +88,7 @@
 .intro-content p {
     font-size: 1.1rem;
     line-height: 1.8;
-    color: #555;
+    color: var(--text-muted, #555);
 }
 
 /* Featured Projects */
@@ -101,7 +101,7 @@
 .section-title {
     text-align: center;
     margin-bottom: 3rem;
-    color: #2c3e50;
+    color: var(--text, #2c3e50);
     font-size: 2.5rem;
 }
 
@@ -131,11 +131,11 @@
 
 .project-info {
     padding: 1.5rem;
-    background: white;
+    background: var(--surface, white);
 }
 
 .project-info h3 {
-    color: #27ae60;
+    color: var(--heading-green, #27ae60);
     margin-top: 0;
 }
 
@@ -336,7 +336,7 @@
 /* Project Showcase Section */
 .project-showcase {
     padding: 100px 0;
-    background: #fdfdfd;
+    background: var(--surface-alt, #fdfdfd);
     overflow: hidden;
     width: 100vw;
     margin-left: calc(50% - 50vw);
@@ -640,8 +640,8 @@
     position: absolute;
     bottom: -30px;
     left: -30px;
-    background: #fff;
-    color: #1a1a1a;
+    background: var(--surface, #fff);
+    color: var(--text, #1a1a1a);
     padding: 20px 30px;
     border-radius: 15px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
@@ -653,13 +653,13 @@
     display: block;
     font-size: 0.8rem;
     text-transform: uppercase;
-    color: #666;
+    color: var(--text-muted, #666);
 }
 
 .floating-badge strong {
     display: block;
     font-size: 1.5rem;
-    color: #4CAF50;
+    color: var(--heading-green, #4CAF50);
     font-weight: 800;
 }
 
@@ -721,7 +721,7 @@
 /* Project Showcase Section */
 .project-showcase {
     padding: 100px 0;
-    background: #fdfdfd;
+    background: var(--surface-alt, #fdfdfd);
     overflow: hidden;
 }
 
@@ -750,7 +750,7 @@
 
 .sub-heading-animate {
     font-size: 0.9rem;
-    color: #4CAF50;
+    color: var(--heading-green, #4CAF50);
     text-transform: uppercase;
     letter-spacing: 3px;
     font-weight: 700;
@@ -761,7 +761,7 @@
 .heading-animate {
     font-family: 'Playfair Display', serif;
     font-size: 3.5rem;
-    color: #1a1a1a;
+    color: var(--text, #1a1a1a);
     line-height: 1.2;
     margin-bottom: 25px;
     animation: slideUpFade 1s ease-out 0.2s forwards;
@@ -799,14 +799,14 @@
 
 .feature-item h3 {
     font-size: 1.4rem;
-    color: #333;
+    color: var(--text, #333);
     margin-bottom: 8px;
     font-weight: 600;
 }
 
 .feature-item p {
     font-size: 1rem;
-    color: #666;
+    color: var(--text-muted, #666);
     line-height: 1.6;
 }
 

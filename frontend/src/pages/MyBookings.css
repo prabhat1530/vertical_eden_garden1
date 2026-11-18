@@ -7,7 +7,7 @@
     padding: 130px 5% 60px;
     max-width: 900px;
     margin: 0 auto;
-    background: linear-gradient(180deg, #f1f8e9 0%, #ffffff 30%);
+    background: linear-gradient(180deg, var(--surface-alt, #f1f8e9) 0%, var(--surface-alt, #ffffff) 30%);
 }
 
 .mybookings-header {
@@ -22,12 +22,12 @@
 .mybookings-header h1 {
     font-family: var(--font-heading);
     font-size: 2.2rem;
-    color: var(--dark-green, #1b5e20);
+    color: var(--heading-green, var(--dark-green, #1b5e20));
     margin-bottom: 4px;
 }
 
 .mybookings-header p {
-    color: #78909c;
+    color: var(--text-muted, #78909c);
     font-size: 0.95rem;
 }
 
@@ -57,7 +57,7 @@
 .mybookings-empty {
     text-align: center;
     padding: 80px 20px;
-    background: white;
+    background: var(--surface, white);
     border-radius: 20px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
 }
@@ -77,12 +77,12 @@
 .mybookings-empty h3 {
     font-family: var(--font-heading);
     font-size: 1.5rem;
-    color: var(--dark-green, #1b5e20);
+    color: var(--heading-green, var(--dark-green, #1b5e20));
     margin-bottom: 8px;
 }
 
 .mybookings-empty p {
-    color: #90a4ae;
+    color: var(--text-muted, #90a4ae);
     margin-bottom: 28px;
 }
 
@@ -112,7 +112,7 @@
 }
 
 .mybooking-card {
-    background: white;
+    background: var(--surface, white);
     border-radius: 16px;
     padding: 24px;
     box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
@@ -136,7 +136,7 @@
 .mybooking-service-info h3 {
     font-family: var(--font-heading);
     font-size: 1.3rem;
-    color: var(--dark-green, #1b5e20);
+    color: var(--heading-green, var(--dark-green, #1b5e20));
     margin-bottom: 4px;
 }
 
@@ -145,7 +145,7 @@
     align-items: center;
     gap: 6px;
     font-size: 0.8rem;
-    color: #90a4ae;
+    color: var(--text-muted, #90a4ae);
     font-family: monospace;
 }
 
@@ -192,7 +192,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #78909c;
+    color: var(--text-muted, #78909c);
     font-size: 0.88rem;
 }
 
@@ -201,13 +201,13 @@
     justify-content: space-between;
     align-items: center;
     padding-top: 14px;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid var(--border, #f0f0f0);
 }
 
 .mybooking-area {
     font-size: 0.88rem;
-    color: #78909c;
-    background: #f5f5f5;
+    color: var(--text-muted, #78909c);
+    background: var(--surface-tint, #f5f5f5);
     padding: 4px 12px;
     border-radius: 6px;
 }
@@ -215,13 +215,13 @@
 .mybooking-price {
     font-size: 1.2rem;
     font-weight: 700;
-    color: var(--dark-green, #1b5e20);
+    color: var(--heading-green, var(--dark-green, #1b5e20));
 }
 
 .mybooking-payment-info {
     margin-top: 12px;
     font-size: 0.78rem;
-    color: #b0bec5;
+    color: var(--text-muted, #b0bec5);
     font-family: monospace;
 }
 
@@ -343,7 +343,7 @@
     align-items: center;
     margin-top: 10px;
     font-size: 0.8rem;
-    color: #78909c;
+    color: var(--text-muted, #78909c);
 }
 
 .refund-pending, .refund-done {
@@ -367,7 +367,7 @@
 }
 
 .reschedule-modal {
-    background: #fff;
+    background: var(--surface, #fff);
     border-radius: 12px;
     padding: 24px;
     width: 100%;
@@ -382,19 +382,19 @@
 .reschedule-current, .reschedule-note {
     margin: 0 0 8px;
     font-size: 0.85rem;
-    color: #78909c;
+    color: var(--text-muted, #78909c);
 }
 
 .reschedule-modal label {
     font-size: 0.85rem;
     font-weight: 600;
-    color: #455a64;
+    color: var(--text, #455a64);
 }
 
 .reschedule-modal input,
 .reschedule-modal select {
     padding: 10px 12px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--border, #e0e0e0);
     border-radius: 8px;
     font-size: 0.95rem;
     font-family: inherit;
@@ -416,6 +416,6 @@
     cursor: pointer;
 }
 
-.reschedule-cancel { background: #eceff1; color: #455a64; }
+.reschedule-cancel { background: var(--surface-tint, #eceff1); color: var(--text, #455a64); }
 .reschedule-confirm { background: #2e7d32; color: #fff; }
 .reschedule-confirm:disabled { opacity: 0.5; cursor: not-allowed; }

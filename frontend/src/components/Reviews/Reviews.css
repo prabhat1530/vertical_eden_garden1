@@ -2,12 +2,12 @@
 .reviews-section {
     margin-top: 3rem;
     padding-top: 2rem;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid var(--border, #e2e8f0);
 }
 
 .reviews-section h2 {
     font-size: 1.4rem;
-    color: #1e293b;
+    color: var(--text, #1e293b);
     font-weight: 700;
     margin-bottom: 0.5rem;
 }
@@ -22,7 +22,7 @@
 .reviews-avg {
     font-size: 2rem;
     font-weight: 700;
-    color: #1e293b;
+    color: var(--text, #1e293b);
 }
 
 .reviews-stars {
@@ -40,13 +40,13 @@
 }
 
 .reviews-count {
-    color: #64748b;
+    color: var(--text-muted, #64748b);
     font-size: 0.9rem;
 }
 
 /* ─── Review Card ─── */
 .review-card {
-    background: #f8fafc;
+    background: var(--surface-tint, #f8fafc);
     border-radius: 10px;
     padding: 1.25rem;
     margin-bottom: 1rem;
@@ -61,12 +61,12 @@
 
 .review-user {
     font-weight: 600;
-    color: #1e293b;
+    color: var(--text, #1e293b);
     font-size: 0.95rem;
 }
 
 .review-date {
-    color: #94a3b8;
+    color: var(--text-muted, #94a3b8);
     font-size: 0.8rem;
 }
 
@@ -86,7 +86,7 @@
 }
 
 .review-comment {
-    color: #475569;
+    color: var(--text-muted, #475569);
     font-size: 0.9rem;
     line-height: 1.5;
 }
@@ -105,7 +105,7 @@
 }
 
 .review-form-card {
-    background: white;
+    background: var(--surface, white);
     border-radius: 12px;
     padding: 2rem;
     max-width: 460px;
@@ -115,7 +115,7 @@
 
 .review-form-card h3 {
     font-size: 1.2rem;
-    color: #1e293b;
+    color: var(--text, #1e293b);
     margin: 0 0 1.25rem;
 }
 
@@ -147,7 +147,7 @@
     width: 100%;
     min-height: 100px;
     padding: 12px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border, #e2e8f0);
     border-radius: 8px;
     font-size: 0.95rem;
     resize: vertical;
@@ -176,8 +176,8 @@
 }
 
 .review-cancel-btn {
-    background: #f1f5f9;
-    color: #64748b;
+    background: var(--surface-tint, #f1f5f9);
+    color: var(--text-muted, #64748b);
 }
 
 .review-submit-btn {
@@ -207,7 +207,7 @@
 }
 
 .no-reviews {
-    color: #94a3b8;
+    color: var(--text-muted, #94a3b8);
     font-size: 0.9rem;
     padding: 1rem 0;
 }
