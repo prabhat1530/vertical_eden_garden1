@@ -59,21 +59,31 @@ const findValidRefreshToken = async (raw) => {
     return doc;
 };
 
-const cookieOptions = (expiresAt) => ({
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-    expires: expiresAt,
-    path: '/api/auth',
-});
+// Cookie attributes follow the connection, not NODE_ENV:
+// • over HTTPS (production, frontend and API on different sites) the cookie
+//   must be `SameSite=None; Secure` or the browser won't send it cross-site;
+// • over plain HTTP (local dev, same origin via the CRA proxy) `Lax` works and
+//   `Secure` would make the browser drop the cookie.
+// req.secure is reliable here because `trust proxy` makes Express read the
+// proxy's X-Forwarded-Proto header.
+const cookieOptions = (req, expiresAt) => {
+    const isHttps = !!(req && req.secure);
+    return {
+        httpOnly: true,
+        secure: isHttps,
+        sameSite: isHttps ? 'none' : 'lax',
+        expires: expiresAt,
+        path: '/api/auth',
+    };
+};
 
 // Attach the refresh cookie to a response.
 const setRefreshCookie = (res, raw, expiresAt) => {
-    res.cookie(REFRESH_COOKIE, raw, cookieOptions(expiresAt));
+    res.cookie(REFRESH_COOKIE, raw, cookieOptions(res.req, expiresAt));
 };
 
 const clearRefreshCookie = (res) => {
-    res.clearCookie(REFRESH_COOKIE, { ...cookieOptions(new Date()), expires: undefined });
+    res.clearCookie(REFRESH_COOKIE, { ...cookieOptions(res.req, new Date()), expires: undefined });
 };
 
 module.exports = {

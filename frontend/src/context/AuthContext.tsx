@@ -48,24 +48,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     useEffect(() => {
         let cancelled = false;
 
+        // Fallback when the refresh cookie is unavailable (e.g. a browser that
+        // blocks cross-site cookies): keep using the stored access token for
+        // as long as the server still accepts it.
+        const restoreFromStoredToken = async (): Promise<boolean> => {
+            const stored = localStorage.getItem('veg_token');
+            if (!stored) return false;
+            try {
+                const res = await fetch(`${API_URL}/auth/me`, {
+                    headers: { Authorization: `Bearer ${stored}` },
+                });
+                const data = await res.json();
+                if (!cancelled && data.success && data.user) {
+                    setToken(stored);
+                    setUser(data.user);
+                    return true;
+                }
+            } catch { /* fall through */ }
+            return false;
+        };
+
         (async () => {
             const newToken = await refreshAccessToken();
-            if (!cancelled) {
-                if (newToken) {
-                    const cached = localStorage.getItem('veg_user');
-                    setToken(newToken);
-                    if (cached) {
-                        try { setUser(JSON.parse(cached)); } catch { /* ignore */ }
-                    }
-                } else {
-                    // No valid session — clear any stale local data.
-                    localStorage.removeItem('veg_token');
-                    localStorage.removeItem('veg_user');
-                    setToken(null);
-                    setUser(null);
+            if (cancelled) return;
+
+            if (newToken) {
+                const cached = localStorage.getItem('veg_user');
+                setToken(newToken);
+                if (cached) {
+                    try { setUser(JSON.parse(cached)); } catch { /* ignore */ }
                 }
-                setIsLoading(false);
+            } else if (!(await restoreFromStoredToken())) {
+                if (cancelled) return;
+                // No valid session — clear any stale local data.
+                localStorage.removeItem('veg_token');
+                localStorage.removeItem('veg_user');
+                setToken(null);
+                setUser(null);
             }
+            if (!cancelled) setIsLoading(false);
         })();
 
         return () => { cancelled = true; };

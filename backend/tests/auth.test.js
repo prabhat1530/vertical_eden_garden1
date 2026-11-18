@@ -23,6 +23,24 @@ describe('Auth hardening (Phase 1)', () => {
         expect(/HttpOnly/i.test(refresh)).toBe(true);
     });
 
+    test('refresh cookie is SameSite=None; Secure over HTTPS and Lax over plain HTTP', async () => {
+        // Behind Render's proxy, HTTPS arrives as X-Forwarded-Proto: https.
+        const viaHttps = await request(app)
+            .post('/api/auth/signup')
+            .set('X-Forwarded-Proto', 'https')
+            .send({ ...signupBody, email: 'https@example.com' });
+        const secureCookie = viaHttps.headers['set-cookie'].find((c) => c.startsWith('veg_refresh='));
+        expect(secureCookie).toMatch(/SameSite=None/i);
+        expect(secureCookie).toMatch(/;\s*Secure/i);
+
+        const viaHttp = await request(app)
+            .post('/api/auth/signup')
+            .send({ ...signupBody, email: 'http@example.com' });
+        const devCookie = viaHttp.headers['set-cookie'].find((c) => c.startsWith('veg_refresh='));
+        expect(devCookie).toMatch(/SameSite=Lax/i);
+        expect(devCookie).not.toMatch(/;\s*Secure/i);
+    });
+
     test('refresh exchanges the cookie for a new access token', async () => {
         const agent = request.agent(app); // persists cookies across requests
         await agent.post('/api/auth/signup').send(signupBody);
