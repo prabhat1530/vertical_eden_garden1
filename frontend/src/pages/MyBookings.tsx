@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FaCalendarAlt, FaMapMarkerAlt, FaClock, FaLeaf, FaPlus, FaReceipt, FaStar, FaDownload, FaTimes, FaExchangeAlt, FaCreditCard } from 'react-icons/fa';
 import ReviewForm from '../components/Reviews/ReviewForm';
@@ -40,8 +40,7 @@ interface BookingItem {
 }
 
 const MyBookings: React.FC = () => {
-    const { user, token, isAuthenticated } = useAuth();
-    const history = useHistory();
+    const { user, token } = useAuth();
     const [bookings, setBookings] = useState<BookingItem[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -71,13 +70,10 @@ const MyBookings: React.FC = () => {
         }
     };
 
+    // ProtectedRoute guarantees a logged-in user; refetch if the token changes.
     useEffect(() => {
-        if (!isAuthenticated) {
-            history.push('/login?redirect=/my-bookings');
-            return;
-        }
         fetchBookings();
-    }, [isAuthenticated, token, history]);
+    }, [token]);
 
     // Replace one booking in the list with the server's updated copy.
     const replaceBooking = (updated: BookingItem) =>
@@ -172,7 +168,6 @@ const MyBookings: React.FC = () => {
             ? Math.max(0, Math.ceil((new Date(booking.holdExpiresAt).getTime() - Date.now()) / 60000))
             : 0;
 
-    if (!isAuthenticated) return null;
 
     const getStatusClass = (status: string) => {
         switch (status) {

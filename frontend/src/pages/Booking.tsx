@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useHistory, useLocation, Link } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { initiatePayment, calculatePrice } from '../services/PaymentService';
 import { apiFetch } from '../services/api';
@@ -30,8 +30,7 @@ const imageMap: { [key: string]: string } = {
 const STEPS = ['Select Service', 'Project Details', 'Review & Pay'];
 
 const Booking: React.FC = () => {
-    const { user, token, isAuthenticated } = useAuth();
-    const history = useHistory();
+    const { user, token } = useAuth();
     const location = useLocation();
 
     // Parse pre-selected service from query params
@@ -62,13 +61,6 @@ const Booking: React.FC = () => {
             setCurrentStep(1);
         }
     }, [preSelectedService]);
-
-    // Redirect to login if not authenticated
-    useEffect(() => {
-        if (!isAuthenticated) {
-            history.push(`/login?redirect=${encodeURIComponent('/booking' + location.search)}`);
-        }
-    }, [isAuthenticated, history, location.search]);
 
     const selectedServiceData = servicesData.find(s => s.slug === selectedService);
     const pricing = selectedService ? calculatePrice(selectedService, Number(areaSize) || 0) : null;
@@ -207,7 +199,6 @@ const Booking: React.FC = () => {
         setIsProcessing(false);
     };
 
-    if (!isAuthenticated) return null;
 
     // Success screen
     if (bookingComplete) {

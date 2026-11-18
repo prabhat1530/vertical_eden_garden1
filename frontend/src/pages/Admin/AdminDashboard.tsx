@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
+import { Link } from 'react-router-dom';
 import { FaUsers, FaCalendarAlt, FaRupeeSign, FaClock } from 'react-icons/fa';
 import { apiFetch } from '../../services/api';
 import './Admin.css';
@@ -33,22 +32,17 @@ interface RecentBooking {
 }
 
 const AdminDashboard: React.FC = () => {
-    const { isAdmin } = useAuth();
-    const history = useHistory();
     const [stats, setStats] = useState<Stats | null>(null);
     const [recentBookings, setRecentBookings] = useState<RecentBooking[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [emailQueue, setEmailQueue] = useState<EmailQueueStatus | null>(null);
     const [retryMessage, setRetryMessage] = useState('');
 
+    // Access is checked by ProtectedRoute (adminOnly) before this page renders.
     useEffect(() => {
-        if (!isAdmin) {
-            history.push('/');
-            return;
-        }
         fetchStats();
         fetchEmailQueue();
-    }, [isAdmin, history]);
+    }, []);
 
     const fetchStats = async () => {
         try {

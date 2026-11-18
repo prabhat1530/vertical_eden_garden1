@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Admin.css';
 
@@ -16,8 +16,7 @@ interface UserItem {
 }
 
 const AdminUsers: React.FC = () => {
-    const { token, isAdmin } = useAuth();
-    const history = useHistory();
+    const { token } = useAuth();
     const [users, setUsers] = useState<UserItem[]>([]);
     const [filteredUsers, setFilteredUsers] = useState<UserItem[]>([]);
     const [search, setSearch] = useState('');
@@ -26,9 +25,8 @@ const AdminUsers: React.FC = () => {
     const itemsPerPage = 10;
 
     useEffect(() => {
-        if (!isAdmin) { history.push('/'); return; }
         fetchUsers();
-    }, [isAdmin, history]);
+    }, []);
 
     useEffect(() => {
         if (!search.trim()) {
