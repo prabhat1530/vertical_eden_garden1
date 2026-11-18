@@ -26,6 +26,35 @@
     --font-accent: 'Allura', cursive;
 }
 
+/* ─────────────────────────────────────────────
+   Dark mode
+   The theme tokens below exist ONLY in dark mode. Every themed colour in the
+   CSS is written as var(--token, <original colour>): in light mode the token
+   is undefined, so the browser uses the original colour and the light site
+   is exactly as before. In dark mode the token takes over.
+   The theme is set on <html data-theme="..."> by public/index.html before
+   the first paint, and switched by the toggle in the header.
+   ───────────────────────────────────────────── */
+[data-theme='dark'] {
+    color-scheme: dark; /* native scrollbars, date pickers and form controls */
+
+    --surface: #18211d;          /* cards, panels, modals, header bar */
+    --surface-alt: #0f1512;      /* page and section backgrounds */
+    --surface-tint: #1f2b25;     /* hover rows, chips, soft-green / grey fills */
+    --input-bg: #121a16;         /* text fields, selects, textareas */
+    --text: #e3ebe6;             /* body text and dark headings */
+    --text-muted: #a2b1a9;       /* secondary text, captions, placeholders */
+    --heading-green: #8fd19e;    /* green text (headings, links, prices) */
+    --border: #2c3832;           /* borders and dividers */
+
+    /* Existing site variables, mapped onto the dark tokens */
+    --bg-color: var(--surface-alt);
+    --card-bg: var(--surface);
+    --text-color: var(--text);
+    --header-main-bg: var(--surface);
+    --text-dark: var(--text);
+}
+
 *,
 *::before,
 *::after {
@@ -72,7 +101,7 @@ h5,
 h6 {
     margin: 0;
     padding: 0;
-    color: var(--dark-green);
+    color: var(--heading-green, var(--dark-green));
     font-weight: 700;
     font-family: var(--font-heading);
 }
@@ -207,9 +236,9 @@ button:hover,
     width: 100%;
     margin-bottom: 20px;
     padding: 15px;
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border, #e0e0e0);
     border-radius: 8px;
-    background-color: #fafafa;
+    background-color: var(--input-bg, #fafafa);
     color: var(--text-color);
     font-size: 1rem;
     transition: border-color 0.3s;
@@ -220,7 +249,7 @@ button:hover,
 .contact-form textarea:focus {
     outline: none;
     border-color: var(--primary-green);
-    background-color: #fff;
+    background-color: var(--input-bg, #fff);
 }
 
 .contact-form button {
@@ -238,8 +267,8 @@ button:hover,
 }
 
 .skeleton {
-    background: #f6f7f8;
-    background-image: linear-gradient(to right, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
+    background: var(--surface-tint, #f6f7f8);
+    background-image: linear-gradient(to right, var(--surface-tint, #f6f7f8) 0%, var(--border, #edeef1) 20%, var(--surface-tint, #f6f7f8) 40%, var(--surface-tint, #f6f7f8) 100%);
     background-repeat: no-repeat;
     background-size: 800px 100%; 
     animation-duration: 1.5s;
