@@ -1,8 +1,11 @@
 const { spawnSync } = require('child_process');
 
-// Tests that need a real Redis use database 15, separate from the app's
-// database 0, and wipe it afterwards.
+// Tests that need a real Redis use databases 14-15, separate from the app's
+// database 0, and wipe them afterwards. Test files run in parallel, so each
+// file gets its own database: one file's flushdb must not delete another
+// file's keys (e.g. queued email jobs) mid-test.
 const TEST_REDIS_URL = process.env.TEST_REDIS_URL || 'redis://127.0.0.1:6379/15';
+const testRedisUrl = (db) => `${TEST_REDIS_URL.replace(/\/\d+$/, '')}/${db}`;
 
 // Checked synchronously so a test file can choose describe vs describe.skip.
 const isRedisReachable = () => {
@@ -22,4 +25,4 @@ if (!redisAvailable) {
 
 const describeWithRedis = redisAvailable ? describe : describe.skip;
 
-module.exports = { TEST_REDIS_URL, redisAvailable, describeWithRedis };
+module.exports = { TEST_REDIS_URL, testRedisUrl, redisAvailable, describeWithRedis };

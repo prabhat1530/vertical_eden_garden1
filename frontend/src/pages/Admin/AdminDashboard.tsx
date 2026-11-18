@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { FaUsers, FaCalendarAlt, FaRupeeSign, FaClock } from 'react-icons/fa';
 import { apiFetch } from '../../services/api';
 import './Admin.css';
+import AdminCharts, { ChartData } from './AdminCharts';
 
 interface Stats {
     totalUsers: number;
@@ -33,6 +34,7 @@ interface RecentBooking {
 
 const AdminDashboard: React.FC = () => {
     const [stats, setStats] = useState<Stats | null>(null);
+    const [charts, setCharts] = useState<ChartData | null>(null);
     const [recentBookings, setRecentBookings] = useState<RecentBooking[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [emailQueue, setEmailQueue] = useState<EmailQueueStatus | null>(null);
@@ -50,6 +52,7 @@ const AdminDashboard: React.FC = () => {
             const data = await res.json();
             if (data.success) {
                 setStats(data.stats);
+                setCharts(data.charts || null);
                 setRecentBookings(data.recentBookings);
             }
         } catch (error) {
@@ -146,6 +149,8 @@ const AdminDashboard: React.FC = () => {
                     </div>
                 </div>
             )}
+
+            {charts && <AdminCharts charts={charts} />}
 
             {emailQueue && (
                 <div className="admin-table-wrapper email-queue-panel">

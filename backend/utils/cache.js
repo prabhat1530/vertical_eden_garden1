@@ -13,6 +13,7 @@ const { redis, isRedisReady } = require('../config/redis');
 const CACHE_KEYS = {
     adminStats: 'cache:admin:stats',
     reviews: (serviceSlug) => `cache:reviews:${serviceSlug}`,
+    reviewSummary: 'cache:reviews:summary',
 };
 
 const cached = async (key, ttlSeconds, compute) => {

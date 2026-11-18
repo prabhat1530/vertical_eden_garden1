@@ -339,6 +339,13 @@ module.exports = {
                 responses: { 201: ok('Review created', { type: 'object', properties: { success: { type: 'boolean' }, review: ref('Review') } }), 400: err('Invalid input, booking not completed, or already reviewed'), 401: UNAUTHORIZED, 404: err('Booking not found') },
             },
         },
+        '/api/reviews/summary': {
+            get: {
+                tags: ['Reviews'], summary: 'Average rating and review count for every service',
+                description: 'Used by the service cards. Computed with a MongoDB aggregation, cached in Redis for 10 minutes and cleared when a review is posted. Services with no reviews are left out.',
+                responses: { 200: ok('Ratings keyed by service slug', { type: 'object', properties: { success: { type: 'boolean' }, services: { type: 'object', additionalProperties: { type: 'object', properties: { averageRating: { type: 'number', example: 4.5 }, count: { type: 'integer', example: 12 } } }, example: { 'terrace-garden': { averageRating: 4.5, count: 12 } } } } }) },
+            },
+        },
         '/api/reviews/{serviceSlug}': {
             get: {
                 tags: ['Reviews'], summary: 'Reviews and average rating for a service',
@@ -366,7 +373,7 @@ module.exports = {
         // ───────── Admin ─────────
         '/api/admin/stats': {
             get: {
-                tags: ['Admin'], summary: 'Dashboard numbers and the 5 latest bookings', security: AUTH,
+                tags: ['Admin'], summary: 'Dashboard numbers, chart data and the 5 latest bookings', security: AUTH,
                 description: 'Cached in Redis for 60 seconds and cleared after any booking change. See the `X-Cache` header.',
                 responses: {
                     200: ok('Stats', {
@@ -375,6 +382,15 @@ module.exports = {
                             success: { type: 'boolean' },
                             stats: { type: 'object', properties: { totalUsers: { type: 'integer' }, totalBookings: { type: 'integer' }, pendingBookings: { type: 'integer' }, confirmedBookings: { type: 'integer' }, completedBookings: { type: 'integer' }, totalRevenue: { type: 'number' } } },
                             recentBookings: { type: 'array', items: ref('AdminBooking') },
+                            charts: {
+                                type: 'object',
+                                description: 'Computed with MongoDB aggregations. Months are in India time (booking date); revenue counts paid bookings only.',
+                                properties: {
+                                    monthly: { type: 'array', description: 'Last 6 months, oldest first, zeros included', items: { type: 'object', properties: { month: { type: 'string', example: '2026-11' }, bookings: { type: 'integer' }, revenue: { type: 'number' } } } },
+                                    byService: { type: 'array', description: 'Most booked first', items: { type: 'object', properties: { service: { type: 'string', example: 'Terrace Garden' }, count: { type: 'integer' } } } },
+                                    byStatus: { type: 'array', items: { type: 'object', properties: { status: { type: 'string', enum: ['pending', 'confirmed', 'completed', 'cancelled'] }, count: { type: 'integer' } } } },
+                                },
+                            },
                         },
                     }),
                     401: UNAUTHORIZED, 403: FORBIDDEN,

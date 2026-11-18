@@ -42,9 +42,9 @@ describe('API documentation (Phase 5)', () => {
         expect(stale).toEqual([]);
     });
 
-    test('documents all 31 API routes', () => {
-        expect(appRoutes()).toHaveLength(31);
-        expect(documentedRoutes()).toHaveLength(31);
+    test('documents all 32 API routes', () => {
+        expect(appRoutes()).toHaveLength(32);
+        expect(documentedRoutes()).toHaveLength(32);
     });
 
     test('every $ref points to a defined schema', () => {
