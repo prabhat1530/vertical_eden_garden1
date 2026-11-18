@@ -21,9 +21,14 @@ const webhookRoutes = require('./routes/webhooks');
 // Initialize Express app
 const app = express();
 
-// Trust the first proxy (Render/Vercel) so req.ip and rate limiting use the
-// real client IP from X-Forwarded-For, not the proxy's address.
-app.set('trust proxy', 1);
+// How many proxies sit between the internet and this app. Express uses it
+// to read the real client IP from X-Forwarded-For (rate limiting depends on
+// it). Too low → every visitor looks like the proxy's IP and shares one
+// rate-limit counter; too high → visitors can fake their IP. Render puts
+// Cloudflare in front of its own load balancer, so the right value must be
+// measured with GET /api/ip (see below) and set via TRUST_PROXY.
+const TRUST_PROXY = process.env.TRUST_PROXY || '1';
+app.set('trust proxy', /^\d+$/.test(TRUST_PROXY) ? Number(TRUST_PROXY) : TRUST_PROXY);
 
 // ─────────────────────────────────────────────
 // Middleware
@@ -67,6 +72,16 @@ app.get('/api/health', (req, res) => {
         status: 'ok',
         message: 'Vertical Eden Garden API is running',
         timestamp: new Date().toISOString(),
+    });
+});
+
+// IP check — used to calibrate TRUST_PROXY. When it is correct, `ip` equals
+// the caller's real public IP. Only echoes the caller's own request data.
+app.get('/api/ip', (req, res) => {
+    res.json({
+        ip: req.ip,
+        forwardedFor: req.headers['x-forwarded-for'] || null,
+        trustProxy: app.get('trust proxy'),
     });
 });
 
