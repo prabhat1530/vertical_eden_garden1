@@ -59,6 +59,7 @@ module.exports = {
     PAYMENT_HOLD_MINUTES,
     CHANGE_CUTOFF_HOURS,
     MAX_RESCHEDULES,
+    TIMEZONE,
     toISTDateString,
     slotStartsAt,
     validateSlotChoice,
