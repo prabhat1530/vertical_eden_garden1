@@ -5,7 +5,7 @@
 .booking-page {
     min-height: 100vh;
     padding: 130px 5% 60px;
-    background: linear-gradient(180deg, #f1f8e9 0%, #ffffff 40%);
+    background: var(--surface-alt, linear-gradient(180deg, #f1f8e9 0%, #ffffff 40%));
     max-width: 1100px;
     margin: 0 auto;
 }
@@ -18,12 +18,12 @@
 .booking-header h1 {
     font-family: var(--font-heading);
     font-size: 2.5rem;
-    color: var(--dark-green, #1b5e20);
+    color: var(--heading-green, var(--dark-green, #1b5e20));
     margin-bottom: 8px;
 }
 
 .booking-header p {
-    color: #78909c;
+    color: var(--text-muted, #78909c);
     font-size: 1.05rem;
 }
 
@@ -48,8 +48,8 @@
     width: 38px;
     height: 38px;
     border-radius: 50%;
-    background: #e0e0e0;
-    color: #78909c;
+    background: var(--surface-tint, #e0e0e0);
+    color: var(--text-muted, #78909c);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -74,23 +74,23 @@
 .step-label {
     font-size: 0.88rem;
     font-weight: 600;
-    color: #90a4ae;
+    color: var(--text-muted, #90a4ae);
     white-space: nowrap;
     transition: color 0.3s;
 }
 
 .progress-step.active .step-label {
-    color: var(--dark-green, #1b5e20);
+    color: var(--heading-green, var(--dark-green, #1b5e20));
 }
 
 .progress-step.completed .step-label {
-    color: #2e7d32;
+    color: var(--heading-green, #2e7d32);
 }
 
 .step-connector {
     width: 60px;
     height: 3px;
-    background: #e0e0e0;
+    background: var(--border, #e0e0e0);
     margin: 0 12px;
     border-radius: 2px;
     transition: background 0.4s;
@@ -148,12 +148,12 @@
 .step-title {
     font-family: var(--font-heading);
     font-size: 1.8rem;
-    color: var(--dark-green, #1b5e20);
+    color: var(--heading-green, var(--dark-green, #1b5e20));
     margin-bottom: 6px;
 }
 
 .step-subtitle {
-    color: #78909c;
+    color: var(--text-muted, #78909c);
     margin-bottom: 30px;
     font-size: 0.95rem;
 }
@@ -166,7 +166,7 @@
 }
 
 .service-select-card {
-    background: white;
+    background: var(--surface, white);
     border-radius: 16px;
     overflow: hidden;
     cursor: pointer;
@@ -232,11 +232,11 @@
     font-family: var(--font-heading);
     font-size: 1.2rem;
     margin-bottom: 4px;
-    color: var(--dark-green, #1b5e20);
+    color: var(--heading-green, var(--dark-green, #1b5e20));
 }
 
 .service-select-info p {
-    color: #78909c;
+    color: var(--text-muted, #78909c);
     font-size: 0.85rem;
     margin: 0;
 }
@@ -261,7 +261,7 @@
 .booking-input-group label {
     font-size: 0.88rem;
     font-weight: 600;
-    color: #455a64;
+    color: var(--text, #455a64);
     display: flex;
     align-items: center;
     gap: 6px;
@@ -271,12 +271,12 @@
 .booking-input-group select,
 .booking-input-group textarea {
     padding: 13px 16px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid var(--border, #e0e0e0);
     border-radius: 10px;
     font-size: 0.95rem;
     font-family: var(--font-body);
-    background: #fafafa;
-    color: var(--text-color, #263238);
+    background: var(--input-bg, #fafafa);
+    color: var(--text, var(--text-color, #263238));
     transition: all 0.3s ease;
     outline: none;
     width: 100%;
@@ -287,7 +287,7 @@
 .booking-input-group select:focus,
 .booking-input-group textarea:focus {
     border-color: var(--primary-green, #2e7d32);
-    background: #fff;
+    background: var(--input-bg, #fff);
     box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.1);
 }
 
@@ -299,7 +299,7 @@
 /* Price Preview */
 .price-preview {
     margin-top: 30px;
-    background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+    background: var(--surface-tint, linear-gradient(135deg, #e8f5e9, #f1f8e9));
     border-radius: 16px;
     padding: 24px;
     border: 1px solid #c8e6c9;
@@ -307,7 +307,7 @@
 
 .price-preview h4 {
     font-family: var(--font-heading);
-    color: var(--dark-green, #1b5e20);
+    color: var(--heading-green, var(--dark-green, #1b5e20));
     font-size: 1.15rem;
     margin-bottom: 16px;
 }
@@ -318,7 +318,7 @@
     align-items: center;
     padding: 8px 0;
     font-size: 0.95rem;
-    color: #546e7a;
+    color: var(--text-muted, #546e7a);
 }
 
 .price-preview-row.total {
@@ -327,7 +327,7 @@
     padding-top: 12px;
     font-weight: 700;
     font-size: 1.15rem;
-    color: var(--dark-green, #1b5e20);
+    color: var(--heading-green, var(--dark-green, #1b5e20));
 }
 
 /* ---- Step 3: Review ---- */
@@ -337,7 +337,7 @@
 }
 
 .review-card {
-    background: white;
+    background: var(--surface, white);
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
@@ -348,7 +348,7 @@
     align-items: center;
     gap: 20px;
     padding: 24px;
-    background: linear-gradient(135deg, #e8f5e9, #f1f8e9);
+    background: var(--surface-tint, linear-gradient(135deg, #e8f5e9, #f1f8e9));
 }
 
 .review-card-header img {
@@ -361,12 +361,12 @@
 .review-card-header h3 {
     font-family: var(--font-heading);
     font-size: 1.4rem;
-    color: var(--dark-green, #1b5e20);
+    color: var(--heading-green, var(--dark-green, #1b5e20));
     margin-bottom: 4px;
 }
 
 .review-tagline {
-    color: #78909c;
+    color: var(--text-muted, #78909c);
     font-size: 0.88rem;
 }
 
@@ -379,7 +379,7 @@
     justify-content: space-between;
     align-items: flex-start;
     padding: 10px 0;
-    border-bottom: 1px solid #f0f0f0;
+    border-bottom: 1px solid var(--border, #f0f0f0);
 }
 
 .review-detail-row:last-child {
@@ -387,7 +387,7 @@
 }
 
 .review-label {
-    color: #78909c;
+    color: var(--text-muted, #78909c);
     font-size: 0.9rem;
     font-weight: 500;
     flex-shrink: 0;
@@ -395,7 +395,7 @@
 }
 
 .review-value {
-    color: var(--text-color, #263238);
+    color: var(--text, var(--text-color, #263238));
     font-weight: 600;
     font-size: 0.9rem;
     text-align: right;
@@ -403,7 +403,7 @@
 
 .review-pricing {
     padding: 20px 24px;
-    background: #fafafa;
+    background: var(--surface-tint, #fafafa);
 }
 
 .review-price-row {
@@ -411,16 +411,16 @@
     justify-content: space-between;
     padding: 8px 0;
     font-size: 0.95rem;
-    color: #546e7a;
+    color: var(--text-muted, #546e7a);
 }
 
 .review-price-row.total {
-    border-top: 2px solid #e0e0e0;
+    border-top: 2px solid var(--border, #e0e0e0);
     margin-top: 8px;
     padding-top: 14px;
     font-weight: 700;
     font-size: 1.2rem;
-    color: var(--dark-green, #1b5e20);
+    color: var(--heading-green, var(--dark-green, #1b5e20));
 }
 
 .payment-info {
@@ -435,7 +435,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #2e7d32;
+    color: var(--heading-green, #2e7d32);
     font-weight: 600;
     font-size: 0.9rem;
 }
@@ -444,7 +444,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #90a4ae;
+    color: var(--text-muted, #90a4ae);
     font-size: 0.82rem;
 }
 
@@ -454,7 +454,7 @@
     align-items: center;
     margin-top: 40px;
     padding-top: 24px;
-    border-top: 1px solid #e8e8e8;
+    border-top: 1px solid var(--border, #e8e8e8);
 }
 
 .booking-nav-spacer {
@@ -476,14 +476,14 @@
 }
 
 .booking-nav-btn.back {
-    background: #f5f5f5;
-    color: #546e7a;
+    background: var(--surface-tint, #f5f5f5);
+    color: var(--text-muted, #546e7a);
     box-shadow: none;
 }
 
 .booking-nav-btn.back:hover {
-    background: #eeeeee;
-    color: #37474f;
+    background: var(--border, #eeeeee);
+    color: var(--text, #37474f);
     transform: none;
     box-shadow: none;
 }
@@ -576,22 +576,22 @@
 .booking-success h2 {
     font-family: var(--font-heading);
     font-size: 2rem;
-    color: var(--dark-green, #1b5e20);
+    color: var(--heading-green, var(--dark-green, #1b5e20));
     margin-bottom: 10px;
 }
 
 .success-id {
-    color: #2e7d32;
+    color: var(--heading-green, #2e7d32);
     font-size: 0.95rem;
     margin-bottom: 16px;
-    background: #e8f5e9;
+    background: var(--surface-tint, #e8f5e9);
     display: inline-block;
     padding: 6px 16px;
     border-radius: 8px;
 }
 
 .success-desc {
-    color: #78909c;
+    color: var(--text-muted, #78909c);
     font-size: 0.95rem;
     line-height: 1.6;
     margin-bottom: 32px;
@@ -627,13 +627,13 @@
 }
 
 .success-btn.secondary {
-    background: #f5f5f5;
-    color: #546e7a;
+    background: var(--surface-tint, #f5f5f5);
+    color: var(--text-muted, #546e7a);
 }
 
 .success-btn.secondary:hover {
-    background: #eeeeee;
-    color: #37474f;
+    background: var(--border, #eeeeee);
+    color: var(--text, #37474f);
 }
 
 /* ---- Responsive ---- */

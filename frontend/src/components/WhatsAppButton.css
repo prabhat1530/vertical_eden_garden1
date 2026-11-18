@@ -14,8 +14,8 @@
 }
 
 .whatsapp-text-bubble {
-    background-color: white;
-    color: #333;
+    background-color: var(--surface, white);
+    color: var(--text, #333);
     padding: 10px 20px;
     border-radius: 50px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);

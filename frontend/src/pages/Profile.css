@@ -1,7 +1,7 @@
 /* ─── Profile Page ─── */
 .profile-page {
     min-height: 100vh;
-    background: #f1f5f9;
+    background: var(--surface-alt, #f1f5f9);
     padding: 2rem;
 }
 
@@ -16,12 +16,12 @@
 
 .profile-header h1 {
     font-size: 1.8rem;
-    color: #1e293b;
+    color: var(--text, #1e293b);
     font-weight: 700;
 }
 
 .profile-card {
-    background: white;
+    background: var(--surface, white);
     border-radius: 12px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
     padding: 2rem;
@@ -30,11 +30,11 @@
 
 .profile-card h2 {
     font-size: 1.15rem;
-    color: #1e293b;
+    color: var(--text, #1e293b);
     font-weight: 600;
     margin: 0 0 1.5rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border, #e2e8f0);
 }
 
 .profile-form-group {
@@ -45,14 +45,14 @@
     display: block;
     font-size: 0.85rem;
     font-weight: 500;
-    color: #64748b;
+    color: var(--text-muted, #64748b);
     margin-bottom: 6px;
 }
 
 .profile-form-group input {
     width: 100%;
     padding: 10px 14px;
-    border: 1px solid #e2e8f0;
+    border: 1px solid var(--border, #e2e8f0);
     border-radius: 8px;
     font-size: 0.95rem;
     outline: none;
@@ -108,12 +108,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #f1f5f9;
+    background: var(--surface-alt, #f1f5f9);
     padding: 2rem;
 }
 
 .auth-simple-card {
-    background: white;
+    background: var(--surface, white);
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
     padding: 2.5rem;
@@ -123,13 +123,13 @@
 
 .auth-simple-card h1 {
     font-size: 1.5rem;
-    color: #1e293b;
+    color: var(--text, #1e293b);
     font-weight: 700;
     margin: 0 0 0.5rem;
 }
 
 .auth-simple-card p {
-    color: #64748b;
+    color: var(--text-muted, #64748b);
     font-size: 0.9rem;
     margin: 0 0 1.5rem;
 }
@@ -147,7 +147,7 @@
     display: block;
     text-align: center;
     margin-top: 1rem;
-    color: #1e293b;
+    color: var(--text, #1e293b);
     text-decoration: none;
     font-size: 0.9rem;
 }

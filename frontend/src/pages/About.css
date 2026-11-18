@@ -1,7 +1,7 @@
 /* About.css */
 .about-page {
     font-family: var(--font-body);
-    color: #333;
+    color: var(--text, #333);
     overflow-x: hidden;
 }
 
@@ -10,7 +10,7 @@
     display: flex;
     min-height: 85vh;
     position: relative;
-    background: #fcfcfc;
+    background: var(--surface-alt, #fcfcfc);
     overflow: hidden;
     width: 100vw;
     margin-left: calc(50% - 50vw);
@@ -24,7 +24,7 @@
     justify-content: center;
     padding: 80px 60px;
     z-index: 2;
-    background: #ffffff;
+    background: var(--surface, #ffffff);
     max-width: 50%;
     opacity: 0;
     transform: translateX(-30px);
@@ -40,7 +40,7 @@
     font-size: 0.9rem;
     text-transform: uppercase;
     letter-spacing: 3px;
-    color: #4CAF50;
+    color: var(--heading-green, #4CAF50);
     font-weight: 600;
     margin-bottom: 20px;
     display: block;
@@ -50,14 +50,14 @@
     font-family: var(--font-heading);
     font-size: 5.5rem;
     line-height: 1.1;
-    color: #1a1a1a;
+    color: var(--text, #1a1a1a);
     margin-bottom: 30px;
 }
 
 .hero-split-content p {
     font-size: 1.2rem;
     line-height: 1.7;
-    color: #666;
+    color: var(--text-muted, #666);
     max-width: 500px;
     margin-bottom: 50px;
 }
@@ -75,7 +75,7 @@
 .stat-num {
     font-size: 2.5rem;
     font-weight: 700;
-    color: #1a4031;
+    color: var(--heading-green, #1a4031);
     /* Deep Forest Green */
 }
 
@@ -83,7 +83,7 @@
     font-size: 0.85rem;
     text-transform: uppercase;
     letter-spacing: 1px;
-    color: #888;
+    color: var(--text-muted, #888);
 }
 
 .hero-split-image {
@@ -220,7 +220,7 @@
 /* Story Section */
 .story-section {
     padding: 120px 0;
-    background: #fff;
+    background: var(--surface, #fff);
     width: 100vw;
     margin-left: calc(50% - 50vw);
     margin-right: calc(50% - 50vw);
@@ -249,7 +249,7 @@
 
 .section-tag {
     font-size: 0.9rem;
-    color: #aaa;
+    color: var(--text-muted, #aaa);
     text-transform: uppercase;
     letter-spacing: 2px;
     margin-bottom: 15px;
@@ -259,13 +259,13 @@
 .story-content h2 {
     font-family: var(--font-heading);
     font-size: 3.5rem;
-    color: #1a1a1a;
+    color: var(--text, #1a1a1a);
     margin-bottom: 30px;
 }
 
 .story-content p {
     font-size: 1.1rem;
-    color: #555;
+    color: var(--text-muted, #555);
     line-height: 1.8;
     margin-bottom: 20px;
 }
@@ -282,14 +282,14 @@
 
 .value-icon {
     font-size: 1.8rem;
-    color: #4CAF50;
+    color: var(--heading-green, #4CAF50);
     margin-bottom: 10px;
 }
 
 .value-item h4 {
     font-size: 0.9rem;
     font-weight: 600;
-    color: #333;
+    color: var(--text, #333);
 }
 
 .story-image-wrapper {
