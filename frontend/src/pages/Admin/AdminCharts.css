@@ -1,0 +1,156 @@
+/* Admin dashboard charts — one brand-green series per chart. */
+.charts-grid {
+    --chart-bar: #2e7d32;
+    --chart-bar-hover: #1b5e20;
+    --chart-track: #eef2ee;
+    --chart-grid: #e2e8f0;
+    --chart-text: #2c3e50;
+    --chart-muted: #64748b;
+
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.chart-card {
+    margin: 0;
+    background: white;
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem 1.5rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+    min-width: 0;
+}
+
+.chart-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--chart-text);
+    margin-bottom: 1.25rem;
+}
+
+.chart-empty {
+    color: var(--chart-muted);
+    font-size: 0.9rem;
+}
+
+/* ── Column chart (months) ── */
+.column-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    height: 160px;
+    margin-top: 2rem; /* room for the hover tooltip above the tallest bar */
+    border-bottom: 1px solid var(--chart-grid);
+}
+
+.column-slot {
+    position: relative;
+    flex: 1;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    outline: none;
+    cursor: default;
+}
+
+.column-bar {
+    width: 100%;
+    max-width: 24px;
+    min-height: 2px; /* a zero month still shows where the baseline is */
+    background: var(--chart-bar);
+    border-radius: 4px 4px 0 0;
+    transition: background 0.15s;
+}
+
+.column-slot:hover .column-bar,
+.column-slot:focus-visible .column-bar {
+    background: var(--chart-bar-hover);
+}
+
+.chart-tooltip {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    background: var(--chart-text);
+    color: white;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.column-slot:hover .chart-tooltip,
+.column-slot:focus-visible .chart-tooltip {
+    opacity: 1;
+}
+
+.column-labels {
+    display: flex;
+    gap: 2px;
+    margin-top: 0.5rem;
+}
+
+.column-labels span {
+    flex: 1;
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--chart-muted);
+}
+
+/* ── Bar list (services, statuses) ── */
+.bar-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.bar-list li {
+    display: grid;
+    grid-template-columns: minmax(90px, 45%) 1fr 2.5rem;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+}
+
+.bar-list-label {
+    color: var(--chart-text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.bar-list-track {
+    height: 16px;
+    background: var(--chart-track);
+    border-radius: 0 4px 4px 0;
+}
+
+.bar-list-bar {
+    display: block;
+    height: 100%;
+    min-width: 2px;
+    background: var(--chart-bar);
+    border-radius: 0 4px 4px 0;
+}
+
+.bar-list-value {
+    text-align: right;
+    color: var(--chart-text);
+    font-variant-numeric: tabular-nums;
+    font-weight: 600;
+}
+
+@media (max-width: 900px) {
+    .charts-grid {
+        grid-template-columns: 1fr;
+    }
+}
