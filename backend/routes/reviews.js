@@ -3,6 +3,7 @@ const { body, validationResult } = require('express-validator');
 const Review = require('../models/Review');
 const Booking = require('../models/Booking');
 const { protect } = require('../middleware/auth');
+const { cached, invalidateCache, CACHE_KEYS } = require('../utils/cache');
 
 const router = express.Router();
 
@@ -46,6 +47,9 @@ router.post('/', protect, [
             comment,
         });
 
+        // The service's cached review list is now out of date.
+        invalidateCache(CACHE_KEYS.reviews(booking.serviceSlug));
+
         res.status(201).json({
             success: true,
             review: {
@@ -64,28 +68,36 @@ router.post('/', protect, [
 // ─────────────────────────────────────────────
 // GET /api/reviews/:serviceSlug — Get reviews for a service
 // ─────────────────────────────────────────────
+// Reviews + average rating for one service, straight from the database.
+const computeServiceReviews = async (serviceSlug) => {
+    const reviews = await Review.find({ serviceSlug })
+        .populate('user', 'name')
+        .sort({ createdAt: -1 });
+
+    // Calculate average
+    const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
+    const averageRating = reviews.length > 0 ? (totalRating / reviews.length).toFixed(1) : 0;
+
+    return {
+        count: reviews.length,
+        averageRating: Number(averageRating),
+        reviews: reviews.map(r => ({
+            id: r._id,
+            rating: r.rating,
+            comment: r.comment,
+            userName: r.user?.name || 'Anonymous',
+            createdAt: r.createdAt,
+        })),
+    };
+};
+
 router.get('/:serviceSlug', async (req, res) => {
     try {
-        const reviews = await Review.find({ serviceSlug: req.params.serviceSlug })
-            .populate('user', 'name')
-            .sort({ createdAt: -1 });
-
-        // Calculate average
-        const totalRating = reviews.reduce((sum, r) => sum + r.rating, 0);
-        const averageRating = reviews.length > 0 ? (totalRating / reviews.length).toFixed(1) : 0;
-
-        res.json({
-            success: true,
-            count: reviews.length,
-            averageRating: Number(averageRating),
-            reviews: reviews.map(r => ({
-                id: r._id,
-                rating: r.rating,
-                comment: r.comment,
-                userName: r.user?.name || 'Anonymous',
-                createdAt: r.createdAt,
-            })),
-        });
+        // Cached in Redis for 10 minutes; cleared when a new review is posted.
+        const { serviceSlug } = req.params;
+        const { value, status } = await cached(CACHE_KEYS.reviews(serviceSlug), 600, () => computeServiceReviews(serviceSlug));
+        res.set('X-Cache', status);
+        res.json({ success: true, ...value });
     } catch (error) {
         console.error('Get reviews error:', error.message);
         res.status(500).json({ success: false, error: 'Server error.' });

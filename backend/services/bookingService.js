@@ -8,6 +8,10 @@ const {
     slotStartsAt,
     validateSlotChoice,
 } = require('../config/slots');
+const { invalidateCache, CACHE_KEYS } = require('../utils/cache');
+
+// Booking data changed → the cached admin dashboard numbers are stale.
+const bookingsChanged = () => invalidateCache(CACHE_KEYS.adminStats);
 
 // ─────────────────────────────────────────────
 // Booking business actions. Every action that changes a slot runs in a
@@ -88,6 +92,7 @@ const releaseExpiredHolds = async () => {
             console.error('Release hold error:', err.message);
         }
     }
+    if (released > 0) bookingsChanged();
     return released;
 };
 
@@ -260,14 +265,24 @@ const confirmPaidBooking = async ({ bookingId, paymentId }) => {
     }
 };
 
+// Wrap an action so the admin stats cache is cleared after it changes data
+// (on success, and also on failure, since e.g. a late payment flags a refund).
+const invalidatesStats = (action) => async (...args) => {
+    try {
+        return await action(...args);
+    } finally {
+        bookingsChanged();
+    }
+};
+
 module.exports = {
     BookingError,
     SlotUnavailableError,
     releaseExpiredHolds,
     startHoldSweeper,
-    createBooking,
-    cancelBooking,
-    rescheduleBooking,
-    setStatusByAdmin,
-    confirmPaidBooking,
+    createBooking: invalidatesStats(createBooking),
+    cancelBooking: invalidatesStats(cancelBooking),
+    rescheduleBooking: invalidatesStats(rescheduleBooking),
+    setStatusByAdmin: invalidatesStats(setStatusByAdmin),
+    confirmPaidBooking: invalidatesStats(confirmPaidBooking),
 };

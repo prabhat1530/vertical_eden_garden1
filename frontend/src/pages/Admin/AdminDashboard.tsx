@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { FaUsers, FaCalendarAlt, FaRupeeSign, FaClock } from 'react-icons/fa';
+import { apiFetch } from '../../services/api';
 import './Admin.css';
-
-const API_URL = process.env.REACT_APP_API_URL || '/api';
 
 interface Stats {
     totalUsers: number;
@@ -13,6 +12,14 @@ interface Stats {
     confirmedBookings: number;
     completedBookings: number;
     totalRevenue: number;
+}
+
+// Email queue health from GET /api/admin/email-queue
+interface EmailQueueStatus {
+    enabled: boolean;
+    error?: string;
+    counts?: { waiting: number; active: number; delayed: number; completed: number; failed: number };
+    recentFailed?: { id: string; type: string; reason: string; attempts: number; failedAt: string | null }[];
 }
 
 interface RecentBooking {
@@ -26,11 +33,13 @@ interface RecentBooking {
 }
 
 const AdminDashboard: React.FC = () => {
-    const { token, isAdmin } = useAuth();
+    const { isAdmin } = useAuth();
     const history = useHistory();
     const [stats, setStats] = useState<Stats | null>(null);
     const [recentBookings, setRecentBookings] = useState<RecentBooking[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [emailQueue, setEmailQueue] = useState<EmailQueueStatus | null>(null);
+    const [retryMessage, setRetryMessage] = useState('');
 
     useEffect(() => {
         if (!isAdmin) {
@@ -38,13 +47,12 @@ const AdminDashboard: React.FC = () => {
             return;
         }
         fetchStats();
+        fetchEmailQueue();
     }, [isAdmin, history]);
 
     const fetchStats = async () => {
         try {
-            const res = await fetch(`${API_URL}/admin/stats`, {
-                headers: { 'Authorization': `Bearer ${token}` },
-            });
+            const res = await apiFetch('/admin/stats');
             const data = await res.json();
             if (data.success) {
                 setStats(data.stats);
@@ -55,6 +63,29 @@ const AdminDashboard: React.FC = () => {
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const fetchEmailQueue = async () => {
+        try {
+            const res = await apiFetch('/admin/email-queue');
+            const data = await res.json();
+            if (data.success) setEmailQueue(data.queue);
+        } catch (error) {
+            console.error('Failed to fetch email queue:', error);
+        }
+    };
+
+    // Put every failed email back in the queue for another round of attempts.
+    const retryFailed = async () => {
+        setRetryMessage('');
+        try {
+            const res = await apiFetch('/admin/email-queue/retry-failed', { method: 'POST' });
+            const data = await res.json();
+            setRetryMessage(data.success ? `Retrying ${data.retried} email(s).` : data.error || 'Retry failed.');
+        } catch {
+            setRetryMessage('Cannot connect to server.');
+        }
+        fetchEmailQueue();
     };
 
     if (isLoading) {
@@ -119,6 +150,52 @@ const AdminDashboard: React.FC = () => {
                             <p>Pending Bookings</p>
                         </div>
                     </div>
+                </div>
+            )}
+
+            {emailQueue && (
+                <div className="admin-table-wrapper email-queue-panel">
+                    <div className="admin-table-header">
+                        <h2>Email delivery</h2>
+                        {emailQueue.enabled && !!emailQueue.counts?.failed && (
+                            <button className="admin-page-btn" onClick={retryFailed}>Retry failed emails</button>
+                        )}
+                    </div>
+
+                    {!emailQueue.enabled && (
+                        <p className="email-queue-note">
+                            The email queue is off (no Redis configured), so emails are sent once and not retried if they fail.
+                        </p>
+                    )}
+                    {emailQueue.error && <p className="email-queue-note email-queue-error">{emailQueue.error}</p>}
+
+                    {emailQueue.counts && (
+                        <div className="email-queue-counts">
+                            <span className="status-badge completed">{emailQueue.counts.completed} sent (last 24h)</span>
+                            <span className="status-badge confirmed">{emailQueue.counts.waiting + emailQueue.counts.active} sending</span>
+                            <span className="status-badge pending">{emailQueue.counts.delayed} waiting to retry</span>
+                            <span className="status-badge cancelled">{emailQueue.counts.failed} failed</span>
+                        </div>
+                    )}
+                    {retryMessage && <p className="email-queue-note">{retryMessage}</p>}
+
+                    {!!emailQueue.recentFailed?.length && (
+                        <table className="admin-table">
+                            <thead>
+                                <tr><th>Email</th><th>Attempts</th><th>Last error</th><th>Failed at</th></tr>
+                            </thead>
+                            <tbody>
+                                {emailQueue.recentFailed.map(j => (
+                                    <tr key={j.id}>
+                                        <td>{j.type}</td>
+                                        <td>{j.attempts}</td>
+                                        <td>{j.reason}</td>
+                                        <td>{j.failedAt ? new Date(j.failedAt).toLocaleString('en-IN') : '-'}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             )}
 
