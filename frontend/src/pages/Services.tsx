@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { FaSearch } from 'react-icons/fa';
 import { useLocation, Link } from 'react-router-dom';
 import './Services.css';
+import RatingBadge from '../components/RatingBadge';
+import { useRatingSummary } from '../services/ratings';
 import servicesData from '../data/services.json';
 
 // Static imports from the user-specified directory
@@ -24,6 +26,7 @@ const imageMap: { [key: string]: string } = {
 };
 
 const Services: React.FC = () => {
+    const ratings = useRatingSummary();
     const location = useLocation();
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -85,6 +88,7 @@ const Services: React.FC = () => {
                                     <span className="service-index">0{index + 1}</span>
                                 </div>
                                 <h2>{service.category}</h2>
+                                <RatingBadge rating={ratings[service.slug]} />
                                 <p className="service-tagline">{service.tagline}</p>
                                 <div className="service-hidden-content">
                                     <p className="service-desc">{service.description}</p>
