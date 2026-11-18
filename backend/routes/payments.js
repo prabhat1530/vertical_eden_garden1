@@ -4,7 +4,7 @@ const Razorpay = require('razorpay');
 const Booking = require('../models/Booking');
 const Payment = require('../models/Payment');
 const { protect } = require('../middleware/auth');
-const { sendPaymentReceipt } = require('../utils/paymentEmails');
+const { enqueueEmail } = require('../queues/emailQueue');
 const {
     confirmPaidBooking,
     releaseExpiredHolds,
@@ -189,7 +189,7 @@ router.post('/verify', async (req, res) => {
         // Send payment receipt email (once per payment — the webhook may
         // confirm first, in which case alreadyConfirmed is true here)
         if (!alreadyConfirmed) {
-            sendPaymentReceipt(req.user, booking, razorpay_payment_id);
+            enqueueEmail('payment-receipt', { bookingId: String(booking._id) });
         }
 
         res.json({

@@ -6,6 +6,7 @@ const User = require('../models/User');
 const RefreshToken = require('../models/RefreshToken');
 const { protect } = require('../middleware/auth');
 const { authLimiter, otpLimiter } = require('../middleware/rateLimiter');
+const { enqueueEmail } = require('../queues/emailQueue');
 const {
     signAccessToken,
     issueRefreshToken,
@@ -371,20 +372,9 @@ router.post('/forgot-password', authLimiter, async (req, res) => {
         const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
         const resetUrl = `${clientUrl}/reset-password/${resetToken}`;
 
-        const sendEmail = require('../utils/sendEmail');
-        await sendEmail({
-            to: user.email,
-            subject: 'Vertical Eden Garden — Password Reset',
-            html: `
-                <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
-                    <h2 style="color: #1e293b;">Password Reset</h2>
-                    <p>Hi ${user.name},</p>
-                    <p>You requested a password reset. Click the button below to set a new password:</p>
-                    <a href="${resetUrl}" style="display: inline-block; padding: 12px 24px; background: #1e293b; color: white; text-decoration: none; border-radius: 8px; margin: 16px 0;">Reset Password</a>
-                    <p style="color: #94a3b8; font-size: 0.85rem;">This link expires in 30 minutes. If you didn't request this, ignore this email.</p>
-                </div>
-            `,
-        });
+        // Queued, not awaited: the response no longer waits on Gmail, and a
+        // failed send is retried instead of turning into a 500 error.
+        enqueueEmail('password-reset', { to: user.email, name: user.name, resetUrl });
 
         res.json({ success: true, message: 'If that email is registered, a reset link has been sent.' });
     } catch (error) {

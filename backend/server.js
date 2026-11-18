@@ -116,6 +116,19 @@ const startServer = async () => {
     await require('./models/Slot').init();
     require('./services/bookingService').startHoldSweeper();
 
+    // Email worker: sends queued emails and retries failures (needs Redis).
+    const { startEmailWorker, closeEmailQueue } = require('./queues/emailQueue');
+    startEmailWorker();
+
+    // On redeploy/shutdown, let in-flight email jobs finish before exiting.
+    const shutdown = async (signal) => {
+        console.log(`${signal} received — closing email worker`);
+        await closeEmailQueue().catch(() => {});
+        process.exit(0);
+    };
+    process.once('SIGTERM', () => shutdown('SIGTERM'));
+    process.once('SIGINT', () => shutdown('SIGINT'));
+
     app.listen(PORT, () => {
         console.log(`\n🌿 Vertical Eden Garden API`);
         console.log(`   Server running on port ${PORT}`);
