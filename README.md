@@ -17,7 +17,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/React-18.x-61DAFB?style=for-the-badge&logo=react&logoColor=white" />
+  <img src="https://img.shields.io/badge/React-17.x-61DAFB?style=for-the-badge&logo=react&logoColor=white" />
   <img src="https://img.shields.io/badge/Node.js-20.x-339933?style=for-the-badge&logo=node.js&logoColor=white" />
   <img src="https://img.shields.io/badge/MongoDB-Atlas-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
   <img src="https://img.shields.io/badge/Express-4.x-000000?style=for-the-badge&logo=express&logoColor=white" />
@@ -39,37 +39,37 @@ The platform also includes a complete **Admin Dashboard** for business owners to
 ### 🛒 Customer Features
 | Feature | Description |
 |---|---|
-| **Service Browsing** | Explore 6+ professional gardening services with detailed descriptions, pricing & real images |
-| **Online Booking** | 3-step booking wizard — select service → enter project details → review & pay |
-| **Secure Payments** | Integrated Razorpay payment gateway (UPI, Cards, Net Banking, Wallets) |
-| **Dual Login** | Login via **Email + Password** or **Phone + OTP** (SMS via Fast2SMS) |
-| **My Bookings** | Track all past and current bookings with real-time status updates |
-| **Invoice Download** | Download professional PDF invoices for all completed bookings |
-| **Search & Filter** | Quickly find services using the real-time search and filtering system |
-| **Reviews & Ratings** | Write star-rated reviews for completed bookings |
+| **Service Browsing** | Explore 6 professional gardening services with descriptions, pricing & real images |
+| **Slot Booking** | 3-step booking wizard with **live slot availability** — a date + time window can only be booked once |
+| **Payment Hold** | An unpaid booking holds its slot for 15 minutes; it is released automatically if payment isn't completed |
+| **Cancel & Reschedule** | From My Bookings: unpaid bookings any time, paid bookings until 24 hours before the visit (max 2 reschedules) |
+| **Secure Payments** | Razorpay (UPI, Cards, Net Banking, Wallets), confirmed by the browser **and** by a signed Razorpay webhook, so closing the tab after paying is safe |
+| **Dual Login** | Email + Password, or Phone + OTP (SMS via Fast2SMS) |
+| **Stay Logged In Safely** | 15-minute access token + 7-day refresh token in an httpOnly cookie |
+| **Emails** | Booking received, payment receipt **with PDF invoice attached**, confirmed / completed / cancelled, rescheduled, password reset — retried automatically if sending fails |
+| **Invoice Download** | Download a PDF invoice for completed bookings |
+| **Reviews & Ratings** | Star-rated reviews for completed bookings |
 | **User Profile** | Update name, email, phone & change password |
-| **Password Recovery** | Forgot password flow with email reset link |
-| **AI Chatbot** | Built-in chatbot powered by **Google Gemini AI** for instant customer support |
-| **WhatsApp Chat** | One-click WhatsApp button for direct business communication |
+| **Password Recovery** | Forgot-password email with a 30-minute reset link |
+| **AI Chatbot** | Built-in support chatbot powered by **Google Gemini** |
+| **WhatsApp Chat** | One-click WhatsApp button |
 
 ### 🔐 Admin Features
 | Feature | Description |
 |---|---|
-| **Dashboard** | Overview of total users, bookings, revenue & recent activity |
-| **Manage Bookings** | View all bookings, update status (Pending → Confirmed → Completed) |
-| **Manage Users** | View all registered users with booking count, email, phone & role |
-| **Table Pagination** | Efficiently browse large datasets with built-in table pagination |
-| **Role-Based Access** | Admin Panel is hidden from regular users — only visible to admin accounts |
+| **Dashboard** | Users, bookings, revenue & recent activity (cached in Redis, refreshed on every booking change) |
+| **Email Delivery Panel** | Sent / sending / waiting-to-retry / failed emails, failure reasons, and a "Retry failed emails" button |
+| **Manage Bookings** | View all bookings and change status; cancelling frees the slot and the customer is emailed |
+| **Manage Users** | All users with booking count, email, phone & role |
+| **Role-Based Access** | Admin routes are protected on the server by the `adminOnly` middleware |
 
 ### 🎨 Design & UX
 | Feature | Description |
 |---|---|
-| **Fully Responsive** | Works perfectly on Desktop, Tablet & Mobile |
-| **Modern UI** | Glassmorphism, smooth animations, gradient accents & premium feel |
-| **Loading Skeletons** | Professional shimmering skeleton loaders for better perceived performance |
-| **Dark Header** | Sleek navigation with scroll effects & mobile hamburger menu |
-| **Image Gallery** | Portfolio page showcasing real completed projects |
-| **Blog Section** | Informational articles about gardening tips & trends |
+| **Fully Responsive** | Desktop, tablet & mobile |
+| **Loading Skeletons** | Shimmering skeleton loaders |
+| **Image Gallery** | Portfolio of real completed projects |
+| **Blog Section** | Gardening tips & trends |
 
 ---
 
@@ -78,46 +78,52 @@ The platform also includes a complete **Admin Dashboard** for business owners to
 ### Frontend
 | Technology | Purpose |
 |---|---|
-| **React 18** (TypeScript) | UI framework with type safety |
-| **React Router v5** | Client-side routing & navigation |
-| **Context API** | Global state management (Auth, User) |
-| **CSS3** | Custom styling with CSS variables, flexbox & grid |
-| **jspdf** | Client-side PDF generation for invoices |
-| **React Icons** | Beautiful icon library |
+| **React 17** (TypeScript) | UI framework |
+| **React Router v5** | Client-side routing |
+| **Context API** | Auth state (access token, silent refresh) |
+| **CSS3** | Custom styling |
+| **jspdf** | In-browser PDF invoices |
+| **React Icons** | Icons |
 
 ### Backend
 | Technology | Purpose |
 |---|---|
-| **Node.js** + **Express.js** | REST API server |
-| **MongoDB Atlas** + **Mongoose** | Cloud database with ODM |
-| **JWT** (JSON Web Tokens) | Secure authentication |
-| **bcryptjs** | Password hashing |
-| **express-validator** | Input validation & sanitization |
+| **Node.js** + **Express 4** | REST API |
+| **MongoDB Atlas** + **Mongoose 8** | Database (replica set → multi-document transactions for slot booking) |
+| **Redis** + **ioredis** | Rate-limit counters, response cache, job queue storage |
+| **BullMQ** | Email job queue with retries and backoff |
+| **PDFKit** | Server-side PDF invoices |
+| **JWT** + **bcryptjs** | Access tokens; password & OTP hashing |
+| **helmet**, **express-rate-limit** | Security headers, rate limiting |
+| **express-validator** | Input validation |
+| **Swagger UI** (OpenAPI 3) | Interactive API documentation at `/api/docs` |
+| **Jest**, **Supertest**, **mongodb-memory-server** | Automated tests against a real in-memory replica set |
 
 ### Third-Party Integrations
 | Service | Purpose |
 |---|---|
-| **Razorpay** | Payment processing |
+| **Razorpay** | Payments (orders, signature verification, webhook) |
 | **Fast2SMS** | OTP delivery via SMS |
-| **Google Gemini AI** | AI-powered chatbot |
-| **Nodemailer** (Gmail SMTP) | Email notifications |
-| **Firebase Admin** | Additional auth support |
+| **Google Gemini AI** | Chatbot |
+| **Nodemailer** (Gmail SMTP) | Emails |
 
 ### Deployment
 | Platform | Purpose |
 |---|---|
-| **Vercel** | Frontend hosting (auto-deploys from GitHub) |
-| **Render** | Backend API hosting (auto-deploys from GitHub) |
-| **MongoDB Atlas** | Cloud database (Free M0 tier) |
+| **Vercel** | Frontend (auto-deploys `main`; preview builds for other branches) |
+| **Render** | Backend API (auto-deploys `main`) + **Key Value** (Redis) |
+| **MongoDB Atlas** | Database |
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- **Node.js** v18+ installed ([Download](https://nodejs.org))
-- **MongoDB Atlas** account ([Sign up free](https://cloud.mongodb.com))
-- **Git** installed
+- **Node.js** v18+ ([Download](https://nodejs.org))
+- **Redis** (optional locally — without it, emails aren't retried and nothing is cached). macOS: `brew install redis && brew services start redis`
+- **Git**
+
+A MongoDB Atlas account is **not** required for local development: `npm run db` starts a local MongoDB replica set.
 
 ### 1️⃣ Clone the Repository
 
@@ -131,226 +137,135 @@ cd vertical_eden_garden1
 ```bash
 cd backend
 npm install
+cp .env.example .env      # then fill in the values (see comments in the file)
 ```
 
-Create a `.env` file in the `backend/` folder:
+For local development set `MONGO_URI=mongodb://127.0.0.1:27017/veg_dev?replicaSet=rs0`. Payment, SMS, AI and email keys are optional: without them those features run in **simulation mode** (OTP codes and emails are printed in the server log).
 
-```env
-# Server
-PORT=5001
-NODE_ENV=development
-
-# MongoDB
-MONGO_URI=your_mongodb_connection_string
-
-# JWT
-JWT_SECRET=your_jwt_secret_key
-JWT_EXPIRE=7d
-
-# Razorpay (Get keys from https://dashboard.razorpay.com)
-RAZORPAY_KEY_ID=your_razorpay_key_id
-RAZORPAY_KEY_SECRET=your_razorpay_key_secret
-
-# Frontend URL
-CLIENT_URL=http://localhost:3000
-
-# Fast2SMS (Get key from https://www.fast2sms.com)
-FAST2SMS_API_KEY=your_fast2sms_api_key
-
-# Google Gemini AI (Get key from https://aistudio.google.com)
-GEMINI_API_KEY=your_gemini_api_key
-
-# Email (Gmail App Password from https://myaccount.google.com/apppasswords)
-EMAIL_USER=your_gmail@gmail.com
-EMAIL_PASS=your_16_char_app_password
-```
-
-Start the backend server:
+Start the database and the API in two terminals:
 
 ```bash
-npm start
+npm run db      # local MongoDB replica set on port 27017 (data kept in backend/.mongo-data)
+npm start       # API on http://localhost:5001
 ```
 
-The API will be running at `http://localhost:5001`
+- API docs: **http://localhost:5001/api/docs**
+- Health check: http://localhost:5001/api/health
 
 ### 3️⃣ Setup Frontend
 
 ```bash
 cd frontend
 npm install
+npm start       # http://localhost:3000 (proxies /api to port 5001)
 ```
 
-Create a `.env` file in the `frontend/` folder:
-
-```env
-REACT_APP_API_URL=/api
-REACT_APP_RAZORPAY_KEY_ID=your_razorpay_key_id
-```
-
-Start the frontend:
+### 4️⃣ Run the Tests
 
 ```bash
-npm start
+cd backend
+npm test
 ```
 
-The app will open at `http://localhost:3000`
+44 tests (auth, slot booking races, payments & webhook, email queue, caching, API docs). Tests that need Redis use database 15 and are skipped if Redis isn't running.
 
-### 4️⃣ Make Yourself Admin
+### 5️⃣ Make Yourself Admin
 
 ```bash
 cd backend
 node makeAdmin.js
 ```
 
-This script upgrades a specific user account to `admin` role. Edit the script to change the target email/phone.
+Edit the script to set the target email/phone.
+
+### 🧰 Dev Tools
+
+| Command (in `backend/`) | Purpose |
+|---|---|
+| `node scripts/simulate-webhook.js <bookingId>` | Pretend to be Razorpay: send a signed `payment.captured` webhook (`--failed`, `--forged` also available) |
+| `EMAIL_SIMULATE_FAILURES=2 npm start` | Make the first 2 attempts of every email fail, to watch retries |
+| `node scripts/backfill-slots.js [--apply]` | One-time migration: create slot records for bookings made before slot booking (dry run without `--apply`) |
 
 ---
 
 ## 📁 Project Structure
 
 ```
-vertical_eden/
-├── frontend/                    # React Frontend (TypeScript)
-│   ├── public/                  # Static HTML & assets
+vertical_eden_garden1/
+├── frontend/                      # React (TypeScript)
 │   └── src/
-│       ├── components/          # Reusable UI Components
-│       │   ├── Header.tsx       #   → Navigation bar with user menu
-│       │   ├── Footer.tsx       #   → Site footer with links
-│       │   ├── Hero.tsx         #   → Landing page hero section
-│       │   ├── ChatBot/         #   → AI Chatbot (Gemini-powered)
-│       │   ├── Reviews/         #   → Star rating & review components
-│       │   ├── WhatsAppButton/  #   → Floating WhatsApp widget
-│       │   └── ...
-│       ├── pages/               # Application Pages
-│       │   ├── Home.tsx         #   → Landing page
-│       │   ├── Services.tsx     #   → All services listing
-│       │   ├── ServiceDetail.tsx#   → Individual service details
-│       │   ├── Booking.tsx      #   → 3-step booking wizard
-│       │   ├── MyBookings.tsx   #   → User's booking history
-│       │   ├── Login.tsx        #   → Email + OTP dual login
-│       │   ├── Signup.tsx       #   → New user registration
-│       │   ├── Profile.tsx      #   → User profile management
-│       │   ├── Portfolio.tsx    #   → Project gallery
-│       │   ├── Blog.tsx         #   → Blog articles
-│       │   ├── Contact.tsx      #   → Contact form
-│       │   ├── ForgotPassword.tsx #  → Password reset request
-│       │   ├── ResetPassword.tsx  #  → Password reset form
-│       │   └── Admin/           #   → Admin Dashboard
-│       │       ├── AdminDashboard.tsx  # Stats & overview
-│       │       ├── AdminBookings.tsx   # Manage all bookings
-│       │       └── AdminUsers.tsx     # Manage all users
-│       ├── context/
-│       │   └── AuthContext.tsx   # Global auth state (login, logout, role)
+│       ├── components/            # Header, Footer, ChatBot, Reviews, SlotSelect, …
+│       ├── pages/                 # Home, Services, Booking, MyBookings, Login, Profile, Admin/…
+│       ├── context/AuthContext.tsx# Session: access token, silent refresh, logout
 │       ├── services/
-│       │   └── PaymentService.ts # Razorpay payment integration
-│       ├── data/
-│       │   └── services.json    # Service catalog data
-│       └── App.tsx              # Root component with routing
+│       │   ├── api.ts             # apiFetch(): token + cookie, refresh-and-retry on 401
+│       │   └── PaymentService.ts  # Razorpay checkout
+│       └── data/services.json     # Service catalog
 │
-├── backend/                     # Node.js + Express API
-│   ├── config/
-│   │   └── db.js                # MongoDB connection setup
-│   ├── middleware/
-│   │   ├── auth.js              # JWT authentication middleware
-│   │   └── admin.js             # Admin role authorization
-│   ├── models/                  # Mongoose Schemas
-│   │   ├── User.js              #   → name, email, phone, password, role, otp
-│   │   ├── Booking.js           #   → service, address, price, status, user
-│   │   ├── Payment.js           #   → razorpay order/payment IDs, amount
-│   │   └── Review.js            #   → rating, comment, user, booking
-│   ├── routes/                  # API Endpoints
-│   │   ├── auth.js              #   → signup, login, OTP, profile, password reset
-│   │   ├── bookings.js          #   → create & manage bookings
-│   │   ├── payments.js          #   → Razorpay order creation & verification
-│   │   ├── reviews.js           #   → create & fetch reviews
-│   │   ├── admin.js             #   → dashboard stats, manage users/bookings
-│   │   └── chat.js              #   → Gemini AI chatbot endpoint
-│   ├── utils/
-│   │   └── sendEmail.js         # Nodemailer email utility
-│   ├── server.js                # Express app entry point
-│   └── .env                     # Environment variables (not in git)
-│
-└── README.md                    # This file
+└── backend/                       # Node.js + Express
+    ├── config/                    # db, redis, slots (booking rules)
+    ├── middleware/                # auth (JWT), admin, rateLimiter
+    ├── models/                    # User, Booking, Slot, Payment, Review, RefreshToken, WebhookEvent
+    ├── routes/                    # auth, bookings, payments, webhooks, reviews, admin, chat
+    ├── services/                  # bookingService (transactions), slotService
+    ├── queues/emailQueue.js       # BullMQ queue + worker
+    ├── emails/                    # templates + job processor
+    ├── utils/                     # tokens, cache, invoicePdf, sendEmail
+    ├── docs/openapi.js            # API description (served at /api/docs)
+    ├── scripts/                   # start-db, backfill-slots, simulate-webhook
+    ├── tests/                     # Jest test suites
+    └── server.js                  # App entry point
 ```
 
 ---
 
 ## 🔌 API Endpoints
 
-### Authentication (`/api/auth`)
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| `POST` | `/signup` | Register new user | ❌ |
-| `POST` | `/login` | Email + password login | ❌ |
-| `POST` | `/send-otp` | Send OTP to phone | ❌ |
-| `POST` | `/verify-otp` | Verify OTP & login | ❌ |
-| `GET` | `/me` | Get current user profile | ✅ |
-| `PUT` | `/profile` | Update user profile | ✅ |
-| `PUT` | `/change-password` | Change password | ✅ |
-| `POST` | `/forgot-password` | Send password reset email | ❌ |
-| `PUT` | `/reset-password/:token` | Reset password with token | ❌ |
+**Full, interactive documentation: `/api/docs`** (Swagger UI) — every endpoint with its inputs, responses and error codes, and a "Try it out" button. A test fails if a route is added without being documented.
 
-### Bookings (`/api/bookings`)
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| `POST` | `/` | Create a new booking | ✅ |
-| `GET` | `/my` | Get current user's bookings | ✅ |
-
-### Payments (`/api/payments`)
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| `POST` | `/create-order` | Create Razorpay order | ✅ |
-| `POST` | `/verify` | Verify payment signature | ✅ |
-
-### Reviews (`/api/reviews`)
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| `POST` | `/` | Submit a review | ✅ |
-| `GET` | `/service/:slug` | Get reviews for a service | ❌ |
-
-### Admin (`/api/admin`) — 🔒 Admin Only
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| `GET` | `/stats` | Dashboard statistics | 🔒 Admin |
-| `GET` | `/bookings` | All bookings | 🔒 Admin |
-| `PUT` | `/bookings/:id/status` | Update booking status | 🔒 Admin |
-| `GET` | `/users` | All users | 🔒 Admin |
-
-### AI Chat (`/api/chat`)
-| Method | Endpoint | Description | Auth |
-|--------|----------|-------------|------|
-| `POST` | `/` | Send message to AI chatbot | ❌ |
+| Area | Endpoints |
+|---|---|
+| **Auth** `/api/auth` | `POST /signup` · `POST /login` · `POST /send-otp` · `POST /verify-otp` · `POST /refresh` · `POST /logout` · `GET /me` · `PUT /profile` · `PUT /change-password` · `POST /forgot-password` · `PUT /reset-password/:token` |
+| **Bookings** `/api/bookings` | `GET /slots?date=` · `POST /` · `GET /` · `GET /:id` · `PUT /:id/cancel` · `PUT /:id/reschedule` |
+| **Payments** `/api/payments` | `POST /create-order` · `POST /verify` · `POST /webhook` (Razorpay → server) |
+| **Reviews** `/api/reviews` | `POST /` · `GET /:serviceSlug` |
+| **Chat** `/api/chat` | `POST /` |
+| **Admin** `/api/admin` 🔒 | `GET /stats` · `GET /bookings` · `PUT /bookings/:id/status` · `GET /users` · `GET /email-queue` · `POST /email-queue/retry-failed` |
+| **System** | `GET /api/health` · `GET /api/ip` |
 
 ---
 
 ## 🔐 Security Features
 
-- **Password Hashing** — All passwords are encrypted with bcryptjs (salt rounds: 10)
-- **JWT Authentication** — Stateless token-based auth with 30-day expiry
-- **Role-Based Access Control** — Admin routes are protected by `adminOnly` middleware
-- **Input Validation** — All API inputs are validated using express-validator
-- **Secure Payment** — Razorpay signature verification prevents payment tampering
-- **OTP Expiry** — OTPs expire after 10 minutes
-- **Reset Token Hashing** — Password reset tokens are SHA-256 hashed before storage
+- **Password hashing** — bcrypt, cost 12
+- **Short-lived access tokens** — JWT valid 15 minutes, sent as `Authorization: Bearer`
+- **Refresh tokens** — random, 7 days, httpOnly cookie, stored only as a SHA-256 hash, **rotated** on every use and **revoked** on logout or password reset
+- **OTP protection** — OTP stored as a bcrypt hash, expires in 10 minutes, 5 wrong codes lock it for 15 minutes
+- **Rate limiting** — per IP: OTP 5, login/signup/reset 20, whole API 300 per 15 minutes (stored in Redis; in-memory fallback)
+- **Security headers** — helmet (no clickjacking, no MIME sniffing, `X-Powered-By` hidden, Content-Security-Policy)
+- **No double booking** — atomic slot claim inside MongoDB transactions
+- **Payment integrity** — Razorpay signature checks; the booking is found from the server's own order record; webhook signed with HMAC-SHA256, idempotent, amount-checked
+- **Role-based access** — admin routes protected by `adminOnly` middleware
+- **Input validation** — express-validator; customer text HTML-escaped in emails
+- **Reset tokens** — SHA-256 hashed, 30-minute expiry
 
 ---
 
 ## 🌐 Deployment Guide
 
 ### Frontend → Vercel
-1. Push code to GitHub
-2. Import repository on [vercel.com](https://vercel.com)
-3. Set **Root Directory** to `frontend`
-4. Add environment variables:
-   - `REACT_APP_API_URL` = `https://your-backend-url.onrender.com/api`
-   - `REACT_APP_RAZORPAY_KEY_ID` = your Razorpay Key ID
+1. Import the repository on [vercel.com](https://vercel.com), **Root Directory** `frontend`
+2. Environment variables: `REACT_APP_API_URL` = `https://<backend>.onrender.com/api`, `REACT_APP_RAZORPAY_KEY_ID`
+3. Vercel builds with `CI=true`: ESLint warnings fail the build — check with `CI=true npm run build`
 
 ### Backend → Render
-1. Create a new **Web Service** on [render.com](https://render.com)
-2. Set **Root Directory** to `backend`
-3. Set **Build Command** to `npm install`
-4. Set **Start Command** to `node server.js`
-5. Add all environment variables from the `.env` template above
+1. New **Web Service**, **Root Directory** `backend`, build `npm install`, start `node server.js`
+2. Add every variable from `backend/.env.example`, plus for production:
+   - `NODE_ENV=production`, `CLIENT_URL=https://verticaledengarden.in`
+   - `TRUST_PROXY=3` (Cloudflare + Render load balancer; check with `GET /api/ip`)
+   - `RAZORPAY_WEBHOOK_SECRET`
+3. **Redis:** create a Render **Key Value** instance in the same region, eviction policy **`noeviction`**, and set `REDIS_URL` to its internal URL. Without it everything still works, but emails are not retried and nothing is cached.
+4. **Razorpay webhook:** Dashboard → Settings → Webhooks → URL `https://<backend>/api/payments/webhook`, same secret, events `payment.captured`, `payment.failed`, `order.paid`.
 
 ---
 

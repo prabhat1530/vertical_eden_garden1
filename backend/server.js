@@ -17,6 +17,8 @@ const chatRoutes = require('./routes/chat');
 const adminRoutes = require('./routes/admin');
 const reviewRoutes = require('./routes/reviews');
 const webhookRoutes = require('./routes/webhooks');
+const swaggerUi = require('swagger-ui-express');
+const openapiSpec = require('./docs/openapi');
 
 // Initialize Express app
 const app = express();
@@ -84,6 +86,13 @@ app.get('/api/ip', (req, res) => {
         trustProxy: app.get('trust proxy'),
     });
 });
+
+// API documentation — machine-readable spec + interactive Swagger UI.
+app.get('/api/docs/openapi.json', (req, res) => res.json(openapiSpec));
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(openapiSpec, {
+    customSiteTitle: 'Vertical Eden Garden API',
+    swaggerOptions: { persistAuthorization: true, withCredentials: true },
+}));
 
 // 404 handler
 app.use((req, res) => {
