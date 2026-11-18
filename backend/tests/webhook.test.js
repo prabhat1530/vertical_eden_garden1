@@ -12,6 +12,7 @@ const Slot = require('../models/Slot');
 const WebhookEvent = require('../models/WebhookEvent');
 const { signAccessToken } = require('../utils/tokens');
 const { toISTDateString } = require('../config/slots');
+const { waitForDirectSends } = require('../queues/emailQueue');
 
 const DATE = toISTDateString(new Date(Date.now() + 6 * 24 * 60 * 60 * 1000));
 let counter = 0;
@@ -59,7 +60,12 @@ const postWebhook = (raw, { eventId, signature } = {}) => request(app)
     .set('X-Razorpay-Event-Id', eventId || `evt_${crypto.randomBytes(6).toString('hex')}`)
     .send(raw);
 
-const receiptsSent = () => sendEmail.mock.calls.filter(([msg]) => msg.subject.startsWith('Payment Receipt')).length;
+// Emails are sent in the background (no Redis in tests → direct send), so
+// wait for those sends to finish before counting.
+const receiptsSent = async () => {
+    await waitForDirectSends();
+    return sendEmail.mock.calls.filter(([msg]) => msg.subject.startsWith('Payment Receipt')).length;
+};
 
 beforeAll(async () => {
     await Slot.init();
@@ -80,7 +86,7 @@ describe('Razorpay webhook (Phase 3)', () => {
         expect(saved.paymentId).toBe('pay_tab_closed');
         expect(saved.holdExpiresAt).toBeNull();
         expect((await Payment.findOne({ razorpayOrderId: orderId })).status).toBe('captured');
-        expect(receiptsSent()).toBe(1);
+        expect(await receiptsSent()).toBe(1);
     });
 
     test('rejects a forged webhook (wrong signature) and changes nothing', async () => {
@@ -115,7 +121,7 @@ describe('Razorpay webhook (Phase 3)', () => {
         expect(second.status).toBe(200);
         expect(second.body.duplicate).toBe(true);
         expect(await WebhookEvent.countDocuments({ eventId: 'evt_same' })).toBe(1);
-        expect(receiptsSent()).toBe(1);
+        expect(await receiptsSent()).toBe(1);
     });
 
     test('does not confirm when the paid amount does not match the booking', async () => {
@@ -148,7 +154,7 @@ describe('Razorpay webhook (Phase 3)', () => {
         expect(hook.status).toBe(200);
         expect(verify.status).toBe(200);
         expect((await Booking.findById(booking.id)).status).toBe('confirmed');
-        expect(receiptsSent()).toBe(1);
+        expect(await receiptsSent()).toBe(1);
     });
 
     test('payment.failed marks the payment failed and keeps the slot held for a retry', async () => {

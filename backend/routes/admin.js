@@ -5,6 +5,8 @@ const Payment = require('../models/Payment');
 const { protect } = require('../middleware/auth');
 const { adminOnly } = require('../middleware/admin');
 const { setStatusByAdmin, BookingError, SlotUnavailableError } = require('../services/bookingService');
+const { enqueueEmail, getEmailQueueStats, retryFailedEmails } = require('../queues/emailQueue');
+const { cached, CACHE_KEYS } = require('../utils/cache');
 
 const router = express.Router();
 
@@ -15,51 +17,58 @@ router.use(adminOnly);
 // ─────────────────────────────────────────────
 // GET /api/admin/stats — Dashboard statistics
 // ─────────────────────────────────────────────
+// Computes the dashboard numbers. The 7 queries are independent, so they run
+// in parallel instead of one after another.
+const computeAdminStats = async () => {
+    const [
+        totalUsers, totalBookings, pendingBookings, confirmedBookings, completedBookings,
+        revenueResult, recentBookings,
+    ] = await Promise.all([
+        User.countDocuments(),
+        Booking.countDocuments(),
+        Booking.countDocuments({ status: 'pending' }),
+        Booking.countDocuments({ status: 'confirmed' }),
+        Booking.countDocuments({ status: 'completed' }),
+        // Total revenue from confirmed + completed bookings
+        Booking.aggregate([
+            { $match: { status: { $in: ['confirmed', 'completed'] } } },
+            { $group: { _id: null, total: { $sum: '$totalPrice' } } },
+        ]),
+        // Recent bookings (latest 5)
+        Booking.find().populate('user', 'name email phone').sort({ createdAt: -1 }).limit(5),
+    ]);
+
+    return {
+        stats: {
+            totalUsers,
+            totalBookings,
+            pendingBookings,
+            confirmedBookings,
+            completedBookings,
+            totalRevenue: revenueResult.length > 0 ? revenueResult[0].total : 0,
+        },
+        recentBookings: recentBookings.map(b => ({
+            id: b._id,
+            serviceName: b.serviceName,
+            totalPrice: b.totalPrice,
+            status: b.status,
+            preferredDate: b.preferredDate,
+            createdAt: b.createdAt,
+            user: b.user ? {
+                name: b.user.name,
+                email: b.user.email,
+                phone: b.user.phone,
+            } : null,
+        })),
+    };
+};
+
 router.get('/stats', async (req, res) => {
     try {
-        const totalUsers = await User.countDocuments();
-        const totalBookings = await Booking.countDocuments();
-        const pendingBookings = await Booking.countDocuments({ status: 'pending' });
-        const confirmedBookings = await Booking.countDocuments({ status: 'confirmed' });
-        const completedBookings = await Booking.countDocuments({ status: 'completed' });
-
-        // Calculate total revenue from confirmed + completed bookings
-        const revenueResult = await Booking.aggregate([
-            { $match: { status: { $in: ['confirmed', 'completed'] } } },
-            { $group: { _id: null, total: { $sum: '$totalPrice' } } }
-        ]);
-        const totalRevenue = revenueResult.length > 0 ? revenueResult[0].total : 0;
-
-        // Recent bookings (latest 5)
-        const recentBookings = await Booking.find()
-            .populate('user', 'name email phone')
-            .sort({ createdAt: -1 })
-            .limit(5);
-
-        res.json({
-            success: true,
-            stats: {
-                totalUsers,
-                totalBookings,
-                pendingBookings,
-                confirmedBookings,
-                completedBookings,
-                totalRevenue,
-            },
-            recentBookings: recentBookings.map(b => ({
-                id: b._id,
-                serviceName: b.serviceName,
-                totalPrice: b.totalPrice,
-                status: b.status,
-                preferredDate: b.preferredDate,
-                createdAt: b.createdAt,
-                user: b.user ? {
-                    name: b.user.name,
-                    email: b.user.email,
-                    phone: b.user.phone,
-                } : null,
-            })),
-        });
+        // Cached in Redis for 60 s; cleared early whenever a booking changes.
+        const { value, status } = await cached(CACHE_KEYS.adminStats, 60, computeAdminStats);
+        res.set('X-Cache', status);
+        res.json({ success: true, ...value });
     } catch (error) {
         console.error('Admin stats error:', error.message);
         res.status(500).json({ success: false, error: 'Server error.' });
@@ -132,6 +141,9 @@ router.put('/bookings/:id/status', async (req, res) => {
         const updated = await setStatusByAdmin({ bookingId: req.params.id, status });
         const booking = await updated.populate('user', 'name email phone');
 
+        // Tell the customer (confirmed / completed / cancelled; pending is silent).
+        enqueueEmail('booking-status', { bookingId: String(booking._id), status: booking.status });
+
         res.json({
             success: true,
             booking: {
@@ -186,6 +198,26 @@ router.get('/users', async (req, res) => {
     } catch (error) {
         console.error('Admin users error:', error.message);
         res.status(500).json({ success: false, error: 'Server error.' });
+    }
+});
+
+// ─────────────────────────────────────────────
+// GET /api/admin/email-queue — Email queue health (counts + latest failures)
+// ─────────────────────────────────────────────
+router.get('/email-queue', async (req, res) => {
+    res.json({ success: true, queue: await getEmailQueueStats() });
+});
+
+// ─────────────────────────────────────────────
+// POST /api/admin/email-queue/retry-failed — Re-run every failed email job
+// ─────────────────────────────────────────────
+router.post('/email-queue/retry-failed', async (req, res) => {
+    try {
+        const retried = await retryFailedEmails();
+        res.json({ success: true, retried });
+    } catch (error) {
+        console.error('Retry failed emails error:', error.message);
+        res.status(500).json({ success: false, error: 'Could not retry failed emails.' });
     }
 });
 

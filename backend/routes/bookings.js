@@ -2,7 +2,7 @@ const express = require('express');
 const { body, query, validationResult } = require('express-validator');
 const Booking = require('../models/Booking');
 const { protect } = require('../middleware/auth');
-const sendEmail = require('../utils/sendEmail');
+const { enqueueEmail } = require('../queues/emailQueue');
 const { getAvailability } = require('../services/slotService');
 const {
     BookingError,
@@ -12,7 +12,6 @@ const {
     cancelBooking,
     rescheduleBooking,
 } = require('../services/bookingService');
-const { PAYMENT_HOLD_MINUTES } = require('../config/slots');
 
 const router = express.Router();
 
@@ -131,27 +130,8 @@ router.post('/', [
             totalPrice,
         });
 
-        // Send booking email (non-blocking)
-        if (req.user.email) {
-            sendEmail({
-                to: req.user.email,
-                subject: `Booking Received — ${serviceName}`,
-                html: `
-                    <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
-                        <h2 style="color: #1e293b;">🌿 Booking Received!</h2>
-                        <p>Hi ${req.user.name},</p>
-                        <p>Your slot is reserved. Please complete payment within ${PAYMENT_HOLD_MINUTES} minutes to confirm it.</p>
-                        <table style="width:100%; border-collapse:collapse; margin: 16px 0;">
-                            <tr><td style="padding:8px; color:#64748b;">Service</td><td style="padding:8px; font-weight:600;">${serviceName}</td></tr>
-                            <tr><td style="padding:8px; color:#64748b;">Area</td><td style="padding:8px;">${areaSize} sq ft</td></tr>
-                            <tr><td style="padding:8px; color:#64748b;">Date</td><td style="padding:8px;">${preferredDate}</td></tr>
-                            <tr><td style="padding:8px; color:#64748b;">Time</td><td style="padding:8px;">${preferredTime}</td></tr>
-                            <tr><td style="padding:8px; color:#64748b;">Total</td><td style="padding:8px; font-weight:700; color:#10b981;">₹${totalPrice.toLocaleString()}</td></tr>
-                        </table>
-                    </div>
-                `,
-            }).catch(err => console.error('Booking email error:', err.message));
-        }
+        // Queue the "booking received" email (retried if sending fails)
+        enqueueEmail('booking-received', { bookingId: String(booking._id) });
 
         res.status(201).json({ success: true, booking: toClient(booking) });
     } catch (error) {
@@ -199,6 +179,7 @@ router.put('/:id/cancel', async (req, res) => {
             by: 'user',
             reason: (req.body && req.body.reason) || '',
         });
+        enqueueEmail('booking-status', { bookingId: String(booking._id), status: 'cancelled' });
         res.json({ success: true, booking: toClient(booking) });
     } catch (error) {
         handleError(res, error, 'Cancel booking error');
@@ -220,6 +201,7 @@ router.put('/:id/reschedule', [
             preferredDate: req.body.preferredDate,
             preferredTime: req.body.preferredTime,
         });
+        enqueueEmail('booking-rescheduled', { bookingId: String(booking._id) });
         res.json({ success: true, booking: toClient(booking) });
     } catch (error) {
         handleError(res, error, 'Reschedule booking error');

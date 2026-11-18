@@ -281,3 +281,26 @@
         width: 100%;
     }
 }
+
+/* ---- Email delivery panel ---- */
+.email-queue-panel {
+    margin-bottom: 2rem;
+}
+
+.email-queue-counts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 1rem 1.5rem;
+}
+
+.email-queue-note {
+    margin: 0;
+    padding: 1rem 1.5rem;
+    font-size: 0.85rem;
+    color: #64748b;
+}
+
+.email-queue-error {
+    color: #991b1b;
+}

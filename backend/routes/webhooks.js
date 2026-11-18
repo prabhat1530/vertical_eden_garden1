@@ -1,14 +1,13 @@
 const express = require('express');
 const crypto = require('crypto');
 const Payment = require('../models/Payment');
-const User = require('../models/User');
 const WebhookEvent = require('../models/WebhookEvent');
 const {
     confirmPaidBooking,
     BookingError,
     SlotUnavailableError,
 } = require('../services/bookingService');
-const { sendPaymentReceipt } = require('../utils/paymentEmails');
+const { enqueueEmail } = require('../queues/emailQueue');
 
 const router = express.Router();
 
@@ -64,8 +63,7 @@ const handlePaid = async (entity) => {
             paymentId: entity.id,
         });
         if (!alreadyConfirmed) {
-            const user = await User.findById(payment.user);
-            sendPaymentReceipt(user, booking, entity.id);
+            enqueueEmail('payment-receipt', { bookingId: String(booking._id) });
         }
     } catch (err) {
         // Expected business outcome (e.g. hold expired and the slot was
