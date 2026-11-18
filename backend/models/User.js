@@ -34,11 +34,23 @@ const userSchema = new mongoose.Schema({
         default: 'user',
     },
     otp: {
+        // Stores the BCRYPT HASH of the OTP, never the plain code.
         type: String,
         select: false,
     },
     otpExpires: {
         type: Date,
+    },
+    otpAttempts: {
+        // Failed verification attempts for the current OTP.
+        type: Number,
+        default: 0,
+        select: false,
+    },
+    otpLockUntil: {
+        // When set and in the future, OTP verification is temporarily blocked.
+        type: Date,
+        select: false,
     },
     resetPasswordToken: {
         type: String,
