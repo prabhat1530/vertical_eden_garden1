@@ -1,7 +1,10 @@
 const express = require('express');
 const cors = require('cors');
+const helmet = require('helmet');
+const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 const connectDB = require('./config/db');
+const { apiLimiter } = require('./middleware/rateLimiter');
 
 // Load environment variables
 dotenv.config();
@@ -17,18 +20,29 @@ const reviewRoutes = require('./routes/reviews');
 // Initialize Express app
 const app = express();
 
+// Trust the first proxy (Render/Vercel) so req.ip and rate limiting use the
+// real client IP from X-Forwarded-For, not the proxy's address.
+app.set('trust proxy', 1);
+
 // ─────────────────────────────────────────────
 // Middleware
 // ─────────────────────────────────────────────
 
-// CORS — allow React frontend to make requests
+// Secure HTTP headers (clickjacking, MIME sniffing, etc.)
+app.use(helmet());
+
+// CORS — allow React frontend to make requests (credentials for the refresh cookie)
 app.use(cors({
     origin: process.env.CLIENT_URL || 'http://localhost:3000',
     credentials: true,
 }));
 
-// Parse JSON bodies
+// Parse JSON bodies and cookies
 app.use(express.json());
+app.use(cookieParser());
+
+// Global rate limit — a safety net across the whole API
+app.use('/api', apiLimiter);
 
 // ─────────────────────────────────────────────
 // Routes
@@ -85,4 +99,10 @@ const startServer = async () => {
     });
 };
 
-startServer();
+// Only start the server when run directly (`node server.js`).
+// When imported by tests, the app is used without listening/connecting here.
+if (require.main === module) {
+    startServer();
+}
+
+module.exports = app;
