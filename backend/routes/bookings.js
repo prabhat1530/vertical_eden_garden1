@@ -1,13 +1,20 @@
 const express = require('express');
-const { body, validationResult } = require('express-validator');
+const { body, query, validationResult } = require('express-validator');
 const Booking = require('../models/Booking');
 const { protect } = require('../middleware/auth');
 const sendEmail = require('../utils/sendEmail');
+const { getAvailability } = require('../services/slotService');
+const {
+    BookingError,
+    SlotUnavailableError,
+    releaseExpiredHolds,
+    createBooking,
+    cancelBooking,
+    rescheduleBooking,
+} = require('../services/bookingService');
+const { PAYMENT_HOLD_MINUTES } = require('../config/slots');
 
 const router = express.Router();
-
-// All booking routes require authentication
-router.use(protect);
 
 // Service pricing configuration (same as frontend)
 const SERVICE_PRICING = {
@@ -19,8 +26,67 @@ const SERVICE_PRICING = {
     'plants-and-planters': { basePrice: 1000, perSqFt: 40 },
 };
 
+// Shape a booking for API responses.
+const toClient = (b) => ({
+    id: b._id,
+    serviceSlug: b.serviceSlug,
+    serviceName: b.serviceName,
+    areaSize: b.areaSize,
+    address: b.address,
+    city: b.city,
+    preferredDate: b.preferredDate,
+    preferredTime: b.preferredTime,
+    specialInstructions: b.specialInstructions,
+    basePrice: b.basePrice,
+    areaPrice: b.areaPrice,
+    totalPrice: b.totalPrice,
+    status: b.status,
+    paymentId: b.paymentId,
+    holdExpiresAt: b.holdExpiresAt,
+    cancelledBy: b.cancelledBy,
+    cancelReason: b.cancelReason,
+    refundStatus: b.refundStatus,
+    rescheduleCount: b.rescheduleCount,
+    createdAt: b.createdAt,
+});
+
+// Turn service errors into HTTP responses.
+const handleError = (res, error, fallback) => {
+    if (error instanceof BookingError || error instanceof SlotUnavailableError) {
+        return res.status(error.status).json({ success: false, error: error.message });
+    }
+    console.error(`${fallback}:`, error.message);
+    return res.status(500).json({ success: false, error: 'Server error. Please try again.' });
+};
+
+const firstValidationError = (req, res) => {
+    const errors = validationResult(req);
+    if (errors.isEmpty()) return false;
+    res.status(400).json({ success: false, error: errors.array()[0].msg });
+    return true;
+};
+
 // ─────────────────────────────────────────────
-// POST /api/bookings — Create a new booking
+// GET /api/bookings/slots?date=YYYY-MM-DD — Public slot availability
+// ─────────────────────────────────────────────
+router.get('/slots', [
+    query('date').matches(/^\d{4}-\d{2}-\d{2}$/).withMessage('date must be YYYY-MM-DD'),
+], async (req, res) => {
+    try {
+        if (firstValidationError(req, res)) return;
+        await releaseExpiredHolds();
+        const slots = await getAvailability(req.query.date);
+        res.json({ success: true, date: req.query.date, slots });
+    } catch (error) {
+        handleError(res, error, 'Slot availability error');
+    }
+});
+
+// Everything below requires a logged-in user.
+router.use(protect);
+
+// ─────────────────────────────────────────────
+// POST /api/bookings — Create a booking and hold its slot
 // ─────────────────────────────────────────────
 router.post('/', [
     body('serviceSlug').notEmpty().withMessage('Service is required'),
@@ -32,13 +98,7 @@ router.post('/', [
     body('preferredTime').notEmpty().withMessage('Preferred time is required'),
 ], async (req, res) => {
     try {
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(400).json({
-                success: false,
-                error: errors.array()[0].msg,
-            });
-        }
+        if (firstValidationError(req, res)) return;
 
         const {
             serviceSlug, serviceName, areaSize,
@@ -49,17 +109,14 @@ router.post('/', [
         // Calculate price server-side (don't trust client prices)
         const pricing = SERVICE_PRICING[serviceSlug];
         if (!pricing) {
-            return res.status(400).json({
-                success: false,
-                error: 'Invalid service selected.',
-            });
+            return res.status(400).json({ success: false, error: 'Invalid service selected.' });
         }
 
         const basePrice = pricing.basePrice;
         const areaPrice = areaSize * pricing.perSqFt;
         const totalPrice = basePrice + areaPrice;
 
-        const booking = await Booking.create({
+        const booking = await createBooking({
             user: req.user._id,
             serviceSlug,
             serviceName,
@@ -72,19 +129,18 @@ router.post('/', [
             basePrice,
             areaPrice,
             totalPrice,
-            status: 'pending',
         });
 
-        // Send booking confirmation email (non-blocking)
+        // Send booking email (non-blocking)
         if (req.user.email) {
             sendEmail({
                 to: req.user.email,
-                subject: `Booking Confirmed — ${serviceName}`,
+                subject: `Booking Received — ${serviceName}`,
                 html: `
                     <div style="font-family: Arial, sans-serif; max-width: 500px; margin: 0 auto; padding: 20px;">
-                        <h2 style="color: #1e293b;">🌿 Booking Confirmed!</h2>
+                        <h2 style="color: #1e293b;">🌿 Booking Received!</h2>
                         <p>Hi ${req.user.name},</p>
-                        <p>Your booking has been received successfully.</p>
+                        <p>Your slot is reserved. Please complete payment within ${PAYMENT_HOLD_MINUTES} minutes to confirm it.</p>
                         <table style="width:100%; border-collapse:collapse; margin: 16px 0;">
                             <tr><td style="padding:8px; color:#64748b;">Service</td><td style="padding:8px; font-weight:600;">${serviceName}</td></tr>
                             <tr><td style="padding:8px; color:#64748b;">Area</td><td style="padding:8px;">${areaSize} sq ft</td></tr>
@@ -92,37 +148,14 @@ router.post('/', [
                             <tr><td style="padding:8px; color:#64748b;">Time</td><td style="padding:8px;">${preferredTime}</td></tr>
                             <tr><td style="padding:8px; color:#64748b;">Total</td><td style="padding:8px; font-weight:700; color:#10b981;">₹${totalPrice.toLocaleString()}</td></tr>
                         </table>
-                        <p style="color: #94a3b8; font-size: 0.85rem;">Please proceed to payment to confirm your booking.</p>
                     </div>
                 `,
             }).catch(err => console.error('Booking email error:', err.message));
         }
 
-        res.status(201).json({
-            success: true,
-            booking: {
-                id: booking._id,
-                serviceSlug: booking.serviceSlug,
-                serviceName: booking.serviceName,
-                areaSize: booking.areaSize,
-                address: booking.address,
-                city: booking.city,
-                preferredDate: booking.preferredDate,
-                preferredTime: booking.preferredTime,
-                specialInstructions: booking.specialInstructions,
-                basePrice: booking.basePrice,
-                areaPrice: booking.areaPrice,
-                totalPrice: booking.totalPrice,
-                status: booking.status,
-                createdAt: booking.createdAt,
-            },
-        });
+        res.status(201).json({ success: true, booking: toClient(booking) });
     } catch (error) {
-        console.error('Create booking error:', error.message);
-        res.status(500).json({
-            success: false,
-            error: 'Server error. Please try again.',
-        });
+        handleError(res, error, 'Create booking error');
     }
 });
 
@@ -131,36 +164,12 @@ router.post('/', [
 // ─────────────────────────────────────────────
 router.get('/', async (req, res) => {
     try {
-        const bookings = await Booking.find({ user: req.user._id })
-            .sort({ createdAt: -1 });
-
-        res.json({
-            success: true,
-            count: bookings.length,
-            bookings: bookings.map(b => ({
-                id: b._id,
-                serviceSlug: b.serviceSlug,
-                serviceName: b.serviceName,
-                areaSize: b.areaSize,
-                address: b.address,
-                city: b.city,
-                preferredDate: b.preferredDate,
-                preferredTime: b.preferredTime,
-                specialInstructions: b.specialInstructions,
-                basePrice: b.basePrice,
-                areaPrice: b.areaPrice,
-                totalPrice: b.totalPrice,
-                status: b.status,
-                paymentId: b.paymentId,
-                createdAt: b.createdAt,
-            })),
-        });
+        // Free expired holds first so statuses shown are up to date.
+        await releaseExpiredHolds();
+        const bookings = await Booking.find({ user: req.user._id }).sort({ createdAt: -1 });
+        res.json({ success: true, count: bookings.length, bookings: bookings.map(toClient) });
     } catch (error) {
-        console.error('Get bookings error:', error.message);
-        res.status(500).json({
-            success: false,
-            error: 'Server error.',
-        });
+        handleError(res, error, 'Get bookings error');
     }
 });
 
@@ -169,44 +178,51 @@ router.get('/', async (req, res) => {
 // ─────────────────────────────────────────────
 router.get('/:id', async (req, res) => {
     try {
-        const booking = await Booking.findOne({
-            _id: req.params.id,
-            user: req.user._id,
-        });
-
+        const booking = await Booking.findOne({ _id: req.params.id, user: req.user._id });
         if (!booking) {
-            return res.status(404).json({
-                success: false,
-                error: 'Booking not found.',
-            });
+            return res.status(404).json({ success: false, error: 'Booking not found.' });
         }
-
-        res.json({
-            success: true,
-            booking: {
-                id: booking._id,
-                serviceSlug: booking.serviceSlug,
-                serviceName: booking.serviceName,
-                areaSize: booking.areaSize,
-                address: booking.address,
-                city: booking.city,
-                preferredDate: booking.preferredDate,
-                preferredTime: booking.preferredTime,
-                specialInstructions: booking.specialInstructions,
-                basePrice: booking.basePrice,
-                areaPrice: booking.areaPrice,
-                totalPrice: booking.totalPrice,
-                status: booking.status,
-                paymentId: booking.paymentId,
-                razorpayOrderId: booking.razorpayOrderId,
-                createdAt: booking.createdAt,
-            },
-        });
+        res.json({ success: true, booking: { ...toClient(booking), razorpayOrderId: booking.razorpayOrderId } });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            error: 'Server error.',
+        res.status(500).json({ success: false, error: 'Server error.' });
+    }
+});
+
+// ─────────────────────────────────────────────
+// PUT /api/bookings/:id/cancel — Customer cancels; slot is freed
+// ─────────────────────────────────────────────
+router.put('/:id/cancel', async (req, res) => {
+    try {
+        const booking = await cancelBooking({
+            bookingId: req.params.id,
+            userId: req.user._id,
+            by: 'user',
+            reason: (req.body && req.body.reason) || '',
         });
+        res.json({ success: true, booking: toClient(booking) });
+    } catch (error) {
+        handleError(res, error, 'Cancel booking error');
+    }
+});
+
+// ─────────────────────────────────────────────
+// PUT /api/bookings/:id/reschedule — Move to a new date/time slot
+// ─────────────────────────────────────────────
+router.put('/:id/reschedule', [
+    body('preferredDate').notEmpty().withMessage('New date is required'),
+    body('preferredTime').notEmpty().withMessage('New time is required'),
+], async (req, res) => {
+    try {
+        if (firstValidationError(req, res)) return;
+        const booking = await rescheduleBooking({
+            bookingId: req.params.id,
+            userId: req.user._id,
+            preferredDate: req.body.preferredDate,
+            preferredTime: req.body.preferredTime,
+        });
+        res.json({ success: true, booking: toClient(booking) });
+    } catch (error) {
+        handleError(res, error, 'Reschedule booking error');
     }
 });
 

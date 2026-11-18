@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useHistory, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { initiatePayment, calculatePrice } from '../services/PaymentService';
+import { apiFetch } from '../services/api';
+import SlotSelect from '../components/SlotSelect';
 import servicesData from '../data/services.json';
 import { FaCheck, FaArrowRight, FaArrowLeft, FaMapMarkerAlt, FaCalendarAlt, FaClock, FaRulerCombined, FaCreditCard, FaShieldAlt } from 'react-icons/fa';
 import './Booking.css';
@@ -14,7 +16,7 @@ import creepersShrubsImg from '../images/real_service_images/creepers-shrubs.jpe
 import naturalVerticalGardenImg from '../images/real_service_images/natural-vertical-garden.jpeg';
 import plantsPlantersImg from '../images/real_service_images/plants-planters.jpeg';
 
-const API_URL = process.env.REACT_APP_API_URL || '/api';
+const PAYMENT_HOLD_MINUTES = 15;
 
 const imageMap: { [key: string]: string } = {
     'artificial-grass': artificialGrassImg,
@@ -48,6 +50,11 @@ const Booking: React.FC = () => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [bookingComplete, setBookingComplete] = useState(false);
     const [completedBookingId, setCompletedBookingId] = useState('');
+    // Booking already created (slot held) but not yet paid — reused on retry
+    // so clicking Pay again doesn't create a second booking.
+    const [pendingBookingId, setPendingBookingId] = useState('');
+    // Bump to make the slot picker re-check availability.
+    const [slotRefreshKey, setSlotRefreshKey] = useState(0);
 
     // If pre-selected service, jump to step 2
     useEffect(() => {
@@ -117,6 +124,13 @@ const Booking: React.FC = () => {
     };
 
     const prevStep = () => {
+        // Going back to edit details: release the slot held by the unpaid
+        // booking so the next Pay creates a fresh booking with the new details.
+        if (pendingBookingId) {
+            apiFetch(`/bookings/${pendingBookingId}/cancel`, { method: 'PUT' }).catch(() => {});
+            setPendingBookingId('');
+            setSlotRefreshKey((k) => k + 1);
+        }
         setError('');
         setCurrentStep(prev => Math.max(prev - 1, 0));
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -129,38 +143,49 @@ const Booking: React.FC = () => {
         setError('');
 
         try {
-            // Step 1: Create booking on the server
-            const bookingRes = await fetch(`${API_URL}/bookings`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: JSON.stringify({
-                    serviceSlug: selectedService,
-                    serviceName: selectedServiceData.category,
-                    areaSize: Number(areaSize),
-                    address,
-                    city,
-                    preferredDate,
-                    preferredTime,
-                    specialInstructions,
-                }),
-            });
+            // Step 1: Create the booking (this claims and holds the slot) —
+            // unless an earlier attempt already did and only payment failed.
+            let bookingId = pendingBookingId;
+            let amount = pricing.total;
 
-            const bookingData = await bookingRes.json();
+            if (!bookingId) {
+                const bookingRes = await apiFetch('/bookings', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        serviceSlug: selectedService,
+                        serviceName: selectedServiceData.category,
+                        areaSize: Number(areaSize),
+                        address,
+                        city,
+                        preferredDate,
+                        preferredTime,
+                        specialInstructions,
+                    }),
+                });
 
-            if (!bookingData.success) {
-                setError(bookingData.error || 'Failed to create booking.');
-                setIsProcessing(false);
-                return;
+                const bookingData = await bookingRes.json();
+
+                if (!bookingData.success) {
+                    setError(bookingData.error || 'Failed to create booking.');
+                    if (bookingRes.status === 409) {
+                        // Someone just took this slot — send the user back to pick another.
+                        setPreferredTime('');
+                        setSlotRefreshKey((k) => k + 1);
+                        setCurrentStep(1);
+                    }
+                    setIsProcessing(false);
+                    return;
+                }
+
+                bookingId = bookingData.booking.id;
+                amount = bookingData.booking.totalPrice;
+                setPendingBookingId(bookingId);
             }
-
-            const bookingId = bookingData.booking.id;
 
             // Step 2: Initiate payment with server-created order
             const paymentResult = await initiatePayment({
-                amount: bookingData.booking.totalPrice,
+                amount,
                 customerName: user.name,
                 customerEmail: user.email,
                 customerPhone: user.phone,
@@ -169,10 +194,11 @@ const Booking: React.FC = () => {
             }, token);
 
             if (paymentResult.success) {
+                setPendingBookingId('');
                 setCompletedBookingId(bookingId);
                 setBookingComplete(true);
             } else {
-                setError(paymentResult.error || 'Payment failed. Please try again.');
+                setError(`${paymentResult.error || 'Payment failed.'} Your slot is held for ${PAYMENT_HOLD_MINUTES} minutes — click Pay to try again, or finish later from My Bookings.`);
             }
         } catch (err) {
             setError('Something went wrong. Please try again.');
@@ -335,18 +361,13 @@ const Booking: React.FC = () => {
                             <label htmlFor="booking-time">
                                 {(FaClock as any)({ size: 14 })} Preferred Time
                             </label>
-                            <select
+                            <SlotSelect
                                 id="booking-time"
+                                date={preferredDate}
                                 value={preferredTime}
-                                onChange={(e) => setPreferredTime(e.target.value)}
-                            >
-                                <option value="">Select a time slot</option>
-                                <option value="09:00 - 11:00 AM">09:00 - 11:00 AM</option>
-                                <option value="11:00 - 01:00 PM">11:00 - 01:00 PM</option>
-                                <option value="01:00 - 03:00 PM">01:00 - 03:00 PM</option>
-                                <option value="03:00 - 05:00 PM">03:00 - 05:00 PM</option>
-                                <option value="05:00 - 07:00 PM">05:00 - 07:00 PM</option>
-                            </select>
+                                onChange={setPreferredTime}
+                                refreshKey={slotRefreshKey}
+                            />
                         </div>
 
                         <div className="booking-input-group full-width">
@@ -447,6 +468,10 @@ const Booking: React.FC = () => {
                             <div className="payment-methods">
                                 {(FaCreditCard as any)({ size: 14 })}
                                 <span>UPI • Cards • Net Banking • Wallets</span>
+                            </div>
+                            <div className="payment-methods">
+                                {(FaClock as any)({ size: 14 })}
+                                <span>Your slot is held for {PAYMENT_HOLD_MINUTES} minutes while you complete payment.</span>
                             </div>
                         </div>
                     </div>

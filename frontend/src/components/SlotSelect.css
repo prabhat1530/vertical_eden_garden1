@@ -1,0 +1,11 @@
+/* Helper text under the time-slot dropdown */
+.slot-select-note {
+    display: block;
+    margin-top: 6px;
+    font-size: 0.8rem;
+    color: #78909c;
+}
+
+.slot-select-error {
+    color: #c62828;
+}

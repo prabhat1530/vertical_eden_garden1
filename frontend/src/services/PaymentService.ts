@@ -119,7 +119,9 @@ export const initiatePayment = async (
                             paymentId: '',
                             orderId: '',
                             signature: '',
-                            error: 'Payment verification failed. Please contact support.',
+                            // The payment went through but we couldn't reach the server.
+                            // Razorpay's webhook will still confirm the booking.
+                            error: 'Your payment was received, but we could not confirm it right now. It will be confirmed automatically within a few minutes — check My Bookings.',
                         });
                     }
                 },

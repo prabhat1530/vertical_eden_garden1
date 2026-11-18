@@ -1,7 +1,11 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
+import { refreshAccessToken } from '../services/api';
 
 // API base URL — uses proxy in development, full URL in production
 const API_URL = process.env.REACT_APP_API_URL || '/api';
+
+// Silently refresh the access token a little before the ~15m expiry.
+const REFRESH_INTERVAL_MS = 12 * 60 * 1000;
 
 interface AuthUser {
     id: string;
@@ -30,96 +34,94 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const [user, setUser] = useState<AuthUser | null>(null);
     const [token, setToken] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const refreshTimer = useRef<ReturnType<typeof setInterval> | null>(null);
 
-    // On mount, check for existing token and validate it
-    useEffect(() => {
-        const savedToken = localStorage.getItem('veg_token');
-        if (savedToken) {
-            // Validate token by fetching user profile
-            fetch(`${API_URL}/auth/me`, {
-                headers: {
-                    'Authorization': `Bearer ${savedToken}`,
-                },
-            })
-                .then(res => res.json())
-                .then(data => {
-                    if (data.success && data.user) {
-                        setToken(savedToken);
-                        setUser(data.user);
-                    } else {
-                        // Token is invalid — clear it
-                        localStorage.removeItem('veg_token');
-                    }
-                })
-                .catch(() => {
-                    // Server unreachable — keep token for retry
-                    // but try to use cached user data
-                    const cachedUser = localStorage.getItem('veg_user');
-                    if (cachedUser) {
-                        try {
-                            setToken(savedToken);
-                            setUser(JSON.parse(cachedUser));
-                        } catch {
-                            localStorage.removeItem('veg_token');
-                            localStorage.removeItem('veg_user');
-                        }
-                    }
-                })
-                .finally(() => {
-                    setIsLoading(false);
-                });
-        } else {
-            setIsLoading(false);
-        }
+    // Persist a successful auth result everywhere it's read.
+    const applyAuth = useCallback((newToken: string, newUser: AuthUser) => {
+        localStorage.setItem('veg_token', newToken);
+        localStorage.setItem('veg_user', JSON.stringify(newUser));
+        setToken(newToken);
+        setUser(newUser);
     }, []);
+
+    // On mount: try to restore the session from the httpOnly refresh cookie.
+    useEffect(() => {
+        let cancelled = false;
+
+        (async () => {
+            const newToken = await refreshAccessToken();
+            if (!cancelled) {
+                if (newToken) {
+                    const cached = localStorage.getItem('veg_user');
+                    setToken(newToken);
+                    if (cached) {
+                        try { setUser(JSON.parse(cached)); } catch { /* ignore */ }
+                    }
+                } else {
+                    // No valid session — clear any stale local data.
+                    localStorage.removeItem('veg_token');
+                    localStorage.removeItem('veg_user');
+                    setToken(null);
+                    setUser(null);
+                }
+                setIsLoading(false);
+            }
+        })();
+
+        return () => { cancelled = true; };
+    }, []);
+
+    // While logged in, refresh the access token on a timer.
+    useEffect(() => {
+        if (token) {
+            refreshTimer.current = setInterval(() => {
+                refreshAccessToken().then((t) => {
+                    if (t) setToken(t);
+                });
+            }, REFRESH_INTERVAL_MS);
+        }
+        return () => {
+            if (refreshTimer.current) clearInterval(refreshTimer.current);
+        };
+    }, [token]);
 
     const signup = useCallback(async (name: string, email: string, phone: string, password: string) => {
         try {
             const res = await fetch(`${API_URL}/auth/signup`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ name, email, phone, password }),
             });
-
             const data = await res.json();
-
             if (data.success && data.token) {
-                localStorage.setItem('veg_token', data.token);
-                localStorage.setItem('veg_user', JSON.stringify(data.user));
-                setToken(data.token);
-                setUser(data.user);
+                applyAuth(data.token, data.user);
                 return { success: true };
             }
-
             return { success: false, error: data.error || 'Signup failed.' };
         } catch (error) {
             return { success: false, error: 'Cannot connect to server. Please try again.' };
         }
-    }, []);
+    }, [applyAuth]);
 
     const login = useCallback(async (email: string, password: string) => {
         try {
             const res = await fetch(`${API_URL}/auth/login`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ email, password }),
             });
-
             const data = await res.json();
-
             if (data.success && data.token) {
-                localStorage.setItem('veg_token', data.token);
-                localStorage.setItem('veg_user', JSON.stringify(data.user));
-                setToken(data.token);
-                setUser(data.user);
+                applyAuth(data.token, data.user);
                 return { success: true };
             }
-
             return { success: false, error: data.error || 'Login failed.' };
         } catch (error) {
             return { success: false, error: 'Cannot connect to server. Please try again.' };
         }
-    }, []);
+    }, [applyAuth]);
 
     const sendOtp = useCallback(async (phone: string) => {
         try {
@@ -129,10 +131,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 body: JSON.stringify({ phone }),
             });
             const data = await res.json();
-            
-            if (data.success) {
-                return { success: true };
-            }
+            if (data.success) return { success: true };
             return { success: false, error: data.error || 'Failed to send OTP.' };
         } catch (error) {
             return { success: false, error: 'Cannot connect to server.' };
@@ -143,25 +142,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         try {
             const res = await fetch(`${API_URL}/auth/verify-otp`, {
                 method: 'POST',
+                credentials: 'include',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ phone, otp }),
             });
             const data = await res.json();
-            
             if (data.success && data.token) {
-                localStorage.setItem('veg_token', data.token);
-                localStorage.setItem('veg_user', JSON.stringify(data.user));
-                setToken(data.token);
-                setUser(data.user);
+                applyAuth(data.token, data.user);
                 return { success: true };
             }
             return { success: false, error: data.error || 'Invalid OTP.' };
         } catch (error) {
             return { success: false, error: 'Cannot connect to server.' };
         }
-    }, []);
+    }, [applyAuth]);
 
     const logout = useCallback(() => {
+        // Revoke the refresh token server-side (best effort), then clear locally.
+        fetch(`${API_URL}/auth/logout`, { method: 'POST', credentials: 'include' }).catch(() => {});
+        if (refreshTimer.current) clearInterval(refreshTimer.current);
         setUser(null);
         setToken(null);
         localStorage.removeItem('veg_token');
