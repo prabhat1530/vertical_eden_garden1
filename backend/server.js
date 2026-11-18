@@ -1,13 +1,13 @@
+// Load environment variables FIRST — some modules read process.env when
+// they are required (e.g. Redis config, token lifetimes).
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
-const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const { apiLimiter } = require('./middleware/rateLimiter');
-
-// Load environment variables
-dotenv.config();
 
 // Import routes
 const authRoutes = require('./routes/auth');

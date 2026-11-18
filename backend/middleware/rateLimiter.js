@@ -1,16 +1,45 @@
-const rateLimit = require('express-rate-limit');
+const { rateLimit, MemoryStore } = require('express-rate-limit');
 const { RedisStore } = require('rate-limit-redis');
-const redis = require('../config/redis');
+const { redis, isRedisEnabled, isRedisReady } = require('../config/redis');
 
 // ─────────────────────────────────────────────
 // Rate limiting
 // Counts requests per client IP inside a time window and rejects once the
-// limit is crossed. Counters live in Redis so the limit holds even if the
-// API runs as multiple processes/instances. If Redis is unavailable the
-// library falls back to an in-memory store automatically (per process).
+// limit is crossed. With Redis enabled, counters live in Redis so the limit
+// holds across multiple server instances; otherwise each process keeps its
+// own in-memory counters. If Redis fails mid-flight, passOnStoreError lets
+// the request through rather than breaking the API.
 // ─────────────────────────────────────────────
 
-const useRedisStore = process.env.DISABLE_REDIS !== 'true';
+// Uses Redis while it is connected and switches instantly to in-memory
+// counters when it is not, so a Redis outage never slows requests down.
+class FallbackStore {
+    constructor(redisStore) {
+        this.redisStore = redisStore;
+        this.memoryStore = new MemoryStore();
+        this.prefix = redisStore.prefix;
+        this.localKeys = false;
+    }
+
+    init(options) {
+        this.memoryStore.init(options);
+        // If Redis is down now, RedisStore reloads its script on first use.
+        Promise.resolve(this.redisStore.init(options)).catch(() => {});
+    }
+
+    current() {
+        return isRedisReady() ? this.redisStore : this.memoryStore;
+    }
+
+    get(key) { return this.current().get(key); }
+    increment(key) { return this.current().increment(key); }
+    decrement(key) { return this.current().decrement(key); }
+
+    async resetKey(key) {
+        await this.memoryStore.resetKey(key);
+        if (isRedisReady()) await this.redisStore.resetKey(key);
+    }
+}
 
 const makeLimiter = ({ windowMs, max, message, prefix }) => {
     // Skip rate limiting during automated tests so suites can exercise
@@ -25,13 +54,14 @@ const makeLimiter = ({ windowMs, max, message, prefix }) => {
         standardHeaders: true,   // send RateLimit-* headers
         legacyHeaders: false,
         message: { success: false, error: message },
+        passOnStoreError: true,
     };
 
-    if (useRedisStore) {
-        options.store = new RedisStore({
+    if (isRedisEnabled) {
+        options.store = new FallbackStore(new RedisStore({
             sendCommand: (...args) => redis.call(...args),
             prefix,
-        });
+        }));
     }
 
     return rateLimit(options);

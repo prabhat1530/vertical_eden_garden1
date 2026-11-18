@@ -27,7 +27,6 @@ afterAll(async () => {
     await mongoose.disconnect();
     if (replset) await replset.stop();
     // Close the shared Redis connection so Jest can exit cleanly.
-    try {
-        require('../config/redis').disconnect();
-    } catch (_) { /* ignore */ }
+    const { redis } = require('../config/redis');
+    if (redis) redis.disconnect();
 });

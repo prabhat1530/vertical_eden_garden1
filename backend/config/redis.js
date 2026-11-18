@@ -1,29 +1,40 @@
 const Redis = require('ioredis');
 
 // ─────────────────────────────────────────────
-// Shared Redis connection
-// Used for: rate limiting, response caching, and the BullMQ job queue.
-// `maxRetriesPerRequest: null` keeps the connection compatible with BullMQ.
-// Errors are logged (not thrown) so a Redis hiccup never crashes the API.
+// Shared Redis connection (optional)
+// Used for rate limiting and response caching.
+// Redis is ENABLED only when REDIS_URL is set and DISABLE_REDIS !== 'true'.
+// When disabled, callers fall back to in-memory behaviour, so a deployment
+// without Redis keeps working instead of hanging.
+// `maxRetriesPerRequest: 1` makes commands fail fast while Redis is down
+// (callers treat that as "skip Redis") rather than queueing forever.
 // ─────────────────────────────────────────────
-const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+const isRedisEnabled = process.env.DISABLE_REDIS !== 'true' && !!process.env.REDIS_URL;
 
-const redis = new Redis(REDIS_URL, {
-    maxRetriesPerRequest: null,
-    retryStrategy: (times) => Math.min(times * 200, 2000),
-});
+let redis = null;
+let ready = false;
 
-let redisReady = false;
+if (isRedisEnabled) {
+    redis = new Redis(process.env.REDIS_URL, {
+        maxRetriesPerRequest: 1,
+        retryStrategy: (times) => Math.min(times * 200, 2000),
+    });
 
-redis.on('connect', () => {
-    redisReady = true;
-    console.log('✅ Redis connected');
-});
-redis.on('error', (err) => {
-    redisReady = false;
-    console.warn('⚠️  Redis error:', err.message);
-});
+    redis.on('ready', () => {
+        ready = true;
+        console.log('✅ Redis connected');
+    });
+    redis.on('error', (err) => {
+        if (ready) console.warn('⚠️  Redis error:', err.message);
+        ready = false;
+    });
+    redis.on('end', () => { ready = false; });
+} else {
+    console.log('ℹ️  Redis disabled — using in-memory fallbacks');
+}
 
-redis.isReady = () => redisReady;
-
-module.exports = redis;
+module.exports = {
+    redis,
+    isRedisEnabled,
+    isRedisReady: () => ready,
+};
