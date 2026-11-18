@@ -7,6 +7,7 @@ process.env.DISABLE_REDIS = 'true';
 process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret';
 process.env.ACCESS_TOKEN_TTL = process.env.ACCESS_TOKEN_TTL || '15m';
 process.env.RAZORPAY_KEY_SECRET = 'test_razorpay_secret';
+process.env.RAZORPAY_WEBHOOK_SECRET = 'test_webhook_secret';
 
 let replset;
 
