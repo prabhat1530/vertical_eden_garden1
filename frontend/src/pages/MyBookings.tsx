@@ -77,7 +77,6 @@ const MyBookings: React.FC = () => {
             return;
         }
         fetchBookings();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [isAuthenticated, token, history]);
 
     // Replace one booking in the list with the server's updated copy.

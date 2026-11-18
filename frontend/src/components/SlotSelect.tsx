@@ -53,7 +53,7 @@ const SlotSelect: React.FC<SlotSelectProps> = ({ id, date, value, onChange, refr
             .finally(() => { if (!cancelled) setLoading(false); });
 
         return () => { cancelled = true; };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+        // Intentionally re-fetch only when the date or refreshKey changes.
     }, [date, refreshKey]);
 
     const allBooked = slots.length > 0 && slots.every((s) => !s.available);
