@@ -217,16 +217,25 @@ const confirmPaidBooking = async ({ bookingId, paymentId }) => {
             { $set: { status: 'confirmed', paymentId, holdExpiresAt: null } },
             { new: true }
         );
-        // null means the sweeper cancelled it a moment ago — fall through.
         if (updated) return { booking: updated, alreadyConfirmed: false };
+        // null: something changed it a moment ago — either the sweeper
+        // cancelled it, or the other confirmation path (browser verify vs.
+        // webhook) confirmed it first. Re-read to find out which.
+        const latest = await findOwnBooking(bookingId, null);
+        if (latest.status === 'confirmed' || latest.status === 'completed') {
+            return { booking: latest, alreadyConfirmed: true };
+        }
     }
 
     // Booking is cancelled (hold expired while the customer was paying).
     await ensureSlot(booking.preferredDate, booking.preferredTime);
     try {
+        let wasRevivedHere = false;
         const revived = await runInTransaction(async (session) => {
+            wasRevivedHere = false;
             const fresh = await findOwnBooking(bookingId, null, session);
             if (fresh.status !== 'cancelled') return fresh;
+            wasRevivedHere = true;
             await reserveSlot(fresh.preferredDate, fresh.preferredTime, fresh._id, session);
             fresh.status = 'confirmed';
             fresh.paymentId = paymentId;
@@ -237,7 +246,7 @@ const confirmPaidBooking = async ({ bookingId, paymentId }) => {
             await fresh.save({ session });
             return fresh;
         });
-        return { booking: revived, alreadyConfirmed: false };
+        return { booking: revived, alreadyConfirmed: !wasRevivedHere };
     } catch (err) {
         if (!(err instanceof SlotUnavailableError)) throw err;
         await Booking.updateOne(
