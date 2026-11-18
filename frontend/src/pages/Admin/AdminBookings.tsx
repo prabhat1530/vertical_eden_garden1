@@ -80,9 +80,13 @@ const AdminBookings: React.FC = () => {
             const data = await res.json();
             if (data.success) {
                 setBookings(prev => prev.map(b => b.id === bookingId ? { ...b, status: newStatus } : b));
+            } else {
+                // e.g. 409 when re-activating a cancelled booking whose slot is now taken
+                window.alert(data.error || 'Could not update the status.');
             }
         } catch (error) {
             console.error('Failed to update status:', error);
+            window.alert('Cannot connect to server.');
         }
     };
 
