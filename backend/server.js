@@ -16,6 +16,7 @@ const paymentRoutes = require('./routes/payments');
 const chatRoutes = require('./routes/chat');
 const adminRoutes = require('./routes/admin');
 const reviewRoutes = require('./routes/reviews');
+const webhookRoutes = require('./routes/webhooks');
 
 // Initialize Express app
 const app = express();
@@ -36,6 +37,11 @@ app.use(cors({
     origin: process.env.CLIENT_URL || 'http://localhost:3000',
     credentials: true,
 }));
+
+// Razorpay webhook — mounted BEFORE express.json() because its signature is
+// checked against the raw request bytes, and before the API rate limiter
+// so bursts of payment notifications are never rejected.
+app.use('/api/payments/webhook', webhookRoutes);
 
 // Parse JSON bodies and cookies
 app.use(express.json());
